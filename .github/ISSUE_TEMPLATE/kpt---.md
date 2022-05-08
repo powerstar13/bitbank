@@ -2,7 +2,7 @@
 name: KPT 회고
 about: KPT 회고 내용 템플릿
 title: "[KPT 회고] 작성자 이름 및 날짜 기입"
-labels: ''
+labels: KPT 회고
 assignees: powerstar13, jsh0116, daodaoala, boookk
 
 ---
