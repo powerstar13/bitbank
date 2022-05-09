@@ -19,7 +19,7 @@ assignees: powerstar13, jsh0116, daodaoala, boookk
 
 # 소요 시간
 > Pick one
-# `0.5h`
+### `0.5h`
 ### `1h`
 ### `1.5h`
 ### `2h`
