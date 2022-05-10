@@ -1,8 +1,8 @@
 package click.bitbank.api.presentation.member;
 
 import click.bitbank.api.application.response.MemberLoginResponse;
-import click.bitbank.api.application.response.MemberRegistrationResponse;
-import click.bitbank.api.presentation.member.request.MemberRegistrationRequest;
+import click.bitbank.api.application.response.MemberSignupResponse;
+import click.bitbank.api.presentation.member.request.MemberSignupRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,50 +40,27 @@ class MemberHandlerTest {
     }
 
     /**
-     * 강사 등록
+     * 일반 회원 등록
      */
     @Test
-    void teacherRegistration() {
+    void signup() {
 
-        MemberRegistrationRequest request = MemberRegistrationRequest.builder()
-            .memberName("홍강사")
+        MemberSignupRequest request = MemberSignupRequest.builder()
+            .memberLoginId("gildong123")
+            .memberName("홍길동")
             .memberPassword("1234")
             .build();
 
         webTestClientPostMethod
             .post()
-            .uri("/member/admin/teacherRegistration")
+            .uri("/auth/signup")
             .bodyValue(request)
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
             .expectStatus().isOk()
-            .expectBody(MemberRegistrationResponse.class)
-            .value(memberRegistrationResponse -> {
-                Assertions.assertInstanceOf(Integer.class, memberRegistrationResponse.getMemberId());
-            });
-    }
-
-    /**
-     * 학생 회원 등록
-     */
-    @Test
-    void studentRegistration() {
-
-        MemberRegistrationRequest request = MemberRegistrationRequest.builder()
-            .memberName("홍학생")
-            .memberPassword("1234")
-            .build();
-
-        webTestClientPostMethod
-            .post()
-            .uri("/member/studentRegistration")
-            .bodyValue(request)
-            .accept(MediaType.APPLICATION_JSON)
-            .exchange()
-            .expectStatus().isOk()
-            .expectBody(MemberRegistrationResponse.class)
-            .value(memberRegistrationResponse -> {
-                Assertions.assertInstanceOf(Integer.class, memberRegistrationResponse.getMemberId());
+            .expectBody(MemberSignupResponse.class)
+            .value(memberSignupResponse -> {
+                Assertions.assertInstanceOf(Integer.class, memberSignupResponse.getMemberId());
             });
     }
 
@@ -95,7 +72,7 @@ class MemberHandlerTest {
 
         webTestClientPostMethod
             .post()
-            .uri("/member/login")
+            .uri("/auth/login")
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
             .expectStatus().isOk()
