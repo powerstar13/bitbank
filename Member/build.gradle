@@ -4,7 +4,7 @@ plugins {
 	id 'java'
 }
 
-group = 'com.online-study'
+group = 'click.bitbank'
 version = ''
 sourceCompatibility = '11'
 
