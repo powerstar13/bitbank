@@ -24,7 +24,7 @@ const Home = () => {
                         <Box className={classes.title2}>
                             체계적인 예산, 통게 기능으로 쉽고 정확하게 분석합니다.
                         </Box>
-                        <Box display="flex" justifyContent="center">
+                        {/* <Box display="flex" justifyContent="center">
                             <Box>
                                 <Box style={{backgroundColor: "#fff",border: 'solid 5px #466495', borderRadius: "50%", cursor: "pointer", width: "144px", height: "144px", margin: "100px auto 0", textAlign: "center", paddingTop: "38px"}}>
                                     <div className={classes.tech_icon}>
@@ -58,8 +58,8 @@ const Home = () => {
                             <Box>
                                 <div className={classes.title3}>AI 사운드 엔지니어는<br/>여러분들이 원하는 작업을<br/>최적의 프로세스를 통해<br/>빠르게 만들어냅니다</div>
                             </Box>
-                        </Box>
-                    </Box>
+                        </Box> */}
+                    {/* </Box> */}
                 </Box>
                 </Box>
             </Container>
