@@ -47,8 +47,13 @@ public class MemberApplicationServiceImpl implements MemberApplicationService {
         ).switchIfEmpty(Mono.error(new BadRequestException(ExceptionMessage.IsRequiredRequest.getMessage())));
     }
 
+    /**
+     * 일반 회원 로그인
+     * @param serverRequest : 전달된 Request
+     * @return Mono<MemberLoginResponse> : 저장된 회원 정보
+     */
     @Override
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Transactional(rollbackFor = Exception.class)
     public Mono<MemberLoginResponse> login(ServerRequest serverRequest) {
 
         return serverRequest.bodyToMono(MemberLoginRequest.class).flatMap(
