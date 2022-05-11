@@ -1,12 +1,15 @@
 package click.bitbank.api.domain.model.member;
 
+import click.bitbank.api.domain.dao.factory.MemberFactory;
 import click.bitbank.api.infrastructure.exception.status.AlreadyDataException;
 import click.bitbank.api.infrastructure.exception.status.RegistrationFailException;
-import click.bitbank.api.presentation.member.request.MemberRegistrationRequest;
+import click.bitbank.api.presentation.member.request.MemberSignupRequest;
+import click.bitbank.api.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-import click.bitbank.api.application.response.MemberRegistrationResponse;
+import click.bitbank.api.application.response.MemberSignupResponse;
 import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
 
 @Component
@@ -19,20 +22,19 @@ public class MemberSaveSpecification {
     /**
      * 회원 중복 검사 및 계정 생성
      * @param request : 저장할 회원 정보
-     * @param memberType : 저장할 회원 유형
      * @return Mono<MemberRegistrationResponse> : 저장된 회원 정보
      */
-    public Mono<MemberRegistrationResponse> memberExistCheckAndRegistration(MemberRegistrationRequest request, MemberType memberType) {
+    public Mono<MemberSignupResponse> memberExistCheckAndRegistration(MemberSignupRequest request, MemberType memberType) {
 
-        return memberRepository.findByMemberNameAndMemberType(request.getMemberName(), memberType)
+        return memberRepository.findByMemberLoginId(request.getMemberLoginId())
             .hasElement()
             .flatMap(alreadyMember -> {
 
                 if (alreadyMember) return Mono.error(new AlreadyDataException(ExceptionMessage.AlreadyDataMember.getMessage()));
 
-                return this.memberRegistration(request, memberType)
+                return this.signup(request, memberType)
                     .flatMap(savedMember -> Mono.just(
-                        MemberRegistrationResponse.builder()
+                        MemberSignupResponse.builder()
                             .memberId(savedMember.getMemberId())
                             .build()
                     ));
@@ -43,13 +45,13 @@ public class MemberSaveSpecification {
     /**
      * 회원 계정 생성
      * @param request : 저장할 회원 정보
-     * @param memberType : 저장할 회원 유형
      * @return Mono<Member> : 저장된 회원 정보
      */
-    private Mono<Member> memberRegistration(MemberRegistrationRequest request, MemberType memberType) {
+    private Mono<Member> signup(MemberSignupRequest request, MemberType memberType) {
 
         return memberRepository.save(
             memberFactory.memberBuilder(
+                request.getMemberLoginId(),
                 request.getMemberName(),
                 request.getMemberPassword(),
                 memberType
