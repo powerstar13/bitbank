@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { Link, useHistory } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -17,18 +16,11 @@ const useStyles = makeStyles((theme) => ({
 const CardRecommendation = ({ history }) => {
     const classes = useStyles();
     let [loading, setLoading] = useState(false);   
- 
-    const goBack = (e) => {
-        history.goBack();
-    };
 
     return (
         <div>
             {/* <Loader loading={loading} /> */}
-            <div className='center'>
-                <ArrowBackIosIcon style={{margin: '8px 0 0 -5px', color: '#6E6E6E'}} onClick={goBack}/>
-                <div className={clsx('item_center','subtitle_2')}>나에게 가장 좋은 카드는?</div>
-            </div>
+            <div className={clsx('item_center','subtitle_2')}>나에게 가장 좋은 카드는?</div>
             <div className="subtitle_3">입력하신 소비 패턴에 맞게<br/>많은 혜택을 받을 수 있는 카드를 찾았어요!</div>
             <Grid container>
                 <Grid item xs={12} style={{ justifyContent: 'center', marginTop: '30px' }}>
