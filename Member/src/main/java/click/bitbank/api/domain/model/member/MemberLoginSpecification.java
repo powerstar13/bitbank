@@ -26,7 +26,7 @@ public class MemberLoginSpecification {
 
     public Mono<MemberLoginResponse> memberExistCheckAndLogin(MemberLoginRequest request) {
 
-        Mono<Member> member = memberRepository.findByMemberNameAndMemberPassword(request.getMemberName(), MemberSha256.encrypt(request.getMemberPassword()));
+        Mono<Member> member = memberRepository.findByMemberLoginIdAndMemberPassword(request.getMemberLoginId(), MemberSha256.encrypt(request.getMemberPassword()));
         return member
                 .hasElement()
                 .flatMap(hasMember -> {
@@ -40,7 +40,17 @@ public class MemberLoginSpecification {
         return member.flatMap(m -> {
             String accessToken = jwtProvider.createJwtToken(m, Long.parseLong(accessExpiresString));
             String refreshToken = jwtProvider.createJwtToken(m, Long.parseLong(refreshExpiresString));
-            return Mono.just(new MemberLoginResponse(m.getMemberId(), accessToken, refreshToken));
+
+            m.setRefreshToken(refreshToken);
+
+            return updateRefreshTokenByMemberLogin(m)
+                    .flatMap(i -> {
+                        return Mono.just(new MemberLoginResponse(m.getMemberId(), m.getMemberName(), m.getMemberType(), accessToken, refreshToken));
+                    });
         });
+    }
+
+    private Mono<Member> updateRefreshTokenByMemberLogin(Member member) {
+        return memberRepository.save(member);
     }
 }

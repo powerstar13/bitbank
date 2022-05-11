@@ -2,6 +2,7 @@ package click.bitbank.api.presentation.member;
 
 import click.bitbank.api.application.response.MemberLoginResponse;
 import click.bitbank.api.application.response.MemberSignupResponse;
+import click.bitbank.api.presentation.member.request.MemberLoginRequest;
 import click.bitbank.api.presentation.member.request.MemberSignupRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,9 +71,15 @@ class MemberHandlerTest {
     @Test
     void login() {
 
+        MemberLoginRequest request = MemberLoginRequest.builder()
+            .memberLoginId("boookk")
+            .memberPassword("boookk")
+            .build();
+
         webTestClientPostMethod
             .post()
             .uri("/auth/login")
+            .bodyValue(request)
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
             .expectStatus().isOk()

@@ -1,11 +1,15 @@
 package click.bitbank.api.domain.model.member;
 
 import lombok.*;
+import org.apache.kafka.common.protocol.types.Field;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -38,11 +42,17 @@ public class Member {
     private String refreshToken; // JWT 리프레시 토큰
 
     @Column(value = "regDate")
-    private Timestamp regDate; // 생성일
+    @CreatedDate
+    private LocalDateTime regDate; // 생성일
 
     @Column(value = "modDate")
-    private Timestamp modDate; // 수정일
+    @LastModifiedDate
+    private LocalDateTime modDate; // 수정일
 
     @Column(value = "delDate")
-    private Timestamp delDate; // 삭제일
+    private LocalDateTime delDate; // 삭제일
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }
