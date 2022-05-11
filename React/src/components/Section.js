@@ -12,23 +12,24 @@ import CardRanking from './financialMatching/CardRanking'
 import Setting from './setting/Setting'
 import Policy from './setting/Policy'
 import MyPage from './setting/MyPage'
+import AddBook from './accountBook/AddBook'
+import ExcelData from './accountBook/ExcelData'
 
 const useStyles = makeStyles((theme) => ({
     root:{
-        marginTop:"110px", 
+        margin:"130px 0 100PX", 
         padding: "0 100px", 
         minHeight: "calc( 100vh - 594px )",
         height:"auto",
+        fontSize: "16px",
         [theme.breakpoints.up('lg')]: {
             padding: "0 300px", 
         },
-        // backgroundColor:"#F2F2F2"
     }
 }));
 
 const Section = () => {
     const cls = useStyles();
-    // const location = useLocation();
 
     return (
         <Box className={cls.root} display="flex" justifyContent="center">
@@ -42,6 +43,13 @@ const Section = () => {
             <Route path="/setting" component={Setting} exact/>
             <Route path="/policy" component={Policy} exact/>
             <Route path="/mypage" component={MyPage} exact/>
+            <Route path="/books/addbook" component={AddBook} exact/>
+            <Route path="/books/excel" component={ExcelData} exact/>
+            {/* <Route path="/books" component={BookInquiry} exact/> */}
+            {/*
+            <Route path="/addbook" component={AddBook} exact/>
+            <Route path="/addbook" component={AddBook} exact/>
+            <Route path="/addbook" component={AddBook} exact/> */}
         </Box>
     );
 

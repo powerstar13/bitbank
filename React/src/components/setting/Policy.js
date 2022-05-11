@@ -5,7 +5,6 @@ import { Link, useHistory } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { policyData, termsData } from './PolicyData';
 
 const useStyles = makeStyles((theme) => ({
@@ -35,18 +34,11 @@ const Policy = () => {
     let [loading, setLoading] = useState(false);   
     const [terms, setTerms] = useState(false);   
     const [policy, setPolicy] = useState(false);
-    
-    const goBack = (e) => {
-        history.goBack();
-    };
 
     return (
         <div>
             {/* <Loader loading={loading} /> */}
-            <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center'}}>
-                <ArrowBackIosIcon style={{margin: '10px 20px 0 -30px', color: '#6E6E6E'}} onClick={goBack}/>
-                <div className='subtitle_1'>약관 및 정책</div>
-            </Grid>
+            <div className='subtitle_2'>약관 및 정책</div>
             <Grid container style={{marginTop:"50px"}}>
                 <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center'}}>
                     <button className={clsx('btn_1', 'margin_30')} onClick={() => setTerms(!terms)}>

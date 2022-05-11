@@ -4,7 +4,8 @@ import clsx from 'clsx';
 import { Link, useHistory  } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+// import { PDFDownloadLink } from "@react-pdf/renderer";
+// import { PdfDocument } from "./Templete";
 
 const useStyles = makeStyles((theme) => ({
 }));
@@ -14,17 +15,18 @@ const CardRanking = () => {
     const classes = useStyles();
     let history = useHistory();
     let [loading, setLoading] = useState(false);   
+    const [page, setPage] = useState(1);
+    // const [show, setShow] = useState(true); 
 
-    const goBack = (e) => {
-        history.goBack();
-    };
+    // const data=[
+    //     ["삼성카드","1. 삼성카드 taptap O","대형마트 할인","삼성이 혜택을 책임지고 다 드립니다. 통신비에서 10프로 할인까지!"]
+    // ]
+
+
     return (
         <div>
             {/* <Loader loading={loading} /> */}
-            <div className='center'>
-                <ArrowBackIosIcon style={{margin: '8px 15px 0 -30px', color: '#6E6E6E'}} onClick={goBack}/>
-                <div className={clsx('item_center','subtitle_2')}>인기카드 Top 10</div>
-            </div>
+            <div className={clsx('item_center','subtitle_2')}>인기카드 Top 10</div>
             <div className={clsx('item_center','subtitle_3')}>카드사의 대표적인<br/>1위부터 10위 카드를 소개합니다!</div>
             <Grid container>
                 <Grid item xs={12} style={{ justifyContent: 'center', marginTop: '30px' }}>
