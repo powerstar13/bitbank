@@ -1,9 +1,9 @@
 package click.bitbank.api.presentation.accountBook.request;
 
-import click.bitbank.api.domain.model.accountBook.ExpenditureType;
-import click.bitbank.api.domain.model.accountBook.IncomeType;
-import click.bitbank.api.domain.model.accountBook.SearchDateType;
-import click.bitbank.api.domain.model.accountBook.TransferType;
+import click.bitbank.api.domain.accountBook.ExpenditureType;
+import click.bitbank.api.domain.accountBook.IncomeType;
+import click.bitbank.api.domain.accountBook.SearchDateType;
+import click.bitbank.api.domain.accountBook.TransferType;
 import lombok.*;
 
 @Getter

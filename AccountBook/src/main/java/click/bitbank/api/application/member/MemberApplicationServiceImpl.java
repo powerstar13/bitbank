@@ -2,9 +2,9 @@ package click.bitbank.api.application.member;
 
 import click.bitbank.api.application.response.MemberInfoResponse;
 import click.bitbank.api.application.response.MemberRegistrationResponse;
-import click.bitbank.api.domain.model.member.MemberSaveSpecification;
-import click.bitbank.api.domain.model.member.MemberSearchSpecification;
-import click.bitbank.api.domain.model.member.MemberType;
+import click.bitbank.api.domain.member.MemberSaveSpecification;
+import click.bitbank.api.domain.member.MemberSearchSpecification;
+import click.bitbank.api.domain.member.MemberType;
 import click.bitbank.api.infrastructure.exception.status.BadRequestException;
 import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
 import click.bitbank.api.presentation.member.request.MemberRegistrationRequest;

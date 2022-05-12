@@ -3,7 +3,7 @@ package click.bitbank.api.presentation.member;
 import click.bitbank.api.application.member.MemberApplicationService;
 import click.bitbank.api.application.response.MemberInfoResponse;
 import click.bitbank.api.application.response.MemberRegistrationResponse;
-import click.bitbank.api.domain.model.member.MemberType;
+import click.bitbank.api.domain.member.MemberType;
 import click.bitbank.api.infrastructure.kafka.KafkaProducerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;

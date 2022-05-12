@@ -2,9 +2,8 @@ package click.bitbank.api.application.member;
 
 import org.springframework.web.reactive.function.server.ServerRequest;
 import reactor.core.publisher.Mono;
-import click.bitbank.api.domain.model.member.MemberType;
+import click.bitbank.api.domain.member.MemberType;
 import click.bitbank.api.application.response.MemberInfoResponse;
-import click.bitbank.api.application.response.MemberLoginResponse;
 import click.bitbank.api.application.response.MemberRegistrationResponse;
 
 public interface MemberApplicationService {
