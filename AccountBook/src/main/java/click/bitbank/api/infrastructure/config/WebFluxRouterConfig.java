@@ -2,6 +2,7 @@ package click.bitbank.api.infrastructure.config;
 
 import click.bitbank.api.application.response.MemberInfoResponse;
 import click.bitbank.api.application.response.MemberRegistrationResponse;
+import click.bitbank.api.presentation.accountBook.AccountBookHandler;
 import click.bitbank.api.presentation.member.MemberHandler;
 import click.bitbank.api.presentation.member.request.MemberRegistrationRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -118,15 +119,14 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
 
     @RouterOperations({
         @RouterOperation(
-            path = "/member/findMemberInfo/${memberId}",
-            produces = { MediaType.APPLICATION_JSON_VALUE },
-            headers = { HttpHeaders.AUTHORIZATION },
-            beanClass = MemberHandler.class,
+            path = "/account-book/search",
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            headers = {HttpHeaders.AUTHORIZATION},
+            beanClass = AccountBookHandler.class,
             method = RequestMethod.GET,
-            beanMethod = "findMemberInfo",
+            beanMethod = "accountBookSearch",
             operation = @Operation(
-                description = "회원 정보 조회 API",
-                operationId = "findMemberInfo",
+                description = "가계부 목록 검색 API",
                 responses = {
                     @ApiResponse(
                         responseCode = "200",
@@ -142,10 +142,10 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
         )
     })
     @Bean
-    public RouterFunction<ServerResponse> memberRouterGETBuilder(MemberHandler memberHandler) {
+    public RouterFunction<ServerResponse> accountBookRouterGETBuilder(AccountBookHandler accountBookHandler) {
         return RouterFunctions.route()
-            .path("/member", builder -> builder
-                .GET("/findMemberInfo/{memberId}", memberHandler::findMemberInfo)
+            .path("/account-book", builder -> builder
+                .GET("/search", accountBookHandler::accountBookSearch)
             ).build();
     }
 
