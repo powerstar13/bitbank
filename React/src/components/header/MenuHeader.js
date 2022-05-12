@@ -4,7 +4,6 @@ import { Link, useHistory  } from 'react-router-dom';
 import clsx from 'clsx';
 import AppBar from "@mui/material/AppBar";
 import Badge from '@mui/material/Badge';
-import MailIcon from '@mui/icons-material/Mail'
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Menu from '@mui/material/Menu';
@@ -71,13 +70,13 @@ const MenuHeader = () => {
                             <img src="./img/logo.png" width="17px" height="25px" style={{margin:"10px 20px"}}/>
                             <div className='logo' onClick={() => window.location.replace("/")}>ITBANK</div>
                         </Box>
-                        {/* <Link to='/login'>
+                        <Link to='/login'>
                             <Box onClick={()=>setMenu(4)}>
                                 <button className="loginBtn">로그인</button>
                             </Box>
-                        </Link> */}
+                        </Link>
 
-                        <div style={{width:"35px", marginTop:"-10px"}}>
+                        {/* <div style={{width:"35px", marginTop:"-10px"}}>
                             <Badge badgeContent={99} color="primary">
                                 <NotificationsIcon style={{color:"#848484", fontSize:"30px"}} onClick={(e) => setShowNoti(true)}/>
                             </Badge>
@@ -117,23 +116,21 @@ const MenuHeader = () => {
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody className={cls.MuiTableBody}>
-                                                {/* <Box textAlign="center" mt={5}>
-                                                    No data
-                                                </Box> */}
                                             </TableBody>
                                         </Table>
                                     </TableContainer>
                                 </Container>
                             </Menu>
-                        </div>
-
+                        </div> */}
                     </div>
                 </Container>
             </AppBar>
             <AppBar className={cls.appBar1}>
                 <Container maxWidth="sm" style={{padding:"0px"}}>
                     <div className={clsx('around', 'menu_appbar')}>
-                        <Box className={clsx("header_menu", "txt_left", menu===0 && "clickedMenu")} onClick={()=>setMenu(0)}>가계부</Box>
+                        <Link to='/books'>
+                            <Box className={clsx("header_menu", "txt_left", menu===0 && "clickedMenu")} onClick={()=>setMenu(0)}>가계부</Box>
+                        </Link>
                         <Link to='/cards'>
                             <Box className={clsx("header_menu", "txt_center", menu===1 && "clickedMenu")} onClick={(e)=>setMenu(1)}>금융매칭</Box>
                         </Link>

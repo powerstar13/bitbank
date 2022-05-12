@@ -14,16 +14,9 @@ const useStyles = makeStyles((theme) => ({
         '& .MuiInputBase-root': {
           borderRadius: "20px",
         },
-        "& .txtField": {
-          width: "300px",
-          fontSize: "11px",
-          fontFamily: "Spoqa Han Sans Neo",
-          color: "#333333",
-          lineHeight: "14px",
-        },
         '& .MuiOutlinedInput-root':{
             padding: '16.5px 10px'
-        }
+        },
     },
 }));
 
@@ -50,7 +43,7 @@ const Policy = () => {
                         <Box className={cls.txtfieldBox}>
                             <TextField
                                 multiline
-                                rows={5}
+                                rows={6}
                                 defaultValue={termsData}
                                 variant="outlined"
                                 InputProps={{

@@ -6,6 +6,10 @@ import Section from './components/Section'
 import MenuHeader from './components/header/MenuHeader';
 import './App.css';
 
+// const { NODE_ENV } = process.env;
+// export const API_SERVER = (NODE_ENV === "development") ? process.env.REACT_APP_API_SERVER : "https://gateway.bitbank.click";
+
+
 const theme = createTheme({
   breakpoints: {
     values: {
