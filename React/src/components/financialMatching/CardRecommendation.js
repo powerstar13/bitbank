@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const CardRecommendation = ({ history }) => {
+const CardRecommendation = () => {
     const classes = useStyles();
     let [loading, setLoading] = useState(false);   
 

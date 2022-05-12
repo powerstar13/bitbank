@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { API_SERVER } from '../../App';
+import axios from 'axios'
 import clsx from 'clsx'
 import { makeStyles } from '@mui/styles';
 import { Link } from 'react-router-dom';
@@ -33,6 +35,8 @@ const SignUp = () => {
     const specialCharacter = memberPassword.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
     const isValidPassword = memberPassword.length >= 6 && specialCharacter >= 1;
 
+    const API_SERVER = "https://gateway.bitbank.click";
+
     const handleChange = (e) => {
         const { value, name } = e.target;
         setUserInfo({
@@ -49,8 +53,24 @@ const SignUp = () => {
             setIDcheck(true);
         } else if ( !isValidPassword ) {
             setPWcheck(true);
+        } else {
+            registerMember(userInfo)
         }
     };
+
+
+    const registerMember = async(userInfo) => {  
+        try {
+            const response = await axios.post( API_SERVER +'/auth/signup', {
+                memberName: userInfo.memberName,
+                memberLoginid: userInfo.memberLoginid,
+                memberPassword: userInfo.memberPassword,
+            })
+            console.log( '회원가입 성공 response', response )
+        } catch (e) {
+            console.log( 'e', e.response );
+        }
+    }
 
     return (
         <div>
