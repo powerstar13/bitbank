@@ -15,11 +15,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.EnableWebFlux;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
+import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import click.bitbank.api.application.response.MemberInfoResponse;
 import click.bitbank.api.presentation.member.request.MemberLoginRequest;
@@ -29,6 +32,14 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 @Configuration
 @EnableWebFlux // WebFlux 설정 활성화
 public class WebFluxRouterConfig implements WebFluxConfigurer {
+
+    @Override
+    public void addCorsMappings(CorsRegistry corsRegistry) {
+        corsRegistry.addMapping("/**")
+            .allowedOrigins("*")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .maxAge(3600);
+    }
 
     @RouterOperations({
         @RouterOperation(
@@ -140,5 +151,4 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
                 .GET("/findMemberInfo/{memberId}", memberHandler::findMemberInfo)
             ).build();
     }
-
 }
