@@ -118,37 +118,4 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
             )
             .build();
     }
-
-    @RouterOperations({
-        @RouterOperation(
-            path = "/member/findMemberInfo/${memberId}",
-            produces = { MediaType.APPLICATION_JSON_VALUE },
-            headers = { HttpHeaders.AUTHORIZATION },
-            beanClass = MemberHandler.class,
-            method = RequestMethod.GET,
-            beanMethod = "findMemberInfo",
-            operation = @Operation(
-                description = "회원 정보 조회 API",
-                operationId = "findMemberInfo",
-                responses = {
-                    @ApiResponse(
-                        responseCode = "200",
-                        content = @Content(
-                            schema = @Schema(
-                                implementation = MemberInfoResponse.class,
-                                required = true
-                            )
-                        )
-                    )
-                }
-            )
-        )
-    })
-    @Bean
-    public RouterFunction<ServerResponse> memberRouterGETBuilder(MemberHandler memberHandler) {
-        return RouterFunctions.route()
-            .path("/member", builder -> builder
-                .GET("/findMemberInfo/{memberId}", memberHandler::findMemberInfo)
-            ).build();
-    }
 }

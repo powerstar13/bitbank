@@ -1,17 +1,12 @@
 package click.bitbank.api.domain.dao.factory;
 
-import click.bitbank.api.domain.dao.factory.MemberFactory;
 import click.bitbank.api.domain.model.member.Member;
 import click.bitbank.api.infrastructure.exception.status.BadRequestException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import click.bitbank.api.domain.model.member.MemberType;
 import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
-import click.bitbank.api.application.member.MemberSha256;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import click.bitbank.api.infrastructure.util.MemberSha256;
 
 @Component
 public class MemberFactoryImpl implements MemberFactory {

@@ -1,4 +1,4 @@
-package click.bitbank.api.application.member;
+package click.bitbank.api.infrastructure.util;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
