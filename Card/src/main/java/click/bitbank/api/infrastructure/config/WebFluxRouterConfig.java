@@ -1,13 +1,10 @@
 package click.bitbank.api.infrastructure.config;
 
-import click.bitbank.api.application.response.MemberInfoResponse;
-import click.bitbank.api.application.response.MemberRegistrationResponse;
-import click.bitbank.api.presentation.member.MemberHandler;
-import click.bitbank.api.presentation.member.request.MemberRegistrationRequest;
+import click.bitbank.api.application.response.CardPopularListResponse;
+import click.bitbank.api.presentation.card.CardHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springdoc.core.annotations.RouterOperation;
 import org.springdoc.core.annotations.RouterOperations;
@@ -39,100 +36,21 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
 
     @RouterOperations({
         @RouterOperation(
-            path = "/member/admin/teacherRegistration",
-            consumes = { MediaType.APPLICATION_JSON_VALUE },
+            path = "/card/popular-list",
             produces = { MediaType.APPLICATION_JSON_VALUE },
             headers = { HttpHeaders.AUTHORIZATION },
-            beanClass = MemberHandler.class,
-            method = RequestMethod.POST,
-            beanMethod = "memberRegistration",
-            operation = @Operation(
-                description = "강사 등록 API",
-                operationId = "teacherRegistration",
-                requestBody = @RequestBody(
-                    content = @Content(
-                        schema = @Schema(
-                            implementation = MemberRegistrationRequest.class,
-                            required = true
-                        )
-                    )
-                ),
-                responses = {
-                    @ApiResponse(
-                        responseCode = "201",
-                        content = @Content(
-                            schema = @Schema(
-                                implementation = MemberRegistrationResponse.class,
-                                required = true
-                            )
-                        )
-                    )
-                }
-            )
-        ),
-        @RouterOperation(
-            path = "/member/studentRegistration",
-            consumes = { MediaType.APPLICATION_JSON_VALUE },
-            produces = { MediaType.APPLICATION_JSON_VALUE },
-            beanClass = MemberHandler.class,
-            method = RequestMethod.POST,
-            beanMethod = "memberRegistration",
-            operation = @Operation(
-                description = "학생 회원 가입 API",
-                operationId = "studentRegistration",
-                requestBody = @RequestBody(
-                    content = @Content(
-                        schema = @Schema(
-                            implementation = MemberRegistrationRequest.class,
-                            required = true
-                        )
-                    )
-                ),
-                responses = {
-                    @ApiResponse(
-                        responseCode = "201",
-                        content = @Content(
-                            schema = @Schema(
-                                implementation = MemberRegistrationResponse.class,
-                                required = true
-                            )
-                        )
-                    )
-                }
-            )
-        )
-    })
-    @Bean
-    public RouterFunction<ServerResponse> memberRouterBuilder(MemberHandler memberHandler) {
-
-        return RouterFunctions.route()
-            .path("/member", memberBuilder ->
-                memberBuilder.nest(accept(MediaType.APPLICATION_JSON), builder ->
-                    builder
-                        .POST("/admin/teacherRegistration", memberHandler::memberRegistration) // 강사 등록 (관리자만)
-                        .POST("/studentRegistration", memberHandler::memberRegistration) // 학생 회원 가입
-                )
-            )
-            .build();
-    }
-
-    @RouterOperations({
-        @RouterOperation(
-            path = "/member/findMemberInfo/${memberId}",
-            produces = { MediaType.APPLICATION_JSON_VALUE },
-            headers = { HttpHeaders.AUTHORIZATION },
-            beanClass = MemberHandler.class,
+            beanClass = CardHandler.class,
             method = RequestMethod.GET,
-            beanMethod = "findMemberInfo",
+            beanMethod = "cardPopularList",
             operation = @Operation(
-                description = "회원 정보 조회 API",
-                operationId = "findMemberInfo",
+                description = "인기 카드 목록 조회 API",
+                operationId = "cardPopularList",
                 responses = {
                     @ApiResponse(
                         responseCode = "200",
                         content = @Content(
                             schema = @Schema(
-                                implementation = MemberInfoResponse.class,
+                                implementation = CardPopularListResponse.class,
                                 required = true
                             )
                         )
@@ -142,11 +60,16 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
         )
     })
     @Bean
-    public RouterFunction<ServerResponse> memberRouterGETBuilder(MemberHandler memberHandler) {
+    public RouterFunction<ServerResponse> cardRouterBuilder(CardHandler cardHandler) {
+
         return RouterFunctions.route()
-            .path("/member", builder -> builder
-                .GET("/findMemberInfo/{memberId}", memberHandler::findMemberInfo)
-            ).build();
+            .path("/card", cardBuilder ->
+                cardBuilder.nest(accept(MediaType.APPLICATION_JSON), builder ->
+                    builder
+                        .GET("/popular-list", cardHandler::cardPopularList) // 인기 카드 목록 조회
+                )
+            )
+            .build();
     }
 
 }

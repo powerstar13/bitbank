@@ -1,5 +1,6 @@
 package click.bitbank.api.infrastructure.config;
 
+import click.bitbank.api.infrastructure.r2dbc.ConnectionMode;
 import click.bitbank.api.infrastructure.r2dbc.MultiTenantRoutingConnectionFactory;
 import io.r2dbc.spi.ConnectionFactories;
 import io.r2dbc.spi.ConnectionFactory;
