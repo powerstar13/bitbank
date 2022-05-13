@@ -1,9 +1,13 @@
 package click.bitbank.api.application.member;
 
-import click.bitbank.api.application.member.response.MemberLoginResponse;
-import click.bitbank.api.application.member.response.MemberSignupResponse;
+import click.bitbank.api.application.response.AlimCountResponse;
+import click.bitbank.api.application.response.MemberLoginResponse;
+import click.bitbank.api.application.response.MemberSignupResponse;
+import click.bitbank.api.domain.model.alim.AlimCheck;
+import click.bitbank.api.domain.model.member.MemberFindSpecification;
 import click.bitbank.api.domain.model.member.MemberLoginSpecification;
 import click.bitbank.api.domain.model.member.MemberSaveSpecification;
+import click.bitbank.api.domain.repository.AlimRepository;
 import click.bitbank.api.infrastructure.exception.status.BadRequestException;
 import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
 import click.bitbank.api.presentation.member.request.MemberLoginRequest;
@@ -22,6 +26,8 @@ public class MemberApplicationServiceImpl implements MemberApplicationService {
 
     private final MemberSaveSpecification memberSaveSpecification;
     private final MemberLoginSpecification memberLoginSpecification;
+    private final MemberFindSpecification memberFindSpecification;
+    private final AlimRepository alimRepository;
 
     /**
      * 회원 계정 생성
@@ -56,6 +62,20 @@ public class MemberApplicationServiceImpl implements MemberApplicationService {
                     return memberLoginSpecification.memberExistCheckAndLogin(request);
                 }
         ).switchIfEmpty(Mono.error(new BadRequestException(ExceptionMessage.IsRequiredRequest.getMessage())));
+    }
+    
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    public Mono<AlimCountResponse> findAlimCount(ServerRequest serverRequest) {
+        // 회원 고유번호 추출
+        int memberId = Integer.parseInt(serverRequest.queryParam("memberId")
+            .orElseThrow(() -> new BadRequestException(ExceptionMessage.IsRequiredMemberId.getMessage())));
+    
+        return memberFindSpecification.membmerVerify(memberId) // 회원 정보 검증
+            .flatMap(member ->
+                alimRepository.countByMemberIdAndAlimCheck(member.getMemberId(), AlimCheck.N) // 읽지 않은 알림 갯수 조회
+                    .flatMap(aLong -> Mono.just(new AlimCountResponse(aLong)))
+            );
     }
 
 }

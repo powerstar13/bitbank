@@ -1,8 +1,9 @@
 package click.bitbank.api.presentation.member;
 
 import click.bitbank.api.application.member.MemberApplicationService;
-import click.bitbank.api.application.member.response.MemberLoginResponse;
-import click.bitbank.api.application.member.response.MemberSignupResponse;
+import click.bitbank.api.application.response.AlimCountResponse;
+import click.bitbank.api.application.response.MemberLoginResponse;
+import click.bitbank.api.application.response.MemberSignupResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -47,6 +48,21 @@ public class MemberHandler {
         return ok()
             .contentType(MediaType.APPLICATION_JSON)
             .body(response, MemberLoginResponse.class);
+    }
+    
+    /**
+     * 읽지 않은 알림 갯수 조회
+     * @param request : 회원 정보
+     * @return Mono<ServerResponse> : 읽지 않은 알림 갯수
+     */
+    public Mono<ServerResponse> alimCount(ServerRequest request) {
+        
+        Mono<AlimCountResponse> response = memberApplicationService.findAlimCount(request)
+            .subscribeOn(Schedulers.boundedElastic());
+        
+        return  ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response, AlimCountResponse.class);
     }
 
 }

@@ -1,4 +1,4 @@
-package click.bitbank.api.application.member.response;
+package click.bitbank.api.application.response;
 
 import click.bitbank.api.domain.model.member.MemberType;
 import lombok.*;

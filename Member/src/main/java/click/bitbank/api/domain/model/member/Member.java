@@ -1,14 +1,12 @@
 package click.bitbank.api.domain.model.member;
 
 import lombok.*;
-import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter

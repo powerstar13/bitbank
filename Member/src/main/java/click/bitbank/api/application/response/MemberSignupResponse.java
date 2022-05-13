@@ -1,4 +1,4 @@
-package click.bitbank.api.application.member.response;
+package click.bitbank.api.application.response;
 
 import lombok.*;
 import click.bitbank.api.presentation.shared.response.CreatedSuccessResponse;
