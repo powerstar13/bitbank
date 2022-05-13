@@ -1,6 +1,5 @@
 package click.bitbank.api.presentation.member;
 
-import click.bitbank.api.application.response.MemberInfoResponse;
 import click.bitbank.api.application.response.MemberRegistrationResponse;
 import click.bitbank.api.infrastructure.config.WebFluxRouterConfig;
 import click.bitbank.api.presentation.member.request.MemberRegistrationRequest;

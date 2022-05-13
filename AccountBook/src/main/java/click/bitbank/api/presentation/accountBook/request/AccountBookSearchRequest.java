@@ -4,6 +4,9 @@ import click.bitbank.api.domain.accountBook.ExpenditureType;
 import click.bitbank.api.domain.accountBook.IncomeType;
 import click.bitbank.api.domain.accountBook.SearchDateType;
 import click.bitbank.api.domain.accountBook.TransferType;
+import click.bitbank.api.infrastructure.exception.status.BadRequestException;
+import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
+import click.bitbank.api.presentation.shared.request.RequestVerify;
 import lombok.*;
 
 @Getter
@@ -11,9 +14,9 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountBookSearchRequest {
+public class AccountBookSearchRequest implements RequestVerify {
 
-    int memberId;
+    Integer memberId;
 
     String searchKeyword;   // 검색어
 
@@ -29,4 +32,8 @@ public class AccountBookSearchRequest {
 
     TransferType transferType;  // 이체 유형
 
+    @Override
+    public void verify() {
+        if (memberId == null) throw new BadRequestException(ExceptionMessage.IsRequiredMemberId.getMessage());
+    }
 }

@@ -1,10 +1,8 @@
 package click.bitbank.api.infrastructure.config;
 
-import click.bitbank.api.application.response.MemberInfoResponse;
 import click.bitbank.api.application.response.MemberRegistrationResponse;
+import click.bitbank.api.domain.accountBook.model.Member;
 import click.bitbank.api.presentation.accountBook.AccountBookHandler;
-import click.bitbank.api.presentation.member.MemberHandler;
-import click.bitbank.api.presentation.member.request.MemberRegistrationRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -38,7 +36,8 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
             .maxAge(3600);
     }
 
-    @RouterOperations({
+  /*  @RouterOperations({
+>>>>>>> Stashed changes
         @RouterOperation(
             path = "/member/admin/teacherRegistration",
             consumes = { MediaType.APPLICATION_JSON_VALUE },
@@ -115,7 +114,7 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
                 )
             )
             .build();
-    }
+    }*/
 
     @RouterOperations({
         @RouterOperation(
@@ -127,12 +126,13 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
             beanMethod = "accountBookSearch",
             operation = @Operation(
                 description = "가계부 목록 검색 API",
+                operationId = "accountBookSearch",
                 responses = {
                     @ApiResponse(
                         responseCode = "200",
                         content = @Content(
                             schema = @Schema(
-                                implementation = MemberInfoResponse.class,
+                                implementation = Member.class,
                                 required = true
                             )
                         )
