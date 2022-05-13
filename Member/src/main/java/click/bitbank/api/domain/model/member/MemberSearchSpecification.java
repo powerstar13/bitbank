@@ -4,7 +4,7 @@ import click.bitbank.api.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-import click.bitbank.api.application.response.MemberInfoResponse;
+import click.bitbank.api.application.member.response.MemberInfoResponse;
 
 @Component
 @RequiredArgsConstructor

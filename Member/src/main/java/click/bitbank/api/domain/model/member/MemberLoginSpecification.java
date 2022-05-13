@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-import click.bitbank.api.application.response.MemberLoginResponse;
+import click.bitbank.api.application.member.response.MemberLoginResponse;
 import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
 import click.bitbank.api.presentation.member.request.MemberLoginRequest;
 import click.bitbank.api.infrastructure.util.MemberSha256;

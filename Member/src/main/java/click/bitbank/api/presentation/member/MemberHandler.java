@@ -1,8 +1,8 @@
 package click.bitbank.api.presentation.member;
 
 import click.bitbank.api.application.member.MemberApplicationService;
-import click.bitbank.api.application.response.MemberLoginResponse;
-import click.bitbank.api.application.response.MemberSignupResponse;
+import click.bitbank.api.application.member.response.MemberLoginResponse;
+import click.bitbank.api.application.member.response.MemberSignupResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;

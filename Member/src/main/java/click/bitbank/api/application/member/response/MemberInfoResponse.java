@@ -1,4 +1,4 @@
-package click.bitbank.api.application.response;
+package click.bitbank.api.application.member.response;
 
 import click.bitbank.api.domain.model.member.MemberType;
 import click.bitbank.api.presentation.shared.response.SuccessResponse;

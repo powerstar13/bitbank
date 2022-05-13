@@ -1,6 +1,6 @@
 package click.bitbank.api.domain.model.member;
 
-import click.bitbank.api.application.response.MemberSignupResponse;
+import click.bitbank.api.application.member.response.MemberSignupResponse;
 import click.bitbank.api.domain.dao.factory.MemberFactory;
 import click.bitbank.api.domain.repository.MemberRepository;
 import click.bitbank.api.infrastructure.exception.status.AlreadyDataException;

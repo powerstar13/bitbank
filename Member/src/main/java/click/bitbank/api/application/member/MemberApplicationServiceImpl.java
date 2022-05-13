@@ -1,10 +1,9 @@
 package click.bitbank.api.application.member;
 
-import click.bitbank.api.application.response.MemberLoginResponse;
-import click.bitbank.api.application.response.MemberSignupResponse;
+import click.bitbank.api.application.member.response.MemberLoginResponse;
+import click.bitbank.api.application.member.response.MemberSignupResponse;
 import click.bitbank.api.domain.model.member.MemberLoginSpecification;
 import click.bitbank.api.domain.model.member.MemberSaveSpecification;
-import click.bitbank.api.domain.model.member.MemberSearchSpecification;
 import click.bitbank.api.infrastructure.exception.status.BadRequestException;
 import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
 import click.bitbank.api.presentation.member.request.MemberLoginRequest;
@@ -22,8 +21,6 @@ import reactor.core.publisher.Mono;
 public class MemberApplicationServiceImpl implements MemberApplicationService {
 
     private final MemberSaveSpecification memberSaveSpecification;
-    private final MemberSearchSpecification memberSearchSpecification;
-
     private final MemberLoginSpecification memberLoginSpecification;
 
     /**
