@@ -1,4 +1,4 @@
-package click.bitbank.api.infrastructure.config;
+package click.bitbank.api.infrastructure.r2dbc;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

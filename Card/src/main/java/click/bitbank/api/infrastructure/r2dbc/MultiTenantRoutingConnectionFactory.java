@@ -1,6 +1,5 @@
 package click.bitbank.api.infrastructure.r2dbc;
 
-import click.bitbank.api.infrastructure.config.ConnectionMode;
 import org.springframework.r2dbc.connection.lookup.AbstractRoutingConnectionFactory;
 import org.springframework.transaction.reactive.TransactionSynchronizationManager;
 import reactor.core.publisher.Mono;

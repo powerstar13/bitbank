@@ -9,20 +9,20 @@ import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
     info = @Info(
-        title = "가계부 Domain Server",
+        title = "금융 매칭 Domain Server",
         version = "v1.0.0",
-        description = "가계부 서비스 API 문서"
+        description = "금융 매칭 서비스 API 문서"
     )
 )
 @Configuration
 public class SwaggerConfig {
 
     @Bean
-    public GroupedOpenApi memberApi() {
+    public GroupedOpenApi cardApi() {
 
         return GroupedOpenApi.builder()
-            .group("member")
-            .pathsToMatch("/member/**")
+            .group("card")
+            .pathsToMatch("/card/**")
             .build();
     }
 }
