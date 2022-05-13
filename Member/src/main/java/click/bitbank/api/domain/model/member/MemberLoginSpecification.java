@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 import click.bitbank.api.application.response.MemberLoginResponse;
 import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
 import click.bitbank.api.presentation.member.request.MemberLoginRequest;
-import click.bitbank.api.application.member.MemberSha256;
+import click.bitbank.api.infrastructure.util.MemberSha256;
 import click.bitbank.api.infrastructure.jwt.JwtProvider;
 
 @Component
