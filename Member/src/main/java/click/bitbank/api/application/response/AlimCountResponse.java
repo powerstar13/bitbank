@@ -1,6 +1,5 @@
 package click.bitbank.api.application.response;
 
-import click.bitbank.api.domain.model.member.MemberType;
 import click.bitbank.api.presentation.shared.response.SuccessResponse;
 import lombok.*;
 
@@ -9,9 +8,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberInfoResponse extends SuccessResponse {
-
-    private int memberId; // 회원 고유번호
-
-    private MemberType memberType;
+public class AlimCountResponse extends SuccessResponse {
+    
+    private long alimCount; // 읽지 않은 알림 갯수
 }

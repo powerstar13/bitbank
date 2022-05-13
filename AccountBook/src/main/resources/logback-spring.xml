@@ -1,0 +1,62 @@
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <springProperty name="profileActive" source="spring.profiles.active" defaultValue="test"/>
+    <springProperty name="logPath" source="logging.file.path" defaultValue="/var/log/tomcat/test"/>
+    <springProperty name="logLevel" source="logging.level.root" defaultValue="INFO"/>
+
+    <!-- Optional: to enable JMX setting of log levels
+         cf http://logback.qos.ch/manual/jmxConfig.html -->
+    <jmxConfigurator/>
+
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){green} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}" />
+    <property name="CONSOLE_LOG_CHARSET" value="${CONSOLE_LOG_CHARSET:-default}" />
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>${CONSOLE_LOG_CHARSET}</charset>
+        </encoder>
+    </appender>
+
+    <appender name="SPRING-R2DBC" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>${CONSOLE_LOG_CHARSET}</charset>
+        </encoder>
+    </appender>
+
+    <appender name="R2DBC-MYSQL" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>${CONSOLE_LOG_CHARSET}</charset>
+        </encoder>
+    </appender>
+
+    <logger name="org.apache.catalina.startup.DigesterFactory" level="ERROR" />
+    <logger name="org.apache.catalina.util.LifecycleBase" level="ERROR" />
+    <logger name="org.apache.coyote.http11.Http11NioProtocol" level="WARN" />
+    <logger name="org.apache.sshd.common.util.SecurityUtils" level="WARN" />
+    <logger name="org.apache.tomcat.util.net.NioSelectorPool" level="WARN" />
+    <logger name="org.eclipse.jetty.util.component.AbstractLifeCycle" level="ERROR" />
+    <logger name="org.hibernate.validator.internal.util.Version" level="WARN" />
+    <logger name="org.springframework.boot.actuate.endpoint.jmx" level="WARN" />
+
+    <root level="${logLevel}">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+    <!-- NOTE: logback does not support FATAL, only ERROR, WARN, INFO, DEBUG and TRACE -->
+    <logger name="org.springframework.boot:spring-boot-starter-data-r2dbc" level="INFO">
+        <appender-ref ref="SPRING-R2DBC" />
+    </logger>
+
+    <!-- NOTE: logback does not support FATAL, only ERROR, WARN, INFO, DEBUG and TRACE -->
+    <logger name="dev.miku.r2dbc.mysql.message.client.TextQueryMessage" level="INFO" additivity="false">
+        <appender-ref ref="R2DBC-MYSQL" />
+    </logger>
+
+</configuration>

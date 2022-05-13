@@ -1,5 +1,6 @@
 package click.bitbank.api.presentation.member;
 
+import click.bitbank.api.application.response.AlimCountResponse;
 import click.bitbank.api.application.response.MemberLoginResponse;
 import click.bitbank.api.application.response.MemberSignupResponse;
 import click.bitbank.api.infrastructure.config.WebFluxRouterConfig;
@@ -12,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.util.MultiValueMap;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootTest
 class MemberHandlerTest {
@@ -76,5 +81,23 @@ class MemberHandlerTest {
             .exchange()
             .expectStatus().isOk()
             .expectBody(MemberLoginResponse.class);
+    }
+    
+    /**
+     * 로그인
+     */
+    @Test
+    void alimCount() {
+        
+        webTestClientMethod
+            .get()
+            .uri(uriBuilder ->
+                uriBuilder.path("/member/alim-count")
+                    .queryParam("memberId", "2")
+                    .build()
+            )
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody(AlimCountResponse.class);
     }
 }
