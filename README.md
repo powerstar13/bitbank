@@ -1,9 +1,10 @@
 # 💵 bitbank
 
 `건강한 생활 습관 · 소비 습관을 만들어 주는 가계부`
+
 Bitbank services will give you experience in creating healthy lifestyles and consumption habits.
 
-[Welcome to bitbank](https://github.com/bitbank/bitbank)
+[Welcome to bitbank](https://bithumb.bitbank.click)
 
 ---
 
