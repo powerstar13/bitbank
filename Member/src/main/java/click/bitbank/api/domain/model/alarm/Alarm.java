@@ -1,14 +1,10 @@
-package click.bitbank.api.domain.model.alim;
+package click.bitbank.api.domain.model.alarm;
 
-import click.bitbank.api.domain.model.member.Member;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Embedded;
-import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
@@ -18,18 +14,18 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "alim")
-public class Alim {
+@Table(value = "alarm")
+public class Alarm {
 
     @Id // ID로 엔티티를 식별한다.
-    @Column(value = "alimId")
-    private int alimId; // 회원 고유번호
+    @Column(value = "alarmId")
+    private int alarmId; // 회원 고유번호
     
-    @Column(value = "alimMessage")
-    private String alimMessage; // 알림 메시지
+    @Column(value = "alarmMessage")
+    private String alarmMessage; // 알림 메시지
     
-    @Column(value = "alimCheck")
-    private AlimCheck alimCheck; // 알림 읽음 여부
+    @Column(value = "alarmCheck")
+    private boolean alarmCheck; // 알림 읽음 여부
 
     @Column(value = "regDate")
     @CreatedDate
@@ -41,4 +37,11 @@ public class Alim {
     
     @Column(value = "memberId")
     private int memberId; // 회원 고유번호
+
+    /**
+     * 알림 읽음 처리
+     */
+    public void readAlarmCheck() {
+        this.alarmCheck = true;
+    }
 }
