@@ -7,6 +7,7 @@ import click.bitbank.api.application.response.MemberLoginResponse;
 import click.bitbank.api.application.response.MemberSignupResponse;
 import click.bitbank.api.domain.model.member.MemberType;
 import click.bitbank.api.infrastructure.exception.GlobalExceptionHandler;
+import click.bitbank.api.presentation.shared.response.SuccessResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -16,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.ServerRequest;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static click.bitbank.api.infrastructure.factory.MemberTestFactory.*;
@@ -57,12 +59,10 @@ class MemberHandlerTest {
         verify(memberApplicationService).signup(any(ServerRequest.class));
 
         StepVerifier.create(result.getResponseBody().log())
-            .assertNext(response -> {
-                assertAll(() -> {
-                    assertEquals(HttpStatus.CREATED.value(), response.getRt());
-                    assertInstanceOf(Integer.class, response.getMemberId());
-                });
-            })
+            .assertNext(response -> assertAll(() -> {
+                assertEquals(HttpStatus.CREATED.value(), response.getRt());
+                assertInstanceOf(Integer.class, response.getMemberId());
+            }))
             .verifyComplete();
     }
 
@@ -88,14 +88,38 @@ class MemberHandlerTest {
         verify(memberApplicationService).login(any(ServerRequest.class));
 
         StepVerifier.create(result.getResponseBody().log())
-            .assertNext(response -> {
-                assertAll(() -> {
-                    assertEquals(HttpStatus.OK.value(), response.getRt());
-                    assertEquals(1, response.getMemberId());
-                    assertEquals("강보경", response.getMemberName());
-                    assertEquals(MemberType.N, response.getMemberType());
-                });
-            })
+            .assertNext(response -> assertAll(() -> {
+                assertEquals(HttpStatus.OK.value(), response.getRt());
+                assertEquals(1, response.getMemberId());
+                assertEquals("강보경", response.getMemberName());
+                assertEquals(MemberType.N, response.getMemberType());
+            }))
+            .verifyComplete();
+    }
+
+    /**
+     * 로그아웃
+     */
+    @Test
+    void logout() {
+        // given
+        given(memberApplicationService.logout(any(ServerRequest.class))).willReturn(Mono.just(new SuccessResponse()));
+
+        // when
+        FluxExchangeResult<SuccessResponse> result = webClient
+            .post()
+            .uri("/member/logout")
+            .bodyValue(memberLogoutRequest())
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus().isOk()
+            .returnResult(SuccessResponse.class);
+
+        // then
+        verify(memberApplicationService).logout(any(ServerRequest.class));
+
+        StepVerifier.create(result.getResponseBody().log())
+            .assertNext(response -> assertEquals(HttpStatus.OK.value(), response.getRt()))
             .verifyComplete();
     }
 

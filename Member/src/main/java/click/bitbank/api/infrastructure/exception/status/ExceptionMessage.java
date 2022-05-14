@@ -2,10 +2,8 @@ package click.bitbank.api.infrastructure.exception.status;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public enum ExceptionMessage {
 
@@ -24,6 +22,6 @@ public enum ExceptionMessage {
     
     NotFoundMember("NotFoundDataException", "조회된 회원 정보가 없습니다.");
 
-    private String type;
-    private String message;
+    private final String type;
+    private final String message;
 }

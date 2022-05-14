@@ -11,7 +11,9 @@ import click.bitbank.api.domain.model.member.MemberSaveSpecification;
 import click.bitbank.api.infrastructure.exception.status.BadRequestException;
 import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
 import click.bitbank.api.presentation.member.request.MemberLoginRequest;
+import click.bitbank.api.presentation.member.request.MemberLogoutRequest;
 import click.bitbank.api.presentation.member.request.MemberSignupRequest;
+import click.bitbank.api.presentation.shared.response.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -65,6 +67,24 @@ public class MemberApplicationServiceImpl implements MemberApplicationService {
     }
 
     /**
+     * 로그아웃
+     * @param serverRequest : MemberLogoutRequest
+     * @return Mono<SuccessResponse> : 성공 여부
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Mono<SuccessResponse> logout(ServerRequest serverRequest) {
+
+        return serverRequest.bodyToMono(MemberLogoutRequest.class)
+            .flatMap(request -> {
+                request.verify(); // Request 유효성 검사
+
+                return memberLoginSpecification.memberExistCheckAndLogout(request.getMemberId());
+            }
+        ).switchIfEmpty(Mono.error(new BadRequestException(ExceptionMessage.IsRequiredRequest.getMessage())));
+    }
+
+    /**
      * 회원 고유번호 추출
      * @param serverRequest : Params
      * @return int : 회원 고유번호
@@ -77,7 +97,7 @@ public class MemberApplicationServiceImpl implements MemberApplicationService {
 
     /**
      * 읽지 않은 알림 갯수 조회
-     * @param serverRequest : 전달된 Request
+     * @param serverRequest : Params
      * @return Mono<AlarmCountResponse> : 읽지 않은 알림 갯수
      */
     @Override
@@ -94,7 +114,7 @@ public class MemberApplicationServiceImpl implements MemberApplicationService {
 
     /**
      * 읽지 않은 알림 목록 조회
-     * @param serverRequest : 전달된 Request
+     * @param serverRequest : Params
      * @return Mono<AlarmListResponse> : 읽지 않은 알림 목록
      */
     @Override
