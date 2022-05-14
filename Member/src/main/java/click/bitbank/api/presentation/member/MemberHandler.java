@@ -5,6 +5,7 @@ import click.bitbank.api.application.response.AlarmCountResponse;
 import click.bitbank.api.application.response.AlarmListResponse;
 import click.bitbank.api.application.response.MemberLoginResponse;
 import click.bitbank.api.application.response.MemberSignupResponse;
+import click.bitbank.api.presentation.shared.response.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -50,6 +51,21 @@ public class MemberHandler {
             .contentType(MediaType.APPLICATION_JSON)
             .body(response, MemberLoginResponse.class);
     }
+
+    /**
+     * 로그아웃
+     * @param request : 회원 정보
+     * @return Mono<ServerResponse> : 성공 여부
+     */
+    public Mono<ServerResponse> logout(ServerRequest request) {
+
+        Mono<SuccessResponse> response = memberApplicationService.logout(request)
+            .subscribeOn(Schedulers.boundedElastic());
+
+        return ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response, SuccessResponse.class);
+    }
     
     /**
      * 읽지 않은 알림 갯수 조회
@@ -61,7 +77,7 @@ public class MemberHandler {
         Mono<AlarmCountResponse> response = memberApplicationService.findAlarmCount(request)
             .subscribeOn(Schedulers.boundedElastic());
         
-        return  ok()
+        return ok()
             .contentType(MediaType.APPLICATION_JSON)
             .body(response, AlarmCountResponse.class);
     }
@@ -76,7 +92,7 @@ public class MemberHandler {
         Mono<AlarmListResponse> response = memberApplicationService.findAlarmList(request)
             .subscribeOn(Schedulers.boundedElastic());
 
-        return  ok()
+        return ok()
             .contentType(MediaType.APPLICATION_JSON)
             .body(response, AlarmListResponse.class);
     }

@@ -6,7 +6,9 @@ import click.bitbank.api.application.response.MemberLoginResponse;
 import click.bitbank.api.application.response.MemberSignupResponse;
 import click.bitbank.api.presentation.member.MemberHandler;
 import click.bitbank.api.presentation.member.request.MemberLoginRequest;
+import click.bitbank.api.presentation.member.request.MemberLogoutRequest;
 import click.bitbank.api.presentation.member.request.MemberSignupRequest;
+import click.bitbank.api.presentation.shared.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -170,6 +172,37 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
                     )
                 }
             )
+        ),
+        @RouterOperation(
+            path = "/member/logout",
+            consumes = { MediaType.APPLICATION_JSON_VALUE },
+            produces = { MediaType.APPLICATION_JSON_VALUE },
+            beanClass = MemberHandler.class,
+            method = RequestMethod.POST,
+            beanMethod = "logout",
+            operation = @Operation(
+                description = "로그아웃 API",
+                operationId = "logout",
+                requestBody = @RequestBody(
+                    content = @Content(
+                        schema = @Schema(
+                            implementation = MemberLogoutRequest.class,
+                            required = true
+                        )
+                    )
+                ),
+                responses = {
+                    @ApiResponse(
+                        responseCode = "200",
+                        content = @Content(
+                            schema = @Schema(
+                                implementation = SuccessResponse.class,
+                                required = true
+                            )
+                        )
+                    )
+                }
+            )
         )
     })
     @Bean
@@ -187,6 +220,12 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
                 memberBuilder
                     .GET("/alarm-count", memberHandler::alarmCount) // 읽지 않은 알림 갯수 조회
                     .GET("/alarm-list", memberHandler::alarmList) // 읽지 않은 알림 목록 조회
+            )
+            .path("/member", memberBuilder ->
+                memberBuilder.nest(accept(MediaType.APPLICATION_JSON), builder ->
+                    builder
+                        .POST("/logout", memberHandler::logout) // 로그아웃
+                )
             )
             .build();
     }

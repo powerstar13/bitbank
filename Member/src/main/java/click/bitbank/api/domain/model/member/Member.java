@@ -53,4 +53,8 @@ public class Member {
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
+
+    public void logout() {
+        this.refreshToken = null;
+    }
 }
