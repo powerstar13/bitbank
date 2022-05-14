@@ -1,65 +1,69 @@
 package click.bitbank.api.presentation.member;
 
-import click.bitbank.api.application.response.AlimCountResponse;
+import click.bitbank.api.application.member.MemberApplicationService;
+import click.bitbank.api.application.response.AlarmCountResponse;
+import click.bitbank.api.application.response.AlarmListResponse;
 import click.bitbank.api.application.response.MemberLoginResponse;
 import click.bitbank.api.application.response.MemberSignupResponse;
-import click.bitbank.api.infrastructure.config.WebFluxRouterConfig;
-import click.bitbank.api.presentation.member.request.MemberLoginRequest;
-import click.bitbank.api.presentation.member.request.MemberSignupRequest;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import click.bitbank.api.domain.model.member.MemberType;
+import click.bitbank.api.infrastructure.exception.GlobalExceptionHandler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.server.ServerRequest;
+import reactor.test.StepVerifier;
 
-import java.util.HashMap;
-import java.util.Map;
+import static click.bitbank.api.infrastructure.factory.MemberTestFactory.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
-@SpringBootTest
+@WebFluxTest(MemberHandler.class)
 class MemberHandlerTest {
 
-    private WebTestClient webTestClientMethod;
-
     @Autowired
-    private WebFluxRouterConfig webFluxRouterConfig;
-    @Autowired
-    private MemberHandler memberHandler;
+    private WebTestClient webClient;
 
-    @BeforeEach
-    void setUp() {
-        webTestClientMethod = WebTestClient
-            .bindToRouterFunction( // WebFluxConfig에서 작성한 router를 WebTestClient에 바인딩해준다.
-                webFluxRouterConfig.memberRouterBuilder(memberHandler)
-            )
-            .build();
-    }
+    @MockBean
+    private GlobalExceptionHandler globalExceptionHandler;
+    @MockBean
+    private MemberApplicationService memberApplicationService;
 
     /**
      * 일반 회원 등록
      */
     @Test
     void signup() {
+        // given
+        given(memberApplicationService.signup(any(ServerRequest.class))).willReturn(memberSignupResponse());
 
-        MemberSignupRequest request = MemberSignupRequest.builder()
-            .memberLoginId("gildong123")
-            .memberName("홍길동")
-            .memberPassword("1234")
-            .build();
-
-        webTestClientMethod
+        // when
+        FluxExchangeResult<MemberSignupResponse> result = webClient
             .post()
             .uri("/auth/signup")
-            .bodyValue(request)
+            .bodyValue(memberSignupRequest())
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
             .expectStatus().isOk()
-            .expectBody(MemberSignupResponse.class)
-            .value(memberSignupResponse -> {
-                Assertions.assertInstanceOf(Integer.class, memberSignupResponse.getMemberId());
-            });
+            .returnResult(MemberSignupResponse.class);
+
+        // then
+        verify(memberApplicationService).signup(any(ServerRequest.class));
+
+        StepVerifier.create(result.getResponseBody().log())
+            .assertNext(response -> {
+                assertAll(() -> {
+                    assertEquals(HttpStatus.CREATED.value(), response.getRt());
+                    assertInstanceOf(Integer.class, response.getMemberId());
+                });
+            })
+            .verifyComplete();
     }
 
     /**
@@ -67,37 +71,93 @@ class MemberHandlerTest {
      */
     @Test
     void login() {
+        // given
+        given(memberApplicationService.login(any(ServerRequest.class))).willReturn(memberLoginResponse());
 
-        MemberLoginRequest request = MemberLoginRequest.builder()
-            .memberLoginId("boookk")
-            .memberPassword("boookk")
-            .build();
-
-        webTestClientMethod
+        // when
+        FluxExchangeResult<MemberLoginResponse> result = webClient
             .post()
             .uri("/auth/login")
-            .bodyValue(request)
+            .bodyValue(memberLoginRequest())
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
             .expectStatus().isOk()
-            .expectBody(MemberLoginResponse.class);
+            .returnResult(MemberLoginResponse.class);
+
+        // then
+        verify(memberApplicationService).login(any(ServerRequest.class));
+
+        StepVerifier.create(result.getResponseBody().log())
+            .assertNext(response -> {
+                assertAll(() -> {
+                    assertEquals(HttpStatus.OK.value(), response.getRt());
+                    assertEquals(1, response.getMemberId());
+                    assertEquals("강보경", response.getMemberName());
+                    assertEquals(MemberType.N, response.getMemberType());
+                });
+            })
+            .verifyComplete();
     }
-    
+
     /**
-     * 로그인
+     * 읽지 않은 알림 갯수 조회
      */
     @Test
-    void alimCount() {
-        
-        webTestClientMethod
+    void alarmCount() {
+        // given
+        given(memberApplicationService.findAlarmCount(any(ServerRequest.class))).willReturn(alarmCountResponse());
+
+        // when
+        FluxExchangeResult<AlarmCountResponse> result = webClient
             .get()
             .uri(uriBuilder ->
-                uriBuilder.path("/member/alim-count")
+                uriBuilder.path("/member/alarm-count")
                     .queryParam("memberId", "2")
                     .build()
             )
             .exchange()
             .expectStatus().isOk()
-            .expectBody(AlimCountResponse.class);
+            .returnResult(AlarmCountResponse.class);
+
+        // then
+        verify(memberApplicationService).findAlarmCount(any(ServerRequest.class));
+
+        StepVerifier.create(result.getResponseBody().log())
+            .assertNext(response -> assertAll(() -> {
+                assertEquals(HttpStatus.OK.value(), response.getRt());
+                assertEquals(1, response.getAlarmCount());
+            }))
+            .verifyComplete();
+    }
+
+    /**
+     * 읽지 않은 알림 목록 조회
+     */
+    @Test
+    void alarmList() {
+        // given
+        given(memberApplicationService.findAlarmList(any(ServerRequest.class))).willReturn(alarmListResponse());
+
+        // when
+        FluxExchangeResult<AlarmListResponse> result = webClient
+            .get()
+            .uri(uriBuilder ->
+                uriBuilder.path("/member/alarm-list")
+                    .queryParam("memberId", "2")
+                    .build()
+            )
+            .exchange()
+            .expectStatus().isOk()
+            .returnResult(AlarmListResponse.class);
+
+        // then
+        verify(memberApplicationService).findAlarmList(any(ServerRequest.class));
+
+        StepVerifier.create(result.getResponseBody().log())
+            .assertNext(response -> assertAll(() -> {
+                assertEquals(HttpStatus.OK.value(), response.getRt());
+                assertArrayEquals(alarmMessageList().toArray(), response.getAlarmMessageList().toArray());
+            }))
+            .verifyComplete();
     }
 }

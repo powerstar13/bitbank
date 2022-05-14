@@ -34,9 +34,8 @@ public class CardResponseFactory {
                     )
                     .collect(Collectors.toList());
             
-                return CardPopularListResponse.builder()
-                    .cardDTOList(cardDTOList)
-                    .build();
+                return new CardPopularListResponse(cardDTOList);
+
             }).switchIfEmpty(Mono.just(new CardPopularListResponse()));
     }
 }

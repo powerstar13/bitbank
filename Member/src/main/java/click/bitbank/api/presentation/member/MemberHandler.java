@@ -1,7 +1,8 @@
 package click.bitbank.api.presentation.member;
 
 import click.bitbank.api.application.member.MemberApplicationService;
-import click.bitbank.api.application.response.AlimCountResponse;
+import click.bitbank.api.application.response.AlarmCountResponse;
+import click.bitbank.api.application.response.AlarmListResponse;
 import click.bitbank.api.application.response.MemberLoginResponse;
 import click.bitbank.api.application.response.MemberSignupResponse;
 import lombok.RequiredArgsConstructor;
@@ -55,14 +56,29 @@ public class MemberHandler {
      * @param request : 회원 정보
      * @return Mono<ServerResponse> : 읽지 않은 알림 갯수
      */
-    public Mono<ServerResponse> alimCount(ServerRequest request) {
+    public Mono<ServerResponse> alarmCount(ServerRequest request) {
         
-        Mono<AlimCountResponse> response = memberApplicationService.findAlimCount(request)
+        Mono<AlarmCountResponse> response = memberApplicationService.findAlarmCount(request)
             .subscribeOn(Schedulers.boundedElastic());
         
         return  ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(response, AlimCountResponse.class);
+            .body(response, AlarmCountResponse.class);
+    }
+
+    /**
+     * 읽지 않은 알림 목록 조회
+     * @param request : 회원 정보
+     * @return Mono<ServerResponse> : 읽지 않은 알림 목록
+     */
+    public Mono<ServerResponse> alarmList(ServerRequest request) {
+
+        Mono<AlarmListResponse> response = memberApplicationService.findAlarmList(request)
+            .subscribeOn(Schedulers.boundedElastic());
+
+        return  ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response, AlarmListResponse.class);
     }
 
 }

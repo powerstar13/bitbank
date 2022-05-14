@@ -1,11 +1,15 @@
 package click.bitbank.api.infrastructure.config;
 
+import click.bitbank.api.application.response.AlarmCountResponse;
+import click.bitbank.api.application.response.AlarmListResponse;
 import click.bitbank.api.application.response.MemberLoginResponse;
 import click.bitbank.api.application.response.MemberSignupResponse;
 import click.bitbank.api.presentation.member.MemberHandler;
 import click.bitbank.api.presentation.member.request.MemberLoginRequest;
 import click.bitbank.api.presentation.member.request.MemberSignupRequest;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -14,6 +18,7 @@ import org.springdoc.core.annotations.RouterOperation;
 import org.springdoc.core.annotations.RouterOperations;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.reactive.config.CorsRegistry;
@@ -99,6 +104,72 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
                     )
                 }
             )
+        ),
+        @RouterOperation(
+            path = "/member/alarm-count",
+            consumes = { MediaType.APPLICATION_JSON_VALUE },
+            produces = { MediaType.APPLICATION_JSON_VALUE },
+            headers = { HttpHeaders.AUTHORIZATION },
+            beanClass = MemberHandler.class,
+            method = RequestMethod.GET,
+            beanMethod = "alarm-count",
+            operation = @Operation(
+                description = "읽지 않은 알림 갯수 API",
+                operationId = "alarm-count",
+                parameters = {
+                    @Parameter(
+                        in = ParameterIn.QUERY,
+                        name = "memberId",
+                        description = "회원 고유번호",
+                        required = true,
+                        example = "1"
+                    )
+                },
+                responses = {
+                    @ApiResponse(
+                        responseCode = "200",
+                        content = @Content(
+                            schema = @Schema(
+                                implementation = AlarmCountResponse.class,
+                                required = true
+                            )
+                        )
+                    )
+                }
+            )
+        ),
+        @RouterOperation(
+            path = "/member/alarm-list",
+            consumes = { MediaType.APPLICATION_JSON_VALUE },
+            produces = { MediaType.APPLICATION_JSON_VALUE },
+            headers = { HttpHeaders.AUTHORIZATION },
+            beanClass = MemberHandler.class,
+            method = RequestMethod.GET,
+            beanMethod = "alarm-list",
+            operation = @Operation(
+                description = "읽지 않은 알림 목록 API",
+                operationId = "alarm-list",
+                parameters = {
+                    @Parameter(
+                        in = ParameterIn.QUERY,
+                        name = "memberId",
+                        description = "회원 고유번호",
+                        required = true,
+                        example = "1"
+                    )
+                },
+                responses = {
+                    @ApiResponse(
+                        responseCode = "200",
+                        content = @Content(
+                            schema = @Schema(
+                                implementation = AlarmListResponse.class,
+                                required = true
+                            )
+                        )
+                    )
+                }
+            )
         )
     })
     @Bean
@@ -114,7 +185,8 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
             )
             .path("/member", memberBuilder ->
                 memberBuilder
-                    .GET("/alim-count", memberHandler::alimCount) // 읽지 않은 알림 갯수 조회
+                    .GET("/alarm-count", memberHandler::alarmCount) // 읽지 않은 알림 갯수 조회
+                    .GET("/alarm-list", memberHandler::alarmList) // 읽지 않은 알림 목록 조회
             )
             .build();
     }

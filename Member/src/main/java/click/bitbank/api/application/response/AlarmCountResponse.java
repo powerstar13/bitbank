@@ -8,7 +8,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class AlimCountResponse extends SuccessResponse {
+public class AlarmCountResponse extends SuccessResponse {
     
-    private long alimCount; // 읽지 않은 알림 갯수
+    private long alarmCount; // 읽지 않은 알림 갯수
 }
