@@ -6,7 +6,7 @@ import click.bitbank.api.application.response.MemberLoginResponse;
 import click.bitbank.api.application.response.MemberSignupResponse;
 import click.bitbank.api.presentation.member.MemberHandler;
 import click.bitbank.api.presentation.member.request.MemberLoginRequest;
-import click.bitbank.api.presentation.member.request.MemberLogoutRequest;
+import click.bitbank.api.presentation.member.request.MemberIdRequest;
 import click.bitbank.api.presentation.member.request.MemberSignupRequest;
 import click.bitbank.api.presentation.shared.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -186,7 +186,38 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
                 requestBody = @RequestBody(
                     content = @Content(
                         schema = @Schema(
-                            implementation = MemberLogoutRequest.class,
+                            implementation = MemberIdRequest.class,
+                            required = true
+                        )
+                    )
+                ),
+                responses = {
+                    @ApiResponse(
+                        responseCode = "200",
+                        content = @Content(
+                            schema = @Schema(
+                                implementation = SuccessResponse.class,
+                                required = true
+                            )
+                        )
+                    )
+                }
+            )
+        ),
+        @RouterOperation(
+            path = "/member/delete",
+            consumes = { MediaType.APPLICATION_JSON_VALUE },
+            produces = { MediaType.APPLICATION_JSON_VALUE },
+            beanClass = MemberHandler.class,
+            method = RequestMethod.DELETE,
+            beanMethod = "delete",
+            operation = @Operation(
+                description = "회원 탈퇴 API",
+                operationId = "delete",
+                requestBody = @RequestBody(
+                    content = @Content(
+                        schema = @Schema(
+                            implementation = MemberIdRequest.class,
                             required = true
                         )
                     )
@@ -225,6 +256,7 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
                 memberBuilder.nest(accept(MediaType.APPLICATION_JSON), builder ->
                     builder
                         .POST("/logout", memberHandler::logout) // 로그아웃
+                        .DELETE("/delete", memberHandler::delete) // 회원 탈퇴
                 )
             )
             .build();

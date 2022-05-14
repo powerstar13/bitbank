@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.FluxExchangeResult;
@@ -26,7 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-@WebFluxTest(MemberHandler.class)
+@WebFluxTest(value = MemberHandler.class)
 class MemberHandlerTest {
 
     @Autowired
@@ -109,7 +110,7 @@ class MemberHandlerTest {
         FluxExchangeResult<SuccessResponse> result = webClient
             .post()
             .uri("/member/logout")
-            .bodyValue(memberLogoutRequest())
+            .bodyValue(memberIdRequest())
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
             .expectStatus().isOk()
@@ -117,6 +118,32 @@ class MemberHandlerTest {
 
         // then
         verify(memberApplicationService).logout(any(ServerRequest.class));
+
+        StepVerifier.create(result.getResponseBody().log())
+            .assertNext(response -> assertEquals(HttpStatus.OK.value(), response.getRt()))
+            .verifyComplete();
+    }
+
+    /**
+     * 회원 탈퇴
+     */
+    @Test
+    void delete() {
+        // given
+        given(memberApplicationService.delete(any(ServerRequest.class))).willReturn(Mono.just(new SuccessResponse()));
+
+        // when
+        FluxExchangeResult<SuccessResponse> result = webClient
+            .method(HttpMethod.DELETE)
+            .uri("/member/delete")
+            .bodyValue(memberIdRequest())
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus().isOk()
+            .returnResult(SuccessResponse.class);
+
+        // then
+        verify(memberApplicationService).delete(any(ServerRequest.class));
 
         StepVerifier.create(result.getResponseBody().log())
             .assertNext(response -> assertEquals(HttpStatus.OK.value(), response.getRt()))
