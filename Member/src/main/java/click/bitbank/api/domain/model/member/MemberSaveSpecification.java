@@ -25,7 +25,7 @@ public class MemberSaveSpecification {
      */
     public Mono<MemberSignupResponse> memberExistCheckAndRegistration(MemberSignupRequest request) {
 
-        return memberRepository.findByMemberLoginId(request.getMemberLoginId())
+        return memberRepository.findByMemberLoginIdAndDelDateIsNull(request.getMemberLoginId())
             .hasElement()
             .flatMap(alreadyMember -> {
 

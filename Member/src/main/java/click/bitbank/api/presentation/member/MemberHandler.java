@@ -66,6 +66,21 @@ public class MemberHandler {
             .contentType(MediaType.APPLICATION_JSON)
             .body(response, SuccessResponse.class);
     }
+
+    /**
+     * 회원 탈퇴
+     * @param request : 회원 정보
+     * @return Mono<ServerResponse> : 성공 여부
+     */
+    public Mono<ServerResponse> delete(ServerRequest request) {
+
+        Mono<SuccessResponse> response = memberApplicationService.delete(request)
+            .subscribeOn(Schedulers.boundedElastic());
+
+        return ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response, SuccessResponse.class);
+    }
     
     /**
      * 읽지 않은 알림 갯수 조회

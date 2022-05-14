@@ -57,4 +57,8 @@ public class Member {
     public void logout() {
         this.refreshToken = null;
     }
+
+    public void delete() {
+        this.delDate = LocalDateTime.now();
+    }
 }

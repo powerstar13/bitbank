@@ -6,7 +6,7 @@ import click.bitbank.api.application.response.MemberLoginResponse;
 import click.bitbank.api.application.response.MemberSignupResponse;
 import click.bitbank.api.domain.model.member.MemberType;
 import click.bitbank.api.presentation.member.request.MemberLoginRequest;
-import click.bitbank.api.presentation.member.request.MemberLogoutRequest;
+import click.bitbank.api.presentation.member.request.MemberIdRequest;
 import click.bitbank.api.presentation.member.request.MemberSignupRequest;
 import reactor.core.publisher.Mono;
 
@@ -67,11 +67,11 @@ public class MemberTestFactory {
     }
 
     /**
-     * 로그아웃 Request 구성
+     * 회원 고유번호 Request 구성
      */
-    public static MemberLogoutRequest memberLogoutRequest() {
+    public static MemberIdRequest memberIdRequest() {
 
-        return MemberLogoutRequest.builder()
+        return MemberIdRequest.builder()
             .memberId(1)
             .build();
     }

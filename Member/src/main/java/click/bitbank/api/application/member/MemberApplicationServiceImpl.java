@@ -5,13 +5,14 @@ import click.bitbank.api.application.response.AlarmListResponse;
 import click.bitbank.api.application.response.MemberLoginResponse;
 import click.bitbank.api.application.response.MemberSignupResponse;
 import click.bitbank.api.domain.model.alarm.AlarmFindSpecification;
+import click.bitbank.api.domain.model.member.MemberDeleteSpecification;
 import click.bitbank.api.domain.model.member.MemberFindSpecification;
 import click.bitbank.api.domain.model.member.MemberLoginSpecification;
 import click.bitbank.api.domain.model.member.MemberSaveSpecification;
 import click.bitbank.api.infrastructure.exception.status.BadRequestException;
 import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
+import click.bitbank.api.presentation.member.request.MemberIdRequest;
 import click.bitbank.api.presentation.member.request.MemberLoginRequest;
-import click.bitbank.api.presentation.member.request.MemberLogoutRequest;
 import click.bitbank.api.presentation.member.request.MemberSignupRequest;
 import click.bitbank.api.presentation.shared.response.SuccessResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +30,12 @@ public class MemberApplicationServiceImpl implements MemberApplicationService {
     private final MemberSaveSpecification memberSaveSpecification;
     private final MemberLoginSpecification memberLoginSpecification;
     private final MemberFindSpecification memberFindSpecification;
+    private final MemberDeleteSpecification memberDeleteSpecification;
     private final AlarmFindSpecification alarmFindSpecification;
 
     /**
      * 회원 계정 생성
-     * @param serverRequest : 전달된 Request
+     * @param serverRequest : MemberSignupRequest
      * @return Mono<MemberRegistrationResponse> : 저장된 회원 정보
      */
     @Override
@@ -51,7 +53,7 @@ public class MemberApplicationServiceImpl implements MemberApplicationService {
 
     /**
      * 일반 회원 로그인
-     * @param serverRequest : 전달된 Request
+     * @param serverRequest : MemberLoginRequest
      * @return Mono<MemberLoginResponse> : 저장된 회원 정보
      */
     @Override
@@ -68,20 +70,38 @@ public class MemberApplicationServiceImpl implements MemberApplicationService {
 
     /**
      * 로그아웃
-     * @param serverRequest : MemberLogoutRequest
+     * @param serverRequest : MemberIdRequest
      * @return Mono<SuccessResponse> : 성공 여부
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Mono<SuccessResponse> logout(ServerRequest serverRequest) {
 
-        return serverRequest.bodyToMono(MemberLogoutRequest.class)
+        return serverRequest.bodyToMono(MemberIdRequest.class)
             .flatMap(request -> {
                 request.verify(); // Request 유효성 검사
 
                 return memberLoginSpecification.memberExistCheckAndLogout(request.getMemberId());
             }
         ).switchIfEmpty(Mono.error(new BadRequestException(ExceptionMessage.IsRequiredRequest.getMessage())));
+    }
+
+    /**
+     * 회원 탈퇴
+     * @param serverRequest : MemberIdRequest
+     * @return Mono<SuccessResponse> : 성공 여부
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Mono<SuccessResponse> delete(ServerRequest serverRequest) {
+
+        return serverRequest.bodyToMono(MemberIdRequest.class)
+            .flatMap(request -> {
+                    request.verify(); // Request 유효성 검사
+
+                    return memberDeleteSpecification.memberExistCheckAndDelete(request.getMemberId());
+                }
+            ).switchIfEmpty(Mono.error(new BadRequestException(ExceptionMessage.IsRequiredRequest.getMessage())));
     }
 
     /**

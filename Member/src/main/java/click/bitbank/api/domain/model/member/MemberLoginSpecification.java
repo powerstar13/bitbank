@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 @Component
 @RequiredArgsConstructor
@@ -29,14 +28,14 @@ public class MemberLoginSpecification {
 
     public Mono<MemberLoginResponse> memberExistCheckAndLogin(MemberLoginRequest request) {
 
-        Mono<Member> member = memberRepository.findByMemberLoginIdAndMemberPassword(request.getMemberLoginId(), MemberSha256.encrypt(request.getMemberPassword()));
+        Mono<Member> member = memberRepository.findByMemberLoginIdAndMemberPasswordAndDelDateIsNull(request.getMemberLoginId(), MemberSha256.encrypt(request.getMemberPassword()));
         return member
-                .hasElement()
-                .flatMap(hasMember -> {
-                    if (!hasMember) return Mono.error(new UnauthorizedException(ExceptionMessage.NotFoundLoginMember.getMessage()));
+            .hasElement()
+            .flatMap(hasMember -> {
+                if (!hasMember) return Mono.error(new UnauthorizedException(ExceptionMessage.NotFoundLoginMember.getMessage()));
 
-                    return MakeMemberLoginResponse(member);
-                });
+                return MakeMemberLoginResponse(member);
+            });
     }
 
     private Mono<MemberLoginResponse> MakeMemberLoginResponse(Mono<Member> member) {
@@ -47,9 +46,14 @@ public class MemberLoginSpecification {
             m.setRefreshToken(refreshToken);
 
             return updateRefreshTokenByMemberLogin(m)
-                    .flatMap(i -> {
-                        return Mono.just(new MemberLoginResponse(m.getMemberId(), m.getMemberName(), m.getMemberType(), accessToken, refreshToken));
-                    });
+                .flatMap(i ->
+                    Mono.just(MemberLoginResponse.builder()
+                        .memberId(m.getMemberId())
+                        .memberName(m.getMemberName())
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken)
+                        .build())
+                );
         });
     }
 
