@@ -2,20 +2,22 @@
 
 `건강한 생활 습관 · 소비 습관을 만들어 주는 가계부`
 
-Bitbank services will give you experience in creating healthy lifestyles and consumption habits.
+## Bitbank services will give you experience in creating healthy lifestyles and consumption habits.
 
-[Welcome to bitbank](https://bithumb.bitbank.click)
+### [Welcome to bitbank](https://bithumb.bitbank.click)
 
 ---
 
 # ℹ️ Info
 
-1. 자산 관리 서비스
-   1. 내 계좌·현금·주식·예적금을 등록해서 자산을 한 곳에 모아볼 수 있습니다.
-   2. 총 자산에 카테고리 별 통계를 확인할 수 있습니다.
+1. 회원 관리 서비스
+   1. 소셜 로그인을 할 수 있습니다. 소셜 계정이 없으시면 일반 회원 가입을 할 수 있습니다.
+   2. 내 정보를 간편하게 관리할 수 있습니다.
+   3. 사용자 맞춤 알림 서비스를 제공합니다.
 2. 가계부 관리 서비스
    1. 내 지출·수입·이체 내역을 기록하고 월 별로 관리할 수 있습니다.
    2. 월 별 지출·수입 통계를 확인할 수 있습니다.
+   3. 데이터 내보내기를 통해 통계 데이터를 PDF로, 가계부 데이터를 Excel로 받아볼 수 있습니다.
 3. 금융 매칭 서비스
    1. 혜택이 많은 카드를 조회할 수 있습니다.
    2. 내 소비 습관에 따라 카드를 추천받습니다.
