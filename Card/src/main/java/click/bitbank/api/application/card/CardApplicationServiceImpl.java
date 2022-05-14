@@ -25,7 +25,7 @@ public class CardApplicationServiceImpl implements CardApplicationService {
     @Transactional(rollbackFor = Exception.class, readOnly = true)
     public Mono<CardPopularListResponse> findCardPopularList() {
     
-        Flux<Card> cardFlux = cardRepository.findTop10ByOrderByCardRankingAsc(); // 카드 순위에 따라 Top 10 목록 조회
+        Flux<Card> cardFlux = cardRepository.findTop10ByCardRankingIsNotNullOrderByCardRankingAsc(); // 카드 순위에 따라 Top 10 목록 조회
 
         return cardResponseFactory.cardPopularListResponseBuilder(cardFlux);
     }
