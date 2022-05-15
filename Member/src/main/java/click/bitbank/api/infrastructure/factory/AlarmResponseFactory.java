@@ -1,9 +1,11 @@
 package click.bitbank.api.infrastructure.factory;
 
 import click.bitbank.api.application.response.AlarmCountResponse;
+import click.bitbank.api.application.response.AlarmDTO;
 import click.bitbank.api.application.response.AlarmListResponse;
 import click.bitbank.api.domain.model.alarm.Alarm;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -13,6 +15,8 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class AlarmResponseFactory {
+
+    private final ModelMapper modelMapper;
 
     /**
      * 읽지 않은 알림 갯수 결과 구성
@@ -32,8 +36,8 @@ public class AlarmResponseFactory {
     public AlarmListResponse alarmListResponseBuilder(List<Alarm> alarmList) {
 
         // 알림 메시지 목록
-        List<String> alarmMessageList = alarmList.stream()
-            .map(Alarm::getAlarmMessage)
+        List<AlarmDTO> alarmMessageList = alarmList.stream()
+            .map(alarm -> modelMapper.map(alarm, AlarmDTO.class))
             .collect(Collectors.toList());
 
         return new AlarmListResponse(alarmMessageList);

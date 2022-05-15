@@ -12,5 +12,5 @@ import java.util.List;
 @AllArgsConstructor
 public class AlarmListResponse extends SuccessResponse {
     
-    private List<String> alarmMessageList; // 읽지 않은 알림 메시지 목록
+    private List<AlarmDTO> alarmDTOList; // 읽지 않은 알림 메시지 목록
 }

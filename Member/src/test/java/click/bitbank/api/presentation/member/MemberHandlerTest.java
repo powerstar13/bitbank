@@ -207,7 +207,7 @@ class MemberHandlerTest {
         StepVerifier.create(result.getResponseBody().log())
             .assertNext(response -> assertAll(() -> {
                 assertEquals(HttpStatus.OK.value(), response.getRt());
-                assertArrayEquals(alarmMessageList().toArray(), response.getAlarmMessageList().toArray());
+                assertEquals(alarmMessageList().get(0), response.getAlarmDTOList().get(0).getAlarmMessage());
             }))
             .verifyComplete();
     }
