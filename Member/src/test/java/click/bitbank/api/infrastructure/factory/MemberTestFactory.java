@@ -1,17 +1,17 @@
 package click.bitbank.api.infrastructure.factory;
 
-import click.bitbank.api.application.response.AlarmCountResponse;
-import click.bitbank.api.application.response.AlarmListResponse;
-import click.bitbank.api.application.response.MemberLoginResponse;
-import click.bitbank.api.application.response.MemberSignupResponse;
+import click.bitbank.api.application.response.*;
 import click.bitbank.api.domain.model.member.MemberType;
 import click.bitbank.api.presentation.member.request.MemberLoginRequest;
 import click.bitbank.api.presentation.member.request.MemberIdRequest;
 import click.bitbank.api.presentation.member.request.MemberSignupRequest;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 public class MemberTestFactory {
 
@@ -99,9 +99,20 @@ public class MemberTestFactory {
      */
     public static Mono<AlarmListResponse> alarmListResponse() {
 
+        List<AlarmDTO> alarmDTOList = new ArrayList<>();
+
+        alarmMessageList().forEach(alarmMessage ->
+            alarmDTOList.add(
+                AlarmDTO.builder()
+                    .alarmMessage(alarmMessage)
+                    .regDate(LocalDateTime.now())
+                    .build()
+            )
+        );
+
         return Mono.just(
             AlarmListResponse.builder()
-                .alarmMessageList(alarmMessageList())
+                .alarmDTOList(alarmDTOList)
                 .build()
         );
     }
