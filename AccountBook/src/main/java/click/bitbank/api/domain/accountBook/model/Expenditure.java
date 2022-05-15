@@ -2,12 +2,15 @@ package click.bitbank.api.domain.accountBook.model;
 
 import click.bitbank.api.domain.accountBook.ExpenditureType;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -25,7 +28,7 @@ public class Expenditure {
     private String expenditureInfo; // 지출 내역
 
     @Column(value = "expenditureDate")
-    private Timestamp expenditureDate; // 지출 날짜
+    private LocalDateTime expenditureDate; // 지출 날짜
 
     @Column(value = "expenditureMoney")
     private BigInteger expenditureMoney; // 지출 금액
@@ -39,9 +42,14 @@ public class Expenditure {
     @Column(value = "longitude")
     private String longitude; // 경도
 
+    @Column(value = "memberId")
+    private int memberId;
+
     @Column(value = "regDate")
-    private Timestamp regDate; // 생성일
+    @CreatedDate
+    private LocalDateTime regDate; // 생성일
 
     @Column(value = "modDate")
-    private Timestamp modDate; // 수정일
+    @LastModifiedDate
+    private LocalDateTime modDate; // 수정일
 }

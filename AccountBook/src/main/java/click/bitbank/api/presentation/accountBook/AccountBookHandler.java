@@ -1,7 +1,7 @@
 package click.bitbank.api.presentation.accountBook;
 
 import click.bitbank.api.application.accountBook.AccountBookApplicationService;
-import click.bitbank.api.domain.accountBook.model.Member;
+import click.bitbank.api.domain.accountBook.model.Income;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -10,6 +10,8 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+
+import java.util.List;
 
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
@@ -22,12 +24,12 @@ public class AccountBookHandler {
 
     public Mono<ServerResponse> accountBookSearch(ServerRequest request) {
         log.info("-----------------  여긴 핸들러 시작");
-        Mono<Member> response = accountBookApplicationService.accountBookSearch(request)
+        Mono<List<Income>> response = accountBookApplicationService.accountBookSearch(request)
                 .subscribeOn(Schedulers.boundedElastic()).log();
         log.info("-----------------  여긴 핸들러 종료 지점");
 
         return ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(response, Member.class);
+                .body(response, Income.class);
     }
 }

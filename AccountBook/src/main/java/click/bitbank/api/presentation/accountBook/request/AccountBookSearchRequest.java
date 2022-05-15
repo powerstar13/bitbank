@@ -9,6 +9,8 @@ import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
 import click.bitbank.api.presentation.shared.request.RequestVerify;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Builder
 @ToString
@@ -26,14 +28,27 @@ public class AccountBookSearchRequest implements RequestVerify {
 
     String searchEndDate;   // 검색 종료일
 
-    ExpenditureType expenditureType;    // 지출 유형
+    List<ExpenditureType> expenditureType;    // 지출 유형
 
-    IncomeType incomeType;  // 수입 유형
+    List<IncomeType> incomeType;  // 수입 유형
 
-    TransferType transferType;  // 이체 유형
+    List<TransferType> transferType;  // 이체 유형
+
+    public String getSearchKeywordAddPercent() {
+        return '%' + searchKeyword + '%';
+    }
+
+    public void setSearchStartDate(String searchStartDate) {
+        this.searchStartDate = searchStartDate;
+    }
+
+    public void setSearchEndDate(String searchEndDate) {
+        this.searchEndDate = searchEndDate;
+    }
 
     @Override
     public void verify() {
         if (memberId == null) throw new BadRequestException(ExceptionMessage.IsRequiredMemberId.getMessage());
+        if (searchDateType == null && !searchStartDate.isBlank() && !searchEndDate.isBlank()) throw new BadRequestException(ExceptionMessage.IsRequiredSearchDateType.getMessage());
     }
 }

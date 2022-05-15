@@ -17,7 +17,7 @@ public class AccountBookSearchByDailyDTO {
 
     long accountBookTotalByDaily;   // 해당 날짜 가계부 총 금액
 
-    List<AccountBookInfoDTO> accountBookInfoDTOList;
+    List<AccountBookInfoDTO> accountBookInfoDTOList;    // 해당 날짜 가계부 내역 리스트
 
 
 }

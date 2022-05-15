@@ -2,12 +2,15 @@ package click.bitbank.api.domain.accountBook.model;
 
 import click.bitbank.api.domain.accountBook.TransferType;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -25,7 +28,7 @@ public class Transfer {
     private String transferInfo; // 이체 내역
 
     @Column(value = "transferDate")
-    private Timestamp transferDate; // 지출 날짜
+    private LocalDateTime transferDate; // 지출 날짜
 
     @Column(value = "transferMoney")
     private BigInteger transferMoney; // 이체 금액
@@ -33,9 +36,14 @@ public class Transfer {
     @Column(value = "transferType")
     private TransferType transferType; // 이체 유형
 
+    @Column(value = "memberId")
+    private int memberId;
+
     @Column(value = "regDate")
-    private Timestamp regDate; // 생성일
+    @CreatedDate
+    private LocalDateTime regDate; // 생성일
 
     @Column(value = "modDate")
-    private Timestamp modDate; // 수정일
+    @LastModifiedDate
+    private LocalDateTime modDate; // 수정일
 }
