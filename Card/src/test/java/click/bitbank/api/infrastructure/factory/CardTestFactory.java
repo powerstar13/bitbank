@@ -1,6 +1,6 @@
 package click.bitbank.api.infrastructure.factory;
 
-import click.bitbank.api.application.response.CardPopularListResponse;
+import click.bitbank.api.application.response.CardListResponse;
 import click.bitbank.api.application.response.dto.CardDTO;
 import click.bitbank.api.domain.model.card.CardBenefitType;
 import reactor.core.publisher.Mono;
@@ -10,9 +10,9 @@ import java.util.ArrayList;
 public class CardTestFactory {
 
     /**
-     * 인기 카드 목록 Response 구성
+     * 카드 목록 Response 구성
      */
-    public static Mono<CardPopularListResponse> cardPopularListResponse() {
+    public static Mono<CardListResponse> cardListResponse() {
 
         ArrayList<CardDTO> cardDTOList = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
@@ -29,7 +29,7 @@ public class CardTestFactory {
         }
 
         return Mono.just(
-            CardPopularListResponse.builder()
+            CardListResponse.builder()
                 .cardDTOList(cardDTOList)
                 .build()
         );
