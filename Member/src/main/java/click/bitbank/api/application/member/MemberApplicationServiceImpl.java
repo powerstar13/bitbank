@@ -156,7 +156,7 @@ public class MemberApplicationServiceImpl implements MemberApplicationService {
         // 회원 고유번호 추출
         int memberId = this.getMemberIdByRequest(serverRequest);
 
-        return memberFindSpecification.membmerVerify(memberId) // 회원 정보 검증
+        return memberFindSpecification.membmerExistVerify(memberId) // 회원 정보 검증
             .flatMap(member ->
                 alarmFindSpecification.unreadAlarmCountByMember(member.getMemberId())
             );
@@ -173,10 +173,26 @@ public class MemberApplicationServiceImpl implements MemberApplicationService {
         // 회원 고유번호 추출
         int memberId = this.getMemberIdByRequest(serverRequest);
 
-        return memberFindSpecification.membmerVerify(memberId) // 회원 정보 검증
+        return memberFindSpecification.membmerExistVerify(memberId) // 회원 정보 검증
             .flatMap(member ->
                 alarmFindSpecification.unreadAlarmListByMember(member.getMemberId())
             );
     }
+
+    /**
+     * 회원 검증
+     * @param serverRequest : Params
+     * @return Mono<SuccessResponse> : 검증 성공 반환
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    public Mono<SuccessResponse> existVerify(ServerRequest serverRequest) {
+        // 회원 고유번호 추출
+        int memberId = this.getMemberIdByRequest(serverRequest);
+
+        return memberFindSpecification.membmerExistVerify(memberId) // 검증 처리
+            .flatMap(member -> Mono.just(new SuccessResponse())); // 검증 성공 반환
+    }
+
 
 }

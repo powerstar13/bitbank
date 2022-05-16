@@ -18,7 +18,7 @@ public class MemberFindSpecification {
      * @param memberId : 회원 고유번호
      * @return Mono<Member> : 조회된 회원 정보
      */
-    public Mono<Member> membmerVerify(int memberId) {
+    public Mono<Member> membmerExistVerify(int memberId) {
         
         return memberRepository.findById(memberId)
             .switchIfEmpty(Mono.error(new NotFoundDataException(ExceptionMessage.NotFoundMember.getMessage())));

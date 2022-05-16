@@ -142,4 +142,19 @@ public class MemberHandler {
             .body(response, AlarmListResponse.class);
     }
 
+    /**
+     * 회원 검증
+     * @param request : 회원 정보
+     * @return Mono<ServerResponse> : 성공 여부
+     */
+    public Mono<ServerResponse> existVerify(ServerRequest request) {
+
+        Mono<SuccessResponse> response = memberApplicationService.existVerify(request)
+            .subscribeOn(Schedulers.boundedElastic());
+
+        return ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response, SuccessResponse.class);
+    }
+
 }

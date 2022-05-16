@@ -26,4 +26,6 @@ public interface MemberApplicationService {
 
     Mono<AlarmListResponse> findAlarmList(ServerRequest serverRequest); // 읽지 않은 알림 목록 조회
 
+    Mono<SuccessResponse> existVerify(ServerRequest serverRequest); // 회원 검증
+
 }
