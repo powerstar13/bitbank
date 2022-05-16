@@ -1,5 +1,6 @@
 package click.bitbank.api.domain.accountBook.model;
 
+import click.bitbank.api.domain.accountBook.AccountBookType;
 import click.bitbank.api.domain.accountBook.ExpenditureType;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -9,7 +10,6 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter
@@ -52,4 +52,12 @@ public class Expenditure {
     @Column(value = "modDate")
     @LastModifiedDate
     private LocalDateTime modDate; // 수정일
+
+
+    public AccountBookType getAccountBookType() {
+        return AccountBookType.P;
+    }
+    public BigInteger getNegateExpenditureMoney() {
+        return expenditureMoney.negate();
+    }
 }

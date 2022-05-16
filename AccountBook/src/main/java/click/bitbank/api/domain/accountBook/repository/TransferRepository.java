@@ -15,21 +15,21 @@ public interface TransferRepository extends ReactiveCrudRepository<Transfer, Int
 
     Flux<Transfer> findByMemberIdAndTransferInfoContaining(int memberId, String searchKeyword);
 
-    @Query("SELECT * FROM transfer WHERE memberId = :memberId AND DATE(incomeDate) BETWEEN :startDate AND :endDate")
+    @Query("SELECT * FROM transfer WHERE memberId = :memberId AND DATE(transferDate) BETWEEN :startDate AND :endDate")
     Flux<Transfer> findByMemberIdAndTransferDateBetween(int memberId, String startDate, String endDate);
 
-    @Query("SELECT * FROM transfer WHERE memberId = :memberId AND incomeInfo LIKE :searchKeyword AND DATE(incomeDate) BETWEEN :startDate AND :endDate")
+    @Query("SELECT * FROM transfer WHERE memberId = :memberId AND transferInfo LIKE :searchKeyword AND DATE(transferDate) BETWEEN :startDate AND :endDate")
     Flux<Transfer> findByMemberIdAndTransferDateBetweenAndTransferInfoContaining(int memberId, String startDate, String endDate, String searchKeyword);
 
-    Flux<Transfer> findByMemberIdAndTransferTypeIn(int memberId, List<TransferType> incomeType);
+    Flux<Transfer> findByMemberIdAndTransferTypeIn(int memberId, List<TransferType> transferType);
 
-    Flux<Transfer> findByMemberIdAndTransferTypeInAndTransferInfoContaining(int memberId, List<TransferType> incomeType, String searchKeyword);
+    Flux<Transfer> findByMemberIdAndTransferTypeInAndTransferInfoContaining(int memberId, List<TransferType> transferType, String searchKeyword);
 
-    @Query("SELECT * FROM transfer WHERE memberId = :memberId AND (DATE(incomeDate) BETWEEN :startDate AND :endDate) AND (incomeType IN (:incomeType))")
-    Flux<Transfer> findByMemberIdAndTransferDateBetweenAndTransferTypeIn(int memberId, List<TransferType> incomeType, String startDate, String endDate);
+    @Query("SELECT * FROM transfer WHERE memberId = :memberId AND (DATE(transferDate) BETWEEN :startDate AND :endDate) AND (transferType IN (:transferType))")
+    Flux<Transfer> findByMemberIdAndTransferDateBetweenAndTransferTypeIn(int memberId, List<TransferType> transferType, String startDate, String endDate);
 
-    @Query("SELECT * FROM transfer WHERE memberId = :memberId AND incomeType IN (:incomeType) AND incomeInfo LIKE :searchKeyword AND (DATE(incomeDate) BETWEEN :startDate AND :endDate)")
-    Flux<Transfer> findByMemberIdAndTransferDateBetweenAndTransferInfoContainingAndTransferTypeIn(int memberId, List<TransferType> incomeType, String startDate, String endDate, String searchKeyword);
+    @Query("SELECT * FROM transfer WHERE memberId = :memberId AND transferType IN (:transferType) AND transferInfo LIKE :searchKeyword AND (DATE(transferDate) BETWEEN :startDate AND :endDate)")
+    Flux<Transfer> findByMemberIdAndTransferDateBetweenAndTransferInfoContainingAndTransferTypeIn(int memberId, List<TransferType> transferType, String startDate, String endDate, String searchKeyword);
 
 
 }

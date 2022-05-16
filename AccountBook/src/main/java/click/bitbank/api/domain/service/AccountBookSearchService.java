@@ -1,5 +1,8 @@
 package click.bitbank.api.domain.service;
 
+import click.bitbank.api.application.response.DTO.AccountBookByCategoryDTO;
+import click.bitbank.api.application.response.DTO.AccountBookInfoDTO;
+import click.bitbank.api.application.response.DTO.AccountBookSearchByDailyDTO;
 import click.bitbank.api.domain.accountBook.SearchDateType;
 import click.bitbank.api.domain.accountBook.model.Expenditure;
 import click.bitbank.api.domain.accountBook.model.Income;
@@ -10,15 +13,19 @@ import click.bitbank.api.domain.accountBook.repository.TransferRepository;
 import click.bitbank.api.presentation.accountBook.request.AccountBookSearchRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -29,15 +36,47 @@ public class AccountBookSearchService {
     private final ExpenditureRepository expenditureRepository;
     private final TransferRepository transferRepository;
 
-    public Mono<List<Income>> makeAccountBookSearchByDail(AccountBookSearchRequest request) {
-        Mono<List<Income>> income = getIncomeSearch(request);
-        Mono<List<Expenditure>> expenditure = getExpenditureSearch(request);
-        Mono<List<Transfer>> transter = getTransferSearch(request);
+    private final ModelMapper modelMapper;
 
-//        Flux.merge(income.flatMapMany(Flux::fromIterable),income.flatMapMany(Flux::fromIterable)).collectList();
-        return getIncomeSearch(request);
+    public Mono<List<AccountBookSearchByDailyDTO>> makeAccountBookSearchByDail(AccountBookSearchRequest request) {
+
+        return Flux.merge(getIncomeSearch(request), getExpenditureSearch(request), getTransferSearch(request))
+                .flatMapIterable(Function.identity())
+                .collectList()
+                .flatMap(accountBookByCategoryDTOList -> Mono.just(makeAccountBookSearchResponse(accountBookByCategoryDTOList)));
     }
 
+
+    public List<AccountBookSearchByDailyDTO> makeAccountBookSearchResponse(List<AccountBookByCategoryDTO> accountBookByCategoryDTOList) {
+        Map<String, AccountBookSearchByDailyDTO> accountBookMap = new HashMap<>();
+
+        for (AccountBookByCategoryDTO accountBook : accountBookByCategoryDTOList) {
+
+            AccountBookSearchByDailyDTO accountBookSearchByDailyDTO = new AccountBookSearchByDailyDTO(accountBook.getDate());
+
+            if (!accountBookMap.containsKey(accountBookSearchByDailyDTO.getDate())) {   // 해당 날짜의 key, value 생성
+                accountBookMap.put(accountBookSearchByDailyDTO.getDate(), accountBookSearchByDailyDTO);
+            }
+            accountBookSearchByDailyDTO = accountBookMap.get(accountBookSearchByDailyDTO.getDate());    // 해당 날짜에 존재하는 value 가져오기
+            accountBookSearchByDailyDTO.setAccountBookTotalByDaily(accountBook.getMoney()); // 해당 날짜 총 금액 구하기
+
+            AccountBookInfoDTO accountBookInfoDTO = new AccountBookInfoDTO(accountBook.getAccountBookType(), accountBook.getInfo(), accountBook.getMoney());
+            accountBookSearchByDailyDTO.setAccountBookInfoDTOList(accountBookInfoDTO);  // 가계부 상제 정보 세팅
+
+            accountBookMap.put(accountBookSearchByDailyDTO.getDate(), accountBookSearchByDailyDTO); // 변경된 데이터로 value 수정
+//            AccountBookInfoDTO accountBookInfoDTO = new AccountBookInfoDTO(accountBook.getAccountBookType(), accountBook.getInfo(), accountBook.getMoney());
+        }
+
+        Object[] sortedAccountBook = accountBookMap.keySet().toArray();
+        Arrays.sort(sortedAccountBook);
+        List<AccountBookSearchByDailyDTO> accountBookSearchByDailyDTOList = new ArrayList<>();
+
+        for (String key : accountBookMap.keySet()) {
+            accountBookSearchByDailyDTOList.add(accountBookMap.get(key));
+        }
+
+        return accountBookSearchByDailyDTOList;
+    }
 
     /**
      * 가계부 목록 검색 (수입)
@@ -46,7 +85,7 @@ public class AccountBookSearchService {
      * @return
      */
     @Transactional(rollbackFor = Exception.class, readOnly = true)
-    public Mono<List<Income>> getIncomeSearch(AccountBookSearchRequest request) {
+    public Mono<List<AccountBookByCategoryDTO>> getIncomeSearch(AccountBookSearchRequest request) {
         Mono<List<Income>> income = null;
 
         // 수입 유형이 지정되지 않은 경우
@@ -105,11 +144,16 @@ public class AccountBookSearchService {
 
             }
         }
-        return income;
+        return income.map(accountBookList -> {
+            List<AccountBookByCategoryDTO> accountBookByCategoryDTOList = accountBookList.stream()
+                    .map(accountBook -> new AccountBookByCategoryDTO(accountBook.getIncomeDate(), accountBook.getIncomeInfo(), accountBook.getIncomeMoney(), accountBook.getAccountBookType()))
+                    .collect(Collectors.toList());
+            return accountBookByCategoryDTOList;
+        });
     }
 
     @Transactional(rollbackFor = Exception.class, readOnly = true)
-    public Mono<List<Expenditure>> getExpenditureSearch(AccountBookSearchRequest request) {
+    public Mono<List<AccountBookByCategoryDTO>> getExpenditureSearch(AccountBookSearchRequest request) {
         Mono<List<Expenditure>> expenditure = null;
 
         // 지출 유형이 지정되지 않은 경우
@@ -168,11 +212,16 @@ public class AccountBookSearchService {
 
             }
         }
-        return expenditure;
+        return expenditure.map(accountBookList -> {
+            List<AccountBookByCategoryDTO> accountBookByCategoryDTOList = accountBookList.stream()
+                    .map(accountBook -> new AccountBookByCategoryDTO(accountBook.getExpenditureDate(), accountBook.getExpenditureInfo(), accountBook.getNegateExpenditureMoney(), accountBook.getAccountBookType()))
+                    .collect(Collectors.toList());
+            return accountBookByCategoryDTOList;
+        });
     }
 
     @Transactional(rollbackFor = Exception.class, readOnly = true)
-    public Mono<List<Transfer>> getTransferSearch(AccountBookSearchRequest request) {
+    public Mono<List<AccountBookByCategoryDTO>> getTransferSearch(AccountBookSearchRequest request) {
         Mono<List<Transfer>> transfer = null;
 
         // 지출 유형이 지정되지 않은 경우
@@ -231,7 +280,12 @@ public class AccountBookSearchService {
 
             }
         }
-        return transfer;
+        return transfer.map(accountBookList -> {
+            List<AccountBookByCategoryDTO> accountBookByCategoryDTOList = accountBookList.stream()
+                    .map(accountBook -> new AccountBookByCategoryDTO(accountBook.getTransferDate(), accountBook.getTransferInfo(), accountBook.getNegateExpenditureMoney(), accountBook.getAccountBookType()))
+                    .collect(Collectors.toList());
+            return accountBookByCategoryDTOList;
+        });
     }
 
     public void setBoundsDate(AccountBookSearchRequest request) {

@@ -33,7 +33,6 @@ public interface IncomeRepository extends ReactiveCrudRepository<Income, Integer
 
 
 
-
 //    Flux<Income> findByMemberIdAndIncomeType(int memberId, IncomeType incomeType);
 //
 //    Flux<Income> findByMemberIdAndIncomeTypeAndIncomeInfoContaining(int memberId, IncomeType incomeType, String searchKeyword);

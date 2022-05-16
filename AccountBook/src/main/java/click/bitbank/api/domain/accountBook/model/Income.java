@@ -1,5 +1,6 @@
 package click.bitbank.api.domain.accountBook.model;
 
+import click.bitbank.api.domain.accountBook.AccountBookType;
 import click.bitbank.api.domain.accountBook.IncomeType;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -9,7 +10,6 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter
@@ -47,12 +47,8 @@ public class Income {
     @LastModifiedDate
     private LocalDateTime modDate; // 수정일
 
-//    public Income(int incomeId, String incomeInfo, Timestamp , BigInteger incomeMoney, IncomeType incomeType, int memberId) {
-//        this.incomeId = incomeId;
-//        this.incomeInfo = incomeInfo;
-//        this.expenditureDate = expenditureDate;
-//        this.incomeMoney = incomeMoney;
-//        this.incomeType = incomeType;
-//        this.memberId = memberId;
-//    }
+
+    public AccountBookType getAccountBookType() {
+        return AccountBookType.I;
+    }
 }

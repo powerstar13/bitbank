@@ -14,20 +14,20 @@ public interface ExpenditureRepository extends ReactiveCrudRepository<Expenditur
 
     Flux<Expenditure> findByMemberIdAndExpenditureInfoContaining(int memberId, String searchKeyword);
 
-    @Query("SELECT * FROM expenditure WHERE memberId = :memberId AND DATE(incomeDate) BETWEEN :startDate AND :endDate")
+    @Query("SELECT * FROM expenditure WHERE memberId = :memberId AND DATE(expenditureDate) BETWEEN :startDate AND :endDate")
     Flux<Expenditure> findByMemberIdAndExpenditureDateBetween(int memberId, String startDate, String endDate);
 
-    @Query("SELECT * FROM expenditure WHERE memberId = :memberId AND incomeInfo LIKE :searchKeyword AND DATE(incomeDate) BETWEEN :startDate AND :endDate")
+    @Query("SELECT * FROM expenditure WHERE memberId = :memberId AND expenditureInfo LIKE :searchKeyword AND DATE(expenditureDate) BETWEEN :startDate AND :endDate")
     Flux<Expenditure> findByMemberIdAndExpenditureDateBetweenAndExpenditureInfoContaining(int memberId, String startDate, String endDate, String searchKeyword);
 
-    Flux<Expenditure> findByMemberIdAndExpenditureTypeIn(int memberId, List<ExpenditureType> incomeType);
+    Flux<Expenditure> findByMemberIdAndExpenditureTypeIn(int memberId, List<ExpenditureType> expenditureType);
 
-    Flux<Expenditure> findByMemberIdAndExpenditureTypeInAndExpenditureInfoContaining(int memberId, List<ExpenditureType> incomeType, String searchKeyword);
+    Flux<Expenditure> findByMemberIdAndExpenditureTypeInAndExpenditureInfoContaining(int memberId, List<ExpenditureType> expenditureType, String searchKeyword);
 
-    @Query("SELECT * FROM expenditure WHERE memberId = :memberId AND (DATE(incomeDate) BETWEEN :startDate AND :endDate) AND (incomeType IN (:incomeType))")
-    Flux<Expenditure> findByMemberIdAndExpenditureDateBetweenAndExpenditureTypeIn(int memberId, List<ExpenditureType> incomeType, String startDate, String endDate);
+    @Query("SELECT * FROM expenditure WHERE memberId = :memberId AND (DATE(expenditureDate) BETWEEN :startDate AND :endDate) AND (expenditureType IN (:expenditureType))")
+    Flux<Expenditure> findByMemberIdAndExpenditureDateBetweenAndExpenditureTypeIn(int memberId, List<ExpenditureType> expenditureType, String startDate, String endDate);
 
-    @Query("SELECT * FROM expenditure WHERE memberId = :memberId AND incomeType IN (:incomeType) AND incomeInfo LIKE :searchKeyword AND (DATE(incomeDate) BETWEEN :startDate AND :endDate)")
-    Flux<Expenditure> findByMemberIdAndExpenditureDateBetweenAndExpenditureInfoContainingAndExpenditureTypeIn(int memberId, List<ExpenditureType> incomeType, String startDate, String endDate, String searchKeyword);
+    @Query("SELECT * FROM expenditure WHERE memberId = :memberId AND expenditureType IN (:expenditureType) AND expenditureInfo LIKE :searchKeyword AND (DATE(expenditureDate) BETWEEN :startDate AND :endDate)")
+    Flux<Expenditure> findByMemberIdAndExpenditureDateBetweenAndExpenditureInfoContainingAndExpenditureTypeIn(int memberId, List<ExpenditureType> expenditureType, String startDate, String endDate, String searchKeyword);
 
 }

@@ -1,7 +1,7 @@
 package click.bitbank.api.application.accountBook;
 
+import click.bitbank.api.application.response.DTO.AccountBookSearchByDailyDTO;
 import click.bitbank.api.domain.accountBook.MemberSpecification;
-import click.bitbank.api.domain.accountBook.model.Income;
 import click.bitbank.api.domain.service.AccountBookSearchService;
 import click.bitbank.api.infrastructure.exception.status.BadRequestException;
 import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
@@ -32,7 +32,7 @@ public class AccountBookApplicationServiceImpl implements AccountBookApplication
      */
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
-    public Mono<List<Income>> accountBookSearch(ServerRequest serverRequest) {
+    public Mono<List<AccountBookSearchByDailyDTO>> accountBookSearch(ServerRequest serverRequest) {
         log.info("-----------------  여긴 서비스 시작");
         return serverRequest.bodyToMono(AccountBookSearchRequest.class).flatMap(
                 request -> {

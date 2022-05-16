@@ -1,7 +1,9 @@
 package click.bitbank.api.application.response.DTO;
 
-import click.bitbank.api.domain.model.accountBook.AccountBookType;
+import click.bitbank.api.domain.accountBook.AccountBookType;
 import lombok.*;
+
+import java.math.BigInteger;
 
 @Getter
 @Builder
@@ -14,6 +16,6 @@ public class AccountBookInfoDTO {
 
     String accountBookInfo;     // 가계부 내역 정보
 
-    long accountMoney;  // 가계부 금액
+    BigInteger accountMoney;  // 가계부 금액
 
 }
