@@ -2,10 +2,7 @@ package click.bitbank.api.infrastructure.factory;
 
 import click.bitbank.api.application.response.*;
 import click.bitbank.api.domain.model.member.MemberType;
-import click.bitbank.api.presentation.member.request.MemberLoginRequest;
-import click.bitbank.api.presentation.member.request.MemberIdRequest;
-import click.bitbank.api.presentation.member.request.MemberSignupRequest;
-import click.bitbank.api.presentation.member.request.SocialLoginRequest;
+import click.bitbank.api.presentation.member.request.*;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -91,6 +88,18 @@ public class MemberTestFactory {
         return MemberLoginRequest.builder()
             .memberLoginId("boookk")
             .memberPassword("boookk")
+            .build();
+    }
+
+    /**
+     * 회원 정보 수정 Request 구성
+     */
+    public static MemberModificationRequest memberModificationRequest() {
+
+        return MemberModificationRequest.builder()
+            .memberId(1)
+            .memberName("이름수정")
+            .memberPassword("비밀번호수정")
             .build();
     }
 

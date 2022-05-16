@@ -5,16 +5,10 @@ import click.bitbank.api.application.response.AlarmListResponse;
 import click.bitbank.api.application.response.MemberLoginResponse;
 import click.bitbank.api.application.response.MemberSignupResponse;
 import click.bitbank.api.domain.model.alarm.AlarmFindSpecification;
-import click.bitbank.api.domain.model.member.MemberDeleteSpecification;
-import click.bitbank.api.domain.model.member.MemberFindSpecification;
-import click.bitbank.api.domain.model.member.MemberLoginSpecification;
-import click.bitbank.api.domain.model.member.MemberSaveSpecification;
+import click.bitbank.api.domain.model.member.*;
 import click.bitbank.api.infrastructure.exception.status.BadRequestException;
 import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
-import click.bitbank.api.presentation.member.request.MemberIdRequest;
-import click.bitbank.api.presentation.member.request.MemberLoginRequest;
-import click.bitbank.api.presentation.member.request.MemberSignupRequest;
-import click.bitbank.api.presentation.member.request.SocialLoginRequest;
+import click.bitbank.api.presentation.member.request.*;
 import click.bitbank.api.presentation.shared.response.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +26,7 @@ public class MemberApplicationServiceImpl implements MemberApplicationService {
     private final MemberLoginSpecification memberLoginSpecification;
     private final MemberFindSpecification memberFindSpecification;
     private final MemberDeleteSpecification memberDeleteSpecification;
+    private final MemberUpdateSpecification memberUpdateSpecification;
     private final AlarmFindSpecification alarmFindSpecification;
 
     /**
@@ -102,6 +97,23 @@ public class MemberApplicationServiceImpl implements MemberApplicationService {
                 return memberLoginSpecification.memberExistCheckAndLogout(request.getMemberId());
             }
         ).switchIfEmpty(Mono.error(new BadRequestException(ExceptionMessage.IsRequiredRequest.getMessage())));
+    }
+
+    /**
+     * 회원 정보 수정
+     * @param serverRequest : MemberModificationRequest
+     * @return Mono<SuccessResponse> : 성공 여부
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Mono<SuccessResponse> modification(ServerRequest serverRequest) {
+        return serverRequest.bodyToMono(MemberModificationRequest.class)
+            .flatMap(request -> {
+                    request.verify(); // Request 유효성 검사
+
+                    return memberUpdateSpecification.memberExistCheckAndModification(request);
+                }
+            ).switchIfEmpty(Mono.error(new BadRequestException(ExceptionMessage.IsRequiredRequest.getMessage())));
     }
 
     /**

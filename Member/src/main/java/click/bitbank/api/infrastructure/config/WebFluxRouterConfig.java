@@ -209,6 +209,7 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
             path = "/member/logout",
             consumes = { MediaType.APPLICATION_JSON_VALUE },
             produces = { MediaType.APPLICATION_JSON_VALUE },
+            headers = { HttpHeaders.AUTHORIZATION },
             beanClass = MemberHandler.class,
             method = RequestMethod.POST,
             beanMethod = "logout",
@@ -237,9 +238,42 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
             )
         ),
         @RouterOperation(
+            path = "/member/modification",
+            consumes = { MediaType.APPLICATION_JSON_VALUE },
+            produces = { MediaType.APPLICATION_JSON_VALUE },
+            headers = { HttpHeaders.AUTHORIZATION },
+            beanClass = MemberHandler.class,
+            method = RequestMethod.POST,
+            beanMethod = "modification",
+            operation = @Operation(
+                description = "회원 정보 수정 API",
+                operationId = "modification",
+                requestBody = @RequestBody(
+                    content = @Content(
+                        schema = @Schema(
+                            implementation = MemberIdRequest.class,
+                            required = true
+                        )
+                    )
+                ),
+                responses = {
+                    @ApiResponse(
+                        responseCode = "200",
+                        content = @Content(
+                            schema = @Schema(
+                                implementation = SuccessResponse.class,
+                                required = true
+                            )
+                        )
+                    )
+                }
+            )
+        ),
+        @RouterOperation(
             path = "/member/delete",
             consumes = { MediaType.APPLICATION_JSON_VALUE },
             produces = { MediaType.APPLICATION_JSON_VALUE },
+            headers = { HttpHeaders.AUTHORIZATION },
             beanClass = MemberHandler.class,
             method = RequestMethod.DELETE,
             beanMethod = "delete",
@@ -289,6 +323,7 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
                 memberBuilder.nest(accept(MediaType.APPLICATION_JSON), builder ->
                     builder
                         .POST("/logout", memberHandler::logout) // 로그아웃
+                        .PUT("/modification", memberHandler::modification) // 회원 정보 수정
                         .DELETE("/delete", memberHandler::delete) // 회원 탈퇴
                 )
             )

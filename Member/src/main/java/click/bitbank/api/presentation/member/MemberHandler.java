@@ -83,6 +83,21 @@ public class MemberHandler {
     }
 
     /**
+     * 회원 정보 수정
+     * @param request : 수정할 회원 정보
+     * @return Mono<ServerResponse> : 성공 여부
+     */
+    public Mono<ServerResponse> modification(ServerRequest request) {
+
+        Mono<SuccessResponse> response = memberApplicationService.modification(request)
+            .subscribeOn(Schedulers.boundedElastic());
+
+        return ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response, SuccessResponse.class);
+    }
+
+    /**
      * 회원 탈퇴
      * @param request : 회원 정보
      * @return Mono<ServerResponse> : 성공 여부
