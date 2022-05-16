@@ -5,10 +5,10 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-
 @Repository
 public interface CardRepository extends ReactiveCrudRepository<Card, Integer> {
 
-    Flux<Card> findTop10ByOrderByCardRankingAsc();
+    Flux<Card> findTop10ByCardRankingIsNotNullOrderByCardRankingAsc();
+
+    Mono<Card> findFirstByCardBenefitType(CardBenefitType cardBenefitType);
 }

@@ -1,6 +1,6 @@
 package click.bitbank.api.infrastructure.config;
 
-import click.bitbank.api.application.response.CardPopularListResponse;
+import click.bitbank.api.application.response.CardListResponse;
 import click.bitbank.api.presentation.card.CardHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -38,7 +38,6 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
         @RouterOperation(
             path = "/card/popular-list",
             produces = { MediaType.APPLICATION_JSON_VALUE },
-            headers = { HttpHeaders.AUTHORIZATION },
             beanClass = CardHandler.class,
             method = RequestMethod.GET,
             beanMethod = "cardPopularList",
@@ -50,7 +49,29 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
                         responseCode = "200",
                         content = @Content(
                             schema = @Schema(
-                                implementation = CardPopularListResponse.class,
+                                implementation = CardListResponse.class,
+                                required = true
+                            )
+                        )
+                    )
+                }
+            )
+        ),
+        @RouterOperation(
+            path = "/card/recommendation-list",
+            produces = { MediaType.APPLICATION_JSON_VALUE },
+            beanClass = CardHandler.class,
+            method = RequestMethod.GET,
+            beanMethod = "cardRecommendationList",
+            operation = @Operation(
+                description = "소비 패턴 설문에 따른 카드 추천 API",
+                operationId = "cardRecommendationList",
+                responses = {
+                    @ApiResponse(
+                        responseCode = "200",
+                        content = @Content(
+                            schema = @Schema(
+                                implementation = CardListResponse.class,
                                 required = true
                             )
                         )
@@ -64,10 +85,9 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
 
         return RouterFunctions.route()
             .path("/card", cardBuilder ->
-                cardBuilder.nest(accept(MediaType.APPLICATION_JSON), builder ->
-                    builder
-                        .GET("/popular-list", cardHandler::cardPopularList) // 인기 카드 목록 조회
-                )
+                cardBuilder
+                    .GET("/popular-list", cardHandler::cardPopularList) // 인기 카드 목록 조회
+                    .GET("/recommendation-list", cardHandler::cardRecommendationList) // 소비 패턴 설문에 따른 카드 추천
             )
             .build();
     }

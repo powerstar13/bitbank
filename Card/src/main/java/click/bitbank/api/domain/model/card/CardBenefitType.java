@@ -18,6 +18,6 @@ public enum CardBenefitType {
     M("M", "대형마트비"),
     C("C", "편의점비");
 
-    private String name;
-    private String description;
+    private final String name;
+    private final String description;
 }

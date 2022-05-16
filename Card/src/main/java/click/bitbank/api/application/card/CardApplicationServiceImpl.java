@@ -1,21 +1,20 @@
 package click.bitbank.api.application.card;
 
-import click.bitbank.api.application.response.CardPopularListResponse;
-import click.bitbank.api.domain.model.card.Card;
-import click.bitbank.api.domain.model.card.CardRepository;
+import click.bitbank.api.application.response.CardListResponse;
+import click.bitbank.api.domain.model.card.CardFindSpecification;
 import click.bitbank.api.infrastructure.factory.CardResponseFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
+import org.springframework.web.reactive.function.server.ServerRequest;
 import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
 public class CardApplicationServiceImpl implements CardApplicationService {
 
-    private final CardRepository cardRepository;
     private final CardResponseFactory cardResponseFactory;
+    private final CardFindSpecification cardFindSpecification;
 
     /**
      * 인기 카드 목록 조회
@@ -23,10 +22,15 @@ public class CardApplicationServiceImpl implements CardApplicationService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
-    public Mono<CardPopularListResponse> findCardPopularList() {
-    
-        Flux<Card> cardFlux = cardRepository.findTop10ByOrderByCardRankingAsc(); // 카드 순위에 따라 Top 10 목록 조회
+    public Mono<CardListResponse> findCardPopularList() {
 
-        return cardResponseFactory.cardPopularListResponseBuilder(cardFlux);
+        return cardResponseFactory.cardListResponseBuilder(cardFindSpecification.cardPopularList());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    public Mono<CardListResponse> findCardRecommendationList(ServerRequest serverRequest) {
+
+        return cardFindSpecification.cardRecommendationVerify(serverRequest.queryParams().toSingleValueMap());
     }
 }
