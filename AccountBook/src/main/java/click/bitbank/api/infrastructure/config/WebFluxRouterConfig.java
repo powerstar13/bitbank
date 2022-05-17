@@ -22,6 +22,8 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
+
 @Configuration
 @EnableWebFlux // WebFlux 설정 활성화
 public class WebFluxRouterConfig implements WebFluxConfigurer {
@@ -34,85 +36,6 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
             .maxAge(3600);
     }
 
-  /*  @RouterOperations({
->>>>>>> Stashed changes
-        @RouterOperation(
-            path = "/member/admin/teacherRegistration",
-            consumes = { MediaType.APPLICATION_JSON_VALUE },
-            produces = { MediaType.APPLICATION_JSON_VALUE },
-            headers = { HttpHeaders.AUTHORIZATION },
-            beanClass = MemberHandler.class,
-            method = RequestMethod.POST,
-            beanMethod = "memberRegistration",
-            operation = @Operation(
-                description = "강사 등록 API",
-                operationId = "teacherRegistration",
-                requestBody = @RequestBody(
-                    content = @Content(
-                        schema = @Schema(
-                            implementation = MemberRegistrationRequest.class,
-                            required = true
-                        )
-                    )
-                ),
-                responses = {
-                    @ApiResponse(
-                        responseCode = "201",
-                        content = @Content(
-                            schema = @Schema(
-                                implementation = MemberRegistrationResponse.class,
-                                required = true
-                            )
-                        )
-                    )
-                }
-            )
-        ),
-        @RouterOperation(
-            path = "/member/studentRegistration",
-            consumes = { MediaType.APPLICATION_JSON_VALUE },
-            produces = { MediaType.APPLICATION_JSON_VALUE },
-            beanClass = MemberHandler.class,
-            method = RequestMethod.POST,
-            beanMethod = "memberRegistration",
-            operation = @Operation(
-                description = "학생 회원 가입 API",
-                operationId = "studentRegistration",
-                requestBody = @RequestBody(
-                    content = @Content(
-                        schema = @Schema(
-                            implementation = MemberRegistrationRequest.class,
-                            required = true
-                        )
-                    )
-                ),
-                responses = {
-                    @ApiResponse(
-                        responseCode = "201",
-                        content = @Content(
-                            schema = @Schema(
-                                implementation = MemberRegistrationResponse.class,
-                                required = true
-                            )
-                        )
-                    )
-                }
-            )
-        )
-    })
-    @Bean
-    public RouterFunction<ServerResponse> memberRouterBuilder(MemberHandler memberHandler) {
-
-        return RouterFunctions.route()
-            .path("/member", memberBuilder ->
-                memberBuilder.nest(accept(MediaType.APPLICATION_JSON), builder ->
-                    builder
-                        .POST("/admin/teacherRegistration", memberHandler::memberRegistration) // 강사 등록 (관리자만)
-                        .POST("/studentRegistration", memberHandler::memberRegistration) // 학생 회원 가입
-                )
-            )
-            .build();
-    }*/
 
     @RouterOperations({
         @RouterOperation(
@@ -148,11 +71,15 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
         )
     })
     @Bean
-    public RouterFunction<ServerResponse> accountBookRouterGETBuilder(AccountBookHandler accountBookHandler) {
+    public RouterFunction<ServerResponse> accountBookRouterBuilder(AccountBookHandler accountBookHandler) {
         return RouterFunctions.route()
-            .path("/account-book", builder -> builder
-                .GET("/search", accountBookHandler::accountBookSearch)
-            ).build();
+                .path("/account-book", builder -> builder
+                        .nest(accept(MediaType.APPLICATION_JSON), acceptBuilder ->
+                                acceptBuilder
+//                                        .POST("/", accountBookHandler::accountBookWrite) // 가계부 작성
+                                        .POST("/search", accountBookHandler::accountBookSearch) // 가계부 목록 검색
+                        )
+                ).build();
     }
 
 }

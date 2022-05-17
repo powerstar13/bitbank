@@ -1,9 +1,6 @@
 package click.bitbank.api.presentation.accountBook.request;
 
-import click.bitbank.api.domain.accountBook.ExpenditureType;
-import click.bitbank.api.domain.accountBook.IncomeType;
-import click.bitbank.api.domain.accountBook.SearchDateType;
-import click.bitbank.api.domain.accountBook.TransferType;
+import click.bitbank.api.domain.accountBook.*;
 import click.bitbank.api.infrastructure.exception.status.BadRequestException;
 import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
 import click.bitbank.api.presentation.shared.request.RequestVerify;
@@ -28,6 +25,8 @@ public class AccountBookSearchRequest implements RequestVerify {
 
     String searchEndDate;   // 검색 종료일
 
+    AccountBookType accountBookType;    // 가계부 유형
+
     List<ExpenditureType> expenditureType;    // 지출 유형
 
     List<IncomeType> incomeType;  // 수입 유형
@@ -49,6 +48,6 @@ public class AccountBookSearchRequest implements RequestVerify {
     @Override
     public void verify() {
         if (memberId == null) throw new BadRequestException(ExceptionMessage.IsRequiredMemberId.getMessage());
-        if (searchStartDate != null && searchEndDate != null && searchDateType == null) throw new BadRequestException(ExceptionMessage.IsRequiredSearchDateType.getMessage());
+        if ((accountBookType == null || searchStartDate != null && searchEndDate != null) && searchDateType == null) throw new BadRequestException(ExceptionMessage.IsRequiredSearchDateType.getMessage());
     }
 }
