@@ -1,13 +1,10 @@
 package click.bitbank.api.infrastructure.config;
 
-import click.bitbank.api.application.response.MemberInfoResponse;
-import click.bitbank.api.application.response.MemberRegistrationResponse;
-import click.bitbank.api.presentation.member.MemberHandler;
-import click.bitbank.api.presentation.member.request.MemberRegistrationRequest;
+import click.bitbank.api.domain.accountBook.model.Member;
+import click.bitbank.api.presentation.accountBook.AccountBookHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springdoc.core.annotations.RouterOperation;
 import org.springdoc.core.annotations.RouterOperations;
@@ -23,8 +20,6 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
-
 @Configuration
 @EnableWebFlux // WebFlux 설정 활성화
 public class WebFluxRouterConfig implements WebFluxConfigurer {
@@ -37,7 +32,8 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
             .maxAge(3600);
     }
 
-    @RouterOperations({
+  /*  @RouterOperations({
+>>>>>>> Stashed changes
         @RouterOperation(
             path = "/member/admin/teacherRegistration",
             consumes = { MediaType.APPLICATION_JSON_VALUE },
@@ -114,25 +110,25 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
                 )
             )
             .build();
-    }
+    }*/
 
     @RouterOperations({
         @RouterOperation(
-            path = "/member/findMemberInfo/${memberId}",
-            produces = { MediaType.APPLICATION_JSON_VALUE },
-            headers = { HttpHeaders.AUTHORIZATION },
-            beanClass = MemberHandler.class,
+            path = "/account-book/search",
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            headers = {HttpHeaders.AUTHORIZATION},
+            beanClass = AccountBookHandler.class,
             method = RequestMethod.GET,
-            beanMethod = "findMemberInfo",
+            beanMethod = "accountBookSearch",
             operation = @Operation(
-                description = "회원 정보 조회 API",
-                operationId = "findMemberInfo",
+                description = "가계부 목록 검색 API",
+                operationId = "accountBookSearch",
                 responses = {
                     @ApiResponse(
                         responseCode = "200",
                         content = @Content(
                             schema = @Schema(
-                                implementation = MemberInfoResponse.class,
+                                implementation = Member.class,
                                 required = true
                             )
                         )
@@ -142,10 +138,10 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
         )
     })
     @Bean
-    public RouterFunction<ServerResponse> memberRouterGETBuilder(MemberHandler memberHandler) {
+    public RouterFunction<ServerResponse> accountBookRouterGETBuilder(AccountBookHandler accountBookHandler) {
         return RouterFunctions.route()
-            .path("/member", builder -> builder
-                .GET("/findMemberInfo/{memberId}", memberHandler::findMemberInfo)
+            .path("/account-book", builder -> builder
+                .GET("/search", accountBookHandler::accountBookSearch)
             ).build();
     }
 

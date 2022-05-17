@@ -1,4 +1,4 @@
-package click.bitbank.api.domain.model.member;
+package click.bitbank.api.domain.accountBook;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public enum MemberType {
+public enum AccountBookType {
 
-    S("S", "소셜 회원"),
-    N("N", "일반 회원");
+    I("I", "수입"),
+    P("P", "지출"),
+    T("T", "이체");
 
     private String name;
     private String description;
