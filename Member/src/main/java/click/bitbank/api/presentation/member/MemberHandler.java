@@ -23,6 +23,21 @@ public class MemberHandler {
     private final MemberApplicationService memberApplicationService;
 
     /**
+     * 소셜 로그인
+     * @param request : 소셜 정보
+     * @return Mono<ServerResponse> : 권한 인증 정보
+     */
+    public Mono<ServerResponse> socialLogin(ServerRequest request) {
+
+        Mono<MemberLoginResponse> response = memberApplicationService.socialLogin(request)
+            .subscribeOn(Schedulers.boundedElastic());
+
+        return ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response, MemberLoginResponse.class);
+    }
+
+    /**
      * 일반 회원 가입
      * @param request : 가입할 회원 정보
      * @return Mono<ServerResponse> : 등록한 회원 정보

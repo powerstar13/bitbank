@@ -14,6 +14,7 @@ import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
 import click.bitbank.api.presentation.member.request.MemberIdRequest;
 import click.bitbank.api.presentation.member.request.MemberLoginRequest;
 import click.bitbank.api.presentation.member.request.MemberSignupRequest;
+import click.bitbank.api.presentation.member.request.SocialLoginRequest;
 import click.bitbank.api.presentation.shared.response.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +48,23 @@ public class MemberApplicationServiceImpl implements MemberApplicationService {
                 request.verify(); // Request 유효성 검사
 
                 return memberSaveSpecification.memberExistCheckAndRegistration(request); // 회원 계정 생성
+            }
+        ).switchIfEmpty(Mono.error(new BadRequestException(ExceptionMessage.IsRequiredRequest.getMessage())));
+    }
+
+    /**
+     * 소셜 회원 로그인
+     * @param serverRequest : SocialLoginRequest
+     * @return Mono<MemberLoginResponse> : 저장된 회원 정보
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Mono<MemberLoginResponse> socialLogin(ServerRequest serverRequest) {
+
+        return serverRequest.bodyToMono(SocialLoginRequest.class).flatMap(
+            request -> {
+                request.verify(); // Request 유효성 검사
+                return memberLoginSpecification.memberExistCheckAndSocialLogin(request);
             }
         ).switchIfEmpty(Mono.error(new BadRequestException(ExceptionMessage.IsRequiredRequest.getMessage())));
     }

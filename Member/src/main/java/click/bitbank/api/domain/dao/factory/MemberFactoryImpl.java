@@ -12,7 +12,7 @@ import click.bitbank.api.infrastructure.util.MemberSha256;
 public class MemberFactoryImpl implements MemberFactory {
 
     /**
-     * 회원 정보 세팅
+     * 일반 회원 정보 구성
      * @param memberLoginId : 아이디
      * @param memberName : 이름
      * @param memberPassword : 비밀번호
@@ -29,6 +29,26 @@ public class MemberFactoryImpl implements MemberFactory {
             .memberLoginId(memberLoginId)
             .memberName(memberName)
             .memberPassword(MemberSha256.encrypt(memberPassword))
+            .memberType(memberType)
+            .build();
+    }
+
+    /**
+     * 소셜 회원 정보 구성
+     * @param socialToken : 소셜 토큰
+     * @param memberName : 회원 이름
+     * @param memberType : 회원 유형
+     * @return Member : 회원 정보
+     */
+    @Override
+    public Member socialMemberBuilder(String socialToken, String memberName, MemberType memberType) {
+        if (StringUtils.isBlank(socialToken)) throw new BadRequestException(ExceptionMessage.IsRequiredMemberLoginId.getMessage());
+        if (StringUtils.isBlank(memberName)) throw new BadRequestException(ExceptionMessage.IsRequiredMemberName.getMessage());
+        if (memberType == null) throw new BadRequestException(ExceptionMessage.IsRequiredMemberType.getMessage());
+
+        return Member.builder()
+            .socialToken(socialToken)
+            .memberName(memberName)
             .memberType(memberType)
             .build();
     }

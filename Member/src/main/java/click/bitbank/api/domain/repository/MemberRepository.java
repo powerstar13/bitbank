@@ -17,6 +17,8 @@ public interface MemberRepository extends ReactiveCrudRepository<Member, Integer
 
     Mono<Member> findByMemberLoginIdAndDelDateIsNull(String memberLoginId);
 
+    Mono<Member> findBySocialTokenAndDelDateIsNull(String socialToken);
+
     Mono<Member> findByMemberLoginIdAndMemberPasswordAndDelDateIsNull(String memberLoginId, String memberPassword);
 
     Flux<Member> findAllByDelDateIsNull();

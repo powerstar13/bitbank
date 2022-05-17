@@ -8,6 +8,7 @@ import click.bitbank.api.presentation.member.MemberHandler;
 import click.bitbank.api.presentation.member.request.MemberLoginRequest;
 import click.bitbank.api.presentation.member.request.MemberIdRequest;
 import click.bitbank.api.presentation.member.request.MemberSignupRequest;
+import click.bitbank.api.presentation.member.request.SocialLoginRequest;
 import click.bitbank.api.presentation.shared.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -69,6 +70,37 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
                         content = @Content(
                             schema = @Schema(
                                 implementation = MemberSignupResponse.class,
+                                required = true
+                            )
+                        )
+                    )
+                }
+            )
+        ),
+        @RouterOperation(
+            path = "/auth/login/social",
+            consumes = { MediaType.APPLICATION_JSON_VALUE },
+            produces = { MediaType.APPLICATION_JSON_VALUE },
+            beanClass = MemberHandler.class,
+            method = RequestMethod.POST,
+            beanMethod = "loginSocial",
+            operation = @Operation(
+                description = "소셜 로그인 API",
+                operationId = "loginSocial",
+                requestBody = @RequestBody(
+                    content = @Content(
+                        schema = @Schema(
+                            implementation = SocialLoginRequest.class,
+                            required = true
+                        )
+                    )
+                ),
+                responses = {
+                    @ApiResponse(
+                        responseCode = "200",
+                        content = @Content(
+                            schema = @Schema(
+                                implementation = MemberLoginResponse.class,
                                 required = true
                             )
                         )
@@ -244,7 +276,8 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
                 memberBuilder.nest(accept(MediaType.APPLICATION_JSON), builder ->
                     builder
                         .POST("/signup", memberHandler::signup) // 학생 회원 가입
-                        .POST("/login", memberHandler::login) // 로그인
+                        .POST("/login/social", memberHandler::socialLogin) // 소셜 로그인
+                        .POST("/login", memberHandler::login) // 일반 회원 로그인
                 )
             )
             .path("/member", memberBuilder ->

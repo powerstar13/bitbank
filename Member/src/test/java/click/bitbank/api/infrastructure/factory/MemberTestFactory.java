@@ -5,6 +5,7 @@ import click.bitbank.api.domain.model.member.MemberType;
 import click.bitbank.api.presentation.member.request.MemberLoginRequest;
 import click.bitbank.api.presentation.member.request.MemberIdRequest;
 import click.bitbank.api.presentation.member.request.MemberSignupRequest;
+import click.bitbank.api.presentation.member.request.SocialLoginRequest;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -36,6 +37,33 @@ public class MemberTestFactory {
             .memberLoginId("gildong123")
             .memberName("홍길동")
             .memberPassword("1234")
+            .build();
+    }
+
+    /**
+     * 소셜 회원 로그인 Response 구성
+     */
+    public static Mono<MemberLoginResponse> socialLoginResponse() {
+
+        return Mono.just(
+            MemberLoginResponse.builder()
+                .memberId(1)
+                .memberName("홍준성")
+                .accessToken("액세스토큰")
+                .refreshToken("리프레시토큰")
+                .memberType(MemberType.S)
+                .build()
+        );
+    }
+
+    /**
+     * 소셜 회원 로그인 Request 구성
+     */
+    public static SocialLoginRequest socialLoginRequest() {
+
+        return SocialLoginRequest.builder()
+            .socialToken("소셜토큰")
+            .memberName("이름")
             .build();
     }
 

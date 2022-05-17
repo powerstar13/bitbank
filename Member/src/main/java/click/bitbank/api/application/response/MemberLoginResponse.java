@@ -14,12 +14,11 @@ public class MemberLoginResponse extends SuccessResponse {
 
     private int memberId; // 회원 고유번호
 
-    private String memberName;
+    private String memberName; // 회원 이름
 
-    private MemberType memberType;
+    private MemberType memberType; // 회원 유형
 
-    private String accessToken;
+    private String accessToken; // 액세스토큰
 
-    private String refreshToken;
-
+    private String refreshToken; // 리프레시토큰
 }
