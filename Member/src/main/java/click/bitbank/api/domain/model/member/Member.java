@@ -1,6 +1,8 @@
 package click.bitbank.api.domain.model.member;
 
+import click.bitbank.api.infrastructure.util.MemberSha256;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -50,15 +52,35 @@ public class Member {
     @Column(value = "delDate")
     private LocalDateTime delDate; // 삭제일
 
+    /**
+     * 리프레시토큰 발급
+     * @param refreshToken : 리프레시 토큰
+     */
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
 
+    /**
+     * 로그아웃
+     */
     public void logout() {
         this.refreshToken = null;
     }
 
+    /**
+     * 회원 탈퇴
+     */
     public void delete() {
         this.delDate = LocalDateTime.now();
+    }
+
+    /**
+     * 회원 정보 수정
+     * @param memberName : 이름
+     * @param memberPassword : 비밀번호
+     */
+    public void modify(String memberName, String memberPassword) {
+        if (StringUtils.isNotBlank(memberName)) this.memberName = memberName;
+        if (StringUtils.isNotBlank(memberPassword)) this.memberPassword = MemberSha256.encrypt(memberPassword);
     }
 }

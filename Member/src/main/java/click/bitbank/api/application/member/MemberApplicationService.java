@@ -18,6 +18,8 @@ public interface MemberApplicationService {
 
     Mono<SuccessResponse> logout(ServerRequest serverRequest); // 로그아웃
 
+    Mono<SuccessResponse> modification(ServerRequest serverRequest); // 회원 정보 수정
+
     Mono<SuccessResponse> delete(ServerRequest serverRequest); // 회원 탈퇴
 
     Mono<AlarmCountResponse> findAlarmCount(ServerRequest serverRequest); // 읽지 않은 알림 갯수 조회

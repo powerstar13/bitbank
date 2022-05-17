@@ -156,6 +156,32 @@ class MemberHandlerTest {
     }
 
     /**
+     * 회원 정보 수정
+     */
+    @Test
+    void modification() {
+        // given
+        given(memberApplicationService.modification(any(ServerRequest.class))).willReturn(Mono.just(new SuccessResponse()));
+
+        // when
+        FluxExchangeResult<SuccessResponse> result = webClient
+            .put()
+            .uri("/member/modification")
+            .bodyValue(memberModificationRequest())
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus().isOk()
+            .returnResult(SuccessResponse.class);
+
+        // then
+        verify(memberApplicationService).modification(any(ServerRequest.class));
+
+        StepVerifier.create(result.getResponseBody().log())
+            .assertNext(response -> assertEquals(HttpStatus.OK.value(), response.getRt()))
+            .verifyComplete();
+    }
+
+    /**
      * 회원 탈퇴
      */
     @Test
