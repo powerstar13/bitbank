@@ -16,9 +16,12 @@ public class MemberSpecification {
 
     private final MemberRepository memberRepository;
 
+    /**
+     * 회원 존재 여부 확인
+     * @param memberId : 회원 고유 번호
+     * @return Mono<Member> : 회원 고유 번호
+     */
     public Mono<Member> memberExistenceCheck(int memberId) {
-        log.info("-----------------  여긴 멤버 존재 확인 시작");
-
         return memberRepository.findByMemberId(memberId)
                 .switchIfEmpty(Mono.error(new NotFoundDataException(ExceptionMessage.NotFoundLoginMember.getMessage()))).log();
     }

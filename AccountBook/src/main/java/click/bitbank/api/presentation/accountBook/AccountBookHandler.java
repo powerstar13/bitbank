@@ -23,11 +23,15 @@ public class AccountBookHandler {
 
     private final AccountBookApplicationService accountBookApplicationService;
 
+    /**
+     * 가계부 목록 검색
+     * @param request : 전달된 Request
+     * @return Mono<ServerResponse> : 날짜별 가계부 정보
+     */
     public Mono<ServerResponse> accountBookSearch(ServerRequest request) {
-        log.info("-----------------  여긴 핸들러 시작");
+
         Mono<List<AccountBookSearchByDailyDTO>> response = accountBookApplicationService.accountBookSearch(request)
                 .subscribeOn(Schedulers.boundedElastic()).log();
-        log.info("-----------------  여긴 핸들러 종료 지점");
 
         return ok()
                 .contentType(MediaType.APPLICATION_JSON)

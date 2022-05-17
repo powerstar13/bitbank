@@ -41,8 +41,8 @@ public class AccountBookSearchService {
     /**
      * 가계부 목록 검색
      *
-     * @param request
-     * @return
+     * @param request : 전달된 Request
+     * @return Mono<List<AccountBookSearchByDailyDTO>> : 날짜별 가계부 정보
      */
     public Mono<List<AccountBookSearchByDailyDTO>> makeAccountBookSearchByDail(AccountBookSearchRequest request) {
 
@@ -56,8 +56,8 @@ public class AccountBookSearchService {
     /**
      * 가계부 검색 결과 리스트 만들기
      *
-     * @param accountBookByCategoryDTOList
-     * @return
+     * @param accountBookByCategoryDTOList : 가계부(수입, 지출, 이체) 정보
+     * @return List<AccountBookSearchByDailyDTO> : 날짜별 가계부 정보
      */
     public List<AccountBookSearchByDailyDTO> makeAccountBookSearchResponse(List<AccountBookByCategoryDTO> accountBookByCategoryDTOList) {
         BigInteger incomeTotal = BigInteger.valueOf(0);
@@ -94,11 +94,12 @@ public class AccountBookSearchService {
         return new ArrayList<>(accountBookMap.values());
     }
 
+
     /**
      * 가계부 목록 검색 (수입)
      *
      * @param request : 전달된 Request
-     * @return
+     * @return Mono<List<AccountBookByCategoryDTO>> : 회원의 가계부(수입) 내역
      */
     @Transactional(rollbackFor = Exception.class, readOnly = true)
     public Mono<List<AccountBookByCategoryDTO>> getIncomeSearch(AccountBookSearchRequest request) {
@@ -171,8 +172,9 @@ public class AccountBookSearchService {
 
     /**
      * 가계부 목록 검색 (지출)
-     * @param request
-     * @return
+     *
+     * @param request : 전달된 Request
+     * @return Mono<List<AccountBookByCategoryDTO>> : 회원의 가계부(지출) 내역
      */
     @Transactional(rollbackFor = Exception.class, readOnly = true)
     public Mono<List<AccountBookByCategoryDTO>> getExpenditureSearch(AccountBookSearchRequest request) {
@@ -242,10 +244,12 @@ public class AccountBookSearchService {
         });
     }
 
+
     /**
      * 가계부 목록 검색 (이체)
-     * @param request
-     * @return
+     *
+     * @param request : 전달된 Request
+     * @return Mono<List<AccountBookByCategoryDTO>> : 회원의 가계부(이체) 내역
      */
     @Transactional(rollbackFor = Exception.class, readOnly = true)
     public Mono<List<AccountBookByCategoryDTO>> getTransferSearch(AccountBookSearchRequest request) {
@@ -315,9 +319,11 @@ public class AccountBookSearchService {
         });
     }
 
+
     /**
      * 검색 기간 유형에 따라 검색 기간 세팅
-     * @param request
+     *
+     * @param request : 전달된 Request
      */
     public void setBoundsDate(AccountBookSearchRequest request) {
         LocalDateTime today = LocalDateTime.now();

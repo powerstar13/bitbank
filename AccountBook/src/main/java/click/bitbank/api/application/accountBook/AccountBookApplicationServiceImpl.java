@@ -26,14 +26,13 @@ public class AccountBookApplicationServiceImpl implements AccountBookApplication
 
     /**
      * 가계부 목록 검색
-     *
      * @param serverRequest : 전달된 Request
      * @return Mono<AccountBookSearchResponse> : 저장된 가계부 정보
      */
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
     public Mono<List<AccountBookSearchByDailyDTO>> accountBookSearch(ServerRequest serverRequest) {
-        log.info("-----------------  여긴 서비스 시작");
+
         return serverRequest.bodyToMono(AccountBookSearchRequest.class).flatMap(
                 request -> {
                     request.verify();

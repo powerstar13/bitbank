@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class AccountBookByCategoryDTO {
 
-    private LocalDateTime date;
+    private LocalDateTime date; // 가계부 날짜
 
-    private String info;
+    private String info;    // 가계부 정보
 
-    private BigInteger money;
+    private BigInteger money;   // 가계부 금액
 
     private AccountBookType accountBookType;    // 가계부 타입 (수입, 지출, 이체)
 }
