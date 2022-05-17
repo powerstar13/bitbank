@@ -1,5 +1,6 @@
 package click.bitbank.api.domain.service;
 
+import click.bitbank.api.application.response.AccountBookSearchResponse;
 import click.bitbank.api.application.response.DTO.AccountBookByCategoryDTO;
 import click.bitbank.api.application.response.DTO.AccountBookInfoDTO;
 import click.bitbank.api.application.response.DTO.AccountBookSearchByDailyDTO;
@@ -44,7 +45,7 @@ public class AccountBookSearchService {
      * @param request : 전달된 Request
      * @return Mono<List<AccountBookSearchByDailyDTO>> : 날짜별 가계부 정보
      */
-    public Mono<List<AccountBookSearchByDailyDTO>> makeAccountBookSearchByDail(AccountBookSearchRequest request) {
+    public Mono<AccountBookSearchResponse> makeAccountBookSearchByDail(AccountBookSearchRequest request) {
 
         return Flux.merge(getIncomeSearch(request), getExpenditureSearch(request), getTransferSearch(request))
                 .flatMapIterable(Function.identity())
@@ -59,7 +60,7 @@ public class AccountBookSearchService {
      * @param accountBookByCategoryDTOList : 가계부(수입, 지출, 이체) 정보
      * @return List<AccountBookSearchByDailyDTO> : 날짜별 가계부 정보
      */
-    public List<AccountBookSearchByDailyDTO> makeAccountBookSearchResponse(List<AccountBookByCategoryDTO> accountBookByCategoryDTOList) {
+    public AccountBookSearchResponse makeAccountBookSearchResponse(List<AccountBookByCategoryDTO> accountBookByCategoryDTOList) {
         BigInteger incomeTotal = BigInteger.valueOf(0);
         BigInteger expenditureTotal = BigInteger.valueOf(0);
 
@@ -91,7 +92,7 @@ public class AccountBookSearchService {
             }
         }
 
-        return new ArrayList<>(accountBookMap.values());
+        return new AccountBookSearchResponse(new ArrayList<>(accountBookMap.values()), incomeTotal, expenditureTotal);
     }
 
 

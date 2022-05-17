@@ -2,7 +2,6 @@ package click.bitbank.api.presentation.accountBook;
 
 import click.bitbank.api.application.accountBook.AccountBookApplicationService;
 import click.bitbank.api.application.response.AccountBookSearchResponse;
-import click.bitbank.api.application.response.DTO.AccountBookSearchByDailyDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -30,7 +29,7 @@ public class AccountBookHandler {
      */
     public Mono<ServerResponse> accountBookSearch(ServerRequest request) {
 
-        Mono<List<AccountBookSearchByDailyDTO>> response = accountBookApplicationService.accountBookSearch(request)
+        Mono<AccountBookSearchResponse> response = accountBookApplicationService.accountBookSearch(request)
                 .subscribeOn(Schedulers.boundedElastic()).log();
 
         return ok()

@@ -1,10 +1,12 @@
 package click.bitbank.api.infrastructure.config;
 
-import click.bitbank.api.domain.accountBook.model.Member;
+import click.bitbank.api.application.response.AccountBookSearchResponse;
 import click.bitbank.api.presentation.accountBook.AccountBookHandler;
+import click.bitbank.api.presentation.accountBook.request.AccountBookSearchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springdoc.core.annotations.RouterOperation;
 import org.springdoc.core.annotations.RouterOperations;
@@ -123,12 +125,20 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
             operation = @Operation(
                 description = "가계부 목록 검색 API",
                 operationId = "accountBookSearch",
+                requestBody = @RequestBody(
+                        content = @Content(
+                                schema = @Schema(
+                                        implementation = AccountBookSearchRequest.class,
+                                        required = true
+                                )
+                        )
+                ),
                 responses = {
                     @ApiResponse(
                         responseCode = "200",
                         content = @Content(
                             schema = @Schema(
-                                implementation = Member.class,
+                                implementation = AccountBookSearchResponse.class,
                                 required = true
                             )
                         )

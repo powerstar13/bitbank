@@ -1,6 +1,6 @@
 package click.bitbank.api.application.accountBook;
 
-import click.bitbank.api.application.response.DTO.AccountBookSearchByDailyDTO;
+import click.bitbank.api.application.response.AccountBookSearchResponse;
 import click.bitbank.api.domain.accountBook.MemberSpecification;
 import click.bitbank.api.domain.service.AccountBookSearchService;
 import click.bitbank.api.infrastructure.exception.status.BadRequestException;
@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,12 +24,13 @@ public class AccountBookApplicationServiceImpl implements AccountBookApplication
 
     /**
      * 가계부 목록 검색
+     *
      * @param serverRequest : 전달된 Request
      * @return Mono<AccountBookSearchResponse> : 저장된 가계부 정보
      */
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
-    public Mono<List<AccountBookSearchByDailyDTO>> accountBookSearch(ServerRequest serverRequest) {
+    public Mono<AccountBookSearchResponse> accountBookSearch(ServerRequest serverRequest) {
 
         return serverRequest.bodyToMono(AccountBookSearchRequest.class).flatMap(
                 request -> {
