@@ -33,32 +33,35 @@ public class AccountBookFactoryImpl implements AccountBookFactory {
     }
 
     @Override
-    public Income incomeBuilder(String incomeInfo, LocalDateTime incomeDate, IncomeType incomeType, BigInteger incomeMoney) {
+    public Income incomeBuilder(String incomeInfo, LocalDateTime incomeDate, IncomeType incomeType, BigInteger incomeMoney, int memberId) {
         return Income.builder()
             .incomeInfo(incomeInfo)
             .incomeDate(incomeDate)
             .incomeType(incomeType)
             .incomeMoney(incomeMoney)
+            .memberId(memberId)
             .build();
     }
 
     @Override
-    public Expenditure expenditureBuilder(String expenditureInfo, LocalDateTime expenditureDate, ExpenditureType expenditureType, BigInteger expenditureMoney) {
+    public Expenditure expenditureBuilder(String expenditureInfo, LocalDateTime expenditureDate, ExpenditureType expenditureType, BigInteger expenditureMoney, int memberId) {
         return Expenditure.builder()
             .expenditureInfo(expenditureInfo)
             .expenditureDate(expenditureDate)
             .expenditureType(expenditureType)
             .expenditureMoney(expenditureMoney)
+            .memberId(memberId)
             .build();
     }
 
     @Override
-    public Transfer transferBuilder(String transferInfo, LocalDateTime transferDate,TransferType transferType, BigInteger transferMoney) {
+    public Transfer transferBuilder(String transferInfo, LocalDateTime transferDate,TransferType transferType, BigInteger transferMoney, int memberId) {
         return Transfer.builder()
             .transferInfo(transferInfo)
             .transferDate(transferDate)
             .transferType(transferType)
             .transferMoney(transferMoney)
+            .memberId(memberId)
             .build();
     }
 }

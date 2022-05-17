@@ -164,5 +164,4 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
                 .GET("/statistic/income", accountBookHandler::accountBookStatistic) // 월 별 수입 통계
             ).build();
     }
-
 }

@@ -36,7 +36,7 @@ public class AccountBookWriteRequest implements RequestVerify {
 
     private BigInteger price; // 금액
 
-    private LocalDateTime createdDate; // 작성한 날짜
+    private String createdDate; // 작성한 날짜
 
     @Override
     public void verify() {

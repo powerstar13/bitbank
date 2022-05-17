@@ -46,15 +46,19 @@ public class AccountBookApplicationServiceImpl implements AccountBookApplication
 
     /**
      * 가계부 작성
+     *
      * @param serverRequest
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Mono<AccountBookWriteResponse> accountBookWrite(ServerRequest serverRequest) {
+    public Mono<Object> accountBookWrite(ServerRequest serverRequest) {
 //        String jwt = serverRequest.headers().firstHeader("Authorization");
+
         return serverRequest.bodyToMono(AccountBookWriteRequest.class).flatMap(
             request -> {
+                log.info(String.valueOf(request));
+
                 request.verify(); // 유효성 검사
                 return accountBookWriteSpecification.accountBookExistCheckAndWrite(request);
             }
