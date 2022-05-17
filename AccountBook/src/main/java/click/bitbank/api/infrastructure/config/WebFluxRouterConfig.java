@@ -36,7 +36,6 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
             .maxAge(3600);
     }
 
-
     @RouterOperations({
         @RouterOperation(
             path = "/account-book/search",

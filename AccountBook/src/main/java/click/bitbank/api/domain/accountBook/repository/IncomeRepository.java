@@ -1,7 +1,7 @@
 package click.bitbank.api.domain.accountBook.repository;
 
-import click.bitbank.api.domain.accountBook.IncomeType;
-import click.bitbank.api.domain.accountBook.model.Income;
+import click.bitbank.api.domain.accountBook.model.income.Income;
+import click.bitbank.api.domain.accountBook.model.income.IncomeType;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;

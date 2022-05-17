@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class KafkaConsumerService {
 
-
     /**
      * 강의 오픈 토픽 구독
      * @param message : 받은 메시지
