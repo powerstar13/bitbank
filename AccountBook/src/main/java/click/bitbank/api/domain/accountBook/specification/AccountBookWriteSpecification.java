@@ -4,23 +4,14 @@ import click.bitbank.api.application.response.AccountBookWriteResponse;
 import click.bitbank.api.domain.accountBook.DAO.AccountBookFactory;
 import click.bitbank.api.domain.accountBook.model.AccountBook;
 import click.bitbank.api.domain.accountBook.model.AccountBookType;
-import click.bitbank.api.domain.accountBook.model.Classification;
-import click.bitbank.api.domain.accountBook.model.expenditure.Expenditure;
-import click.bitbank.api.domain.accountBook.model.income.Income;
-import click.bitbank.api.domain.accountBook.model.transfer.Transfer;
 import click.bitbank.api.domain.accountBook.repository.AccountBookRepository;
 import click.bitbank.api.domain.accountBook.repository.ExpenditureRepository;
 import click.bitbank.api.domain.accountBook.repository.IncomeRepository;
 import click.bitbank.api.domain.accountBook.repository.TransferRepository;
-import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
-import click.bitbank.api.infrastructure.exception.status.RegistrationFailException;
 import click.bitbank.api.presentation.accountBook.request.AccountBookWriteRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
-import java.math.BigInteger;
-import java.sql.Timestamp;
 
 @Component
 @RequiredArgsConstructor
@@ -68,7 +59,7 @@ public class AccountBookWriteSpecification {
             return accountBookRepository.save(
                 accountBookFactory.builder(
                     request.getAccountBookType(),
-                    Timestamp.valueOf(request.getCreatedDate()),
+                    request.getCreatedDate(),
                     request.getAccountName(),
                     request.getPrice()
                 )
@@ -77,7 +68,7 @@ public class AccountBookWriteSpecification {
             return accountBookRepository.save(
                 accountBookFactory.builder(
                     request.getAccountBookType(),
-                    Timestamp.valueOf(request.getCreatedDate()),
+                    request.getCreatedDate(),
                     request.getAccountName(),
                     request.getPrice()
                 )
@@ -86,7 +77,7 @@ public class AccountBookWriteSpecification {
             return accountBookRepository.save(
                 accountBookFactory.builder(
                     request.getAccountBookType(),
-                    Timestamp.valueOf(request.getCreatedDate()),
+                    request.getCreatedDate(),
                     request.getAccountName(),
                     request.getPrice()
                 )

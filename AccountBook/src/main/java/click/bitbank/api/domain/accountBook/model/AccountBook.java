@@ -1,6 +1,5 @@
 package click.bitbank.api.domain.accountBook.model;
 
-import click.bitbank.api.domain.accountBook.model.Classification;
 import click.bitbank.api.domain.accountBook.model.expenditure.ExpenditureType;
 import click.bitbank.api.domain.accountBook.model.income.IncomeType;
 import click.bitbank.api.domain.accountBook.model.transfer.TransferType;
@@ -10,7 +9,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -18,7 +17,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(value = "accountBook")
-public class AccountBook {
+public class AccountBook extends Classification {
 
     @Id
     @Column(value = "accountBookId")
@@ -28,7 +27,7 @@ public class AccountBook {
     private String accountBookInfo; // 가계부 내역
 
     @Column(value = "accountBookDate")
-    private Timestamp accountBookDate; // 가계부 작성 날짜
+    private LocalDateTime accountBookDate; // 가계부 작성 날짜
 
     @Column(value = "accountBookMoney")
     private BigInteger accountBookMoney; // 금액
@@ -47,10 +46,4 @@ public class AccountBook {
 
     @Column(value = "longitude")
     private String longitude; // 경도
-
-    @Column(value = "regDate")
-    private Timestamp regDate; // 생성일
-
-    @Column(value = "modDate")
-    private Timestamp modDate; // 수정일
 }

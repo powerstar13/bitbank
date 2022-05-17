@@ -12,6 +12,7 @@ import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -35,14 +36,14 @@ public class AccountBookWriteRequest implements RequestVerify {
 
     private BigInteger price; // 금액
 
-    private String createdDate; // 작성한 날짜
+    private LocalDateTime createdDate; // 작성한 날짜
 
     @Override
     public void verify() {
         verifyAccountBookType();
         if (StringUtils.isBlank(accountName)) throw new BadRequestException(ExceptionMessage.IsRequiredAccountName.getMessage());
         if (price.compareTo(new BigInteger("0")) == -1) throw new BadRequestException(ExceptionMessage.IsRequiredPositiveNumber.getMessage());
-        if (StringUtils.isBlank(createdDate)) throw new BadRequestException(ExceptionMessage.IsRequiredCreatedDate.getMessage());
+        if (createdDate == null) throw new BadRequestException(ExceptionMessage.IsRequiredCreatedDate.getMessage());
     }
 
     /**

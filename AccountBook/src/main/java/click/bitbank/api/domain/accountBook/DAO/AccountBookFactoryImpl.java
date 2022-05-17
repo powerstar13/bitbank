@@ -8,17 +8,16 @@ import click.bitbank.api.domain.accountBook.model.income.Income;
 import click.bitbank.api.domain.accountBook.model.income.IncomeType;
 import click.bitbank.api.domain.accountBook.model.transfer.Transfer;
 import click.bitbank.api.domain.accountBook.model.transfer.TransferType;
-
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Component
 public class AccountBookFactoryImpl implements AccountBookFactory {
 
     @Override
-    public AccountBook builder(AccountBookType accountBookType, Timestamp accountBookDate, String accountBookInfo, BigInteger accountBookMoney) {
+    public AccountBook builder(AccountBookType accountBookType, LocalDateTime accountBookDate, String accountBookInfo, BigInteger accountBookMoney) {
 //        if (accountBookType == AccountBookType.I) {
 //
 //        }
@@ -30,7 +29,7 @@ public class AccountBookFactoryImpl implements AccountBookFactory {
     }
 
     @Override
-    public Income incomeBuilder(String incomeInfo, Timestamp incomeDate, IncomeType incomeType, BigInteger incomeMoney) {
+    public Income incomeBuilder(String incomeInfo, LocalDateTime incomeDate, IncomeType incomeType, BigInteger incomeMoney) {
         return Income.builder()
                 .incomeInfo(incomeInfo)
                 .incomeDate(incomeDate)
@@ -40,7 +39,7 @@ public class AccountBookFactoryImpl implements AccountBookFactory {
     }
 
     @Override
-    public Expenditure expenditureBuilder(String expenditureInfo, Timestamp expenditureDate, ExpenditureType expenditureType, BigInteger expenditureMoney) {
+    public Expenditure expenditureBuilder(String expenditureInfo, LocalDateTime expenditureDate, ExpenditureType expenditureType, BigInteger expenditureMoney) {
         return Expenditure.builder()
                 .expenditureInfo(expenditureInfo)
                 .expenditureDate(expenditureDate)
@@ -50,7 +49,7 @@ public class AccountBookFactoryImpl implements AccountBookFactory {
     }
 
     @Override
-    public Transfer transferBuilder(String transferInfo, Timestamp transferDate,TransferType transferType, BigInteger transferMoney) {
+    public Transfer transferBuilder(String transferInfo, LocalDateTime transferDate,TransferType transferType, BigInteger transferMoney) {
         return Transfer.builder()
                 .transferInfo(transferInfo)
                 .transferDate(transferDate)
