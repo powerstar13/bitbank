@@ -1,5 +1,6 @@
 package click.bitbank.api.presentation.accountBook;
 
+<<<<<<< HEAD
 import click.bitbank.api.application.accountBook.AccountBookApplicationService;
 import click.bitbank.api.application.response.AccountBookStatisticResponse;
 import click.bitbank.api.infrastructure.exception.GlobalExceptionHandler;
@@ -91,4 +92,11 @@ class AccountBookHandlerTest {
             }))
             .verifyComplete();
     }
+=======
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class AccountBookHandlerTest {
+
+>>>>>>> 3d8188a (﻿가계부 작성 API 임시 커밋)
 }

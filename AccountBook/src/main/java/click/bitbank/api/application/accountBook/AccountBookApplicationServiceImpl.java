@@ -11,6 +11,8 @@ import click.bitbank.api.domain.accountBook.AccountBookType;
 import click.bitbank.api.domain.accountBook.MemberSpecification;
 import click.bitbank.api.domain.accountBook.repository.ExpenditureRepository;
 import click.bitbank.api.domain.accountBook.repository.IncomeRepository;
+import click.bitbank.api.application.response.AccountBookWriteResponse;
+import click.bitbank.api.domain.accountBook.MemberSpecification;
 import click.bitbank.api.domain.accountBook.specification.AccountBookWriteSpecification;
 import click.bitbank.api.domain.service.AccountBookSearchService;
 import click.bitbank.api.infrastructure.exception.status.BadRequestException;
@@ -39,13 +41,11 @@ public class AccountBookApplicationServiceImpl implements AccountBookApplication
     
     private final MemberSpecification memberSpecification;
     private final AccountBookSearchService accountBookSearchService;
-    
     private final AccountBookWriteSpecification accountBookWriteSpecification;
     private final AccountBookFindSpecification accountBookFindSpecification;
-    
+
     /**
      * 가계부 작성
-     *
      * @param serverRequest
      * @return
      */
@@ -60,7 +60,7 @@ public class AccountBookApplicationServiceImpl implements AccountBookApplication
             }
         );
     }
-    
+
     /**
      * 가계부 목록 검색
      *
@@ -77,7 +77,6 @@ public class AccountBookApplicationServiceImpl implements AccountBookApplication
                 log.info(String.valueOf(request));
                 return memberSpecification.memberExistenceCheck(request.getMemberId())
                     .flatMap(m -> {
-                        
                         return accountBookSearchService.makeAccountBookSearchByDail(request).log();
                     }).log();
             }).switchIfEmpty(Mono.error(new BadRequestException(ExceptionMessage.IsRequiredRequest.getMessage())));

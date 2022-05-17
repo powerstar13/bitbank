@@ -12,7 +12,6 @@ import click.bitbank.api.domain.accountBook.model.transfer.TransferType;
 import click.bitbank.api.presentation.accountBook.request.AccountBookWriteRequest;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public interface AccountBookFactory {
