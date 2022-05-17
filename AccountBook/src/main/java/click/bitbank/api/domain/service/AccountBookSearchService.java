@@ -47,6 +47,15 @@ public class AccountBookSearchService {
      */
     public Mono<AccountBookSearchResponse> makeAccountBookSearchByDail(AccountBookSearchRequest request) {
 
+        if (request.getAccountBookType() == AccountBookType.I) {
+            return getIncomeSearch(request).flatMap(incomeSearchList -> Mono.just(makeAccountBookSearchResponse(incomeSearchList)));
+        } else if (request.getAccountBookType() == AccountBookType.P) {
+            return getExpenditureSearch(request).flatMap(expenditureSearchList -> Mono.just(makeAccountBookSearchResponse(expenditureSearchList)));
+        } else if (request.getAccountBookType() == AccountBookType.T) {
+            return getTransferSearch(request).flatMap(transferSearchList -> Mono.just(makeAccountBookSearchResponse(transferSearchList)));
+        }
+
+        // 가계부 메인 부분에서 사용할 부분
         return Flux.merge(getIncomeSearch(request), getExpenditureSearch(request), getTransferSearch(request))
                 .flatMapIterable(Function.identity())
                 .collectList()
@@ -109,31 +118,10 @@ public class AccountBookSearchService {
         // 수입 유형이 지정되지 않은 경우
         if (request.getIncomeType() == null || request.getIncomeType().isEmpty()) {
 
-            // 검색어가 없는 경우
-            if (request.getSearchKeyword() == null) {
+            setBoundsDate(request); // 검색 기간 세팅
+            income = incomeRepository.findByMemberIdAndIncomeDateBetween(request.getMemberId(), request.getSearchStartDate(), request.getSearchEndDate())
+                    .collectList().log();
 
-                // 전체 기간 조회
-                if (request.getSearchDateType() == SearchDateType.A || request.getSearchDateType() == null) {
-                    income = incomeRepository.findByMemberId(request.getMemberId()).collectList().log();
-                } else {
-                    setBoundsDate(request); // 검색 기간 세팅
-                    income = incomeRepository.findByMemberIdAndIncomeDateBetween(request.getMemberId(), request.getSearchStartDate(), request.getSearchEndDate())
-                            .collectList().log();
-                }
-
-            } else {
-
-                // 전체 기간을 조회하거나, 기간이 설정되어 있지 않은 경우
-                if (request.getSearchDateType() == SearchDateType.A || request.getSearchDateType() == null) {
-                    income = incomeRepository.findByMemberIdAndIncomeInfoContaining(request.getMemberId(), request.getSearchKeyword()).collectList().log();
-                } else {
-                    setBoundsDate(request); // 검색 기간 세팅
-
-                    income = incomeRepository.findByMemberIdAndIncomeDateBetweenAndIncomeInfoContaining(request.getMemberId(), request.getSearchStartDate(), request.getSearchEndDate(), request.getSearchKeywordAddPercent())
-                            .collectList().log();
-                }
-
-            }
         } else {
 
             // 검색어가 없는 경우
@@ -184,31 +172,10 @@ public class AccountBookSearchService {
         // 지출 유형이 지정되지 않은 경우
         if (request.getExpenditureType() == null || request.getExpenditureType().isEmpty()) {
 
-            // 검색어가 없는 경우
-            if (request.getSearchKeyword() == null) {
+            setBoundsDate(request); // 검색 기간 세팅
+            expenditure = expenditureRepository.findByMemberIdAndExpenditureDateBetween(request.getMemberId(), request.getSearchStartDate(), request.getSearchEndDate())
+                    .collectList().log();
 
-                // 전체 기간 조회
-                if (request.getSearchDateType() == SearchDateType.A || request.getSearchDateType() == null) {
-                    expenditure = expenditureRepository.findByMemberId(request.getMemberId()).collectList().log();
-                } else {
-                    setBoundsDate(request); // 검색 기간 세팅
-                    expenditure = expenditureRepository.findByMemberIdAndExpenditureDateBetween(request.getMemberId(), request.getSearchStartDate(), request.getSearchEndDate())
-                            .collectList().log();
-                }
-
-            } else {
-
-                // 전체 기간을 조회하거나, 기간이 설정되어 있지 않은 경우
-                if (request.getSearchDateType() == SearchDateType.A || request.getSearchDateType() == null) {
-                    expenditure = expenditureRepository.findByMemberIdAndExpenditureInfoContaining(request.getMemberId(), request.getSearchKeyword()).collectList().log();
-                } else {
-                    setBoundsDate(request); // 검색 기간 세팅
-
-                    expenditure = expenditureRepository.findByMemberIdAndExpenditureDateBetweenAndExpenditureInfoContaining(request.getMemberId(), request.getSearchStartDate(), request.getSearchEndDate(), request.getSearchKeywordAddPercent())
-                            .collectList().log();
-                }
-
-            }
         } else {
 
             // 검색어가 없는 경우
@@ -259,31 +226,9 @@ public class AccountBookSearchService {
         // 지출 유형이 지정되지 않은 경우
         if (request.getTransferType() == null || request.getTransferType().isEmpty()) {
 
-            // 검색어가 없는 경우
-            if (request.getSearchKeyword() == null) {
-
-                // 전체 기간 조회
-                if (request.getSearchDateType() == SearchDateType.A || request.getSearchDateType() == null) {
-                    transfer = transferRepository.findByMemberId(request.getMemberId()).collectList().log();
-                } else {
-                    setBoundsDate(request); // 검색 기간 세팅
-                    transfer = transferRepository.findByMemberIdAndTransferDateBetween(request.getMemberId(), request.getSearchStartDate(), request.getSearchEndDate())
-                            .collectList().log();
-                }
-
-            } else {
-
-                // 전체 기간을 조회하거나, 기간이 설정되어 있지 않은 경우
-                if (request.getSearchDateType() == SearchDateType.A || request.getSearchDateType() == null) {
-                    transfer = transferRepository.findByMemberIdAndTransferInfoContaining(request.getMemberId(), request.getSearchKeyword()).collectList().log();
-                } else {
-                    setBoundsDate(request); // 검색 기간 세팅
-
-                    transfer = transferRepository.findByMemberIdAndTransferDateBetweenAndTransferInfoContaining(request.getMemberId(), request.getSearchStartDate(), request.getSearchEndDate(), request.getSearchKeywordAddPercent())
-                            .collectList().log();
-                }
-
-            }
+            setBoundsDate(request); // 검색 기간 세팅
+            transfer = transferRepository.findByMemberIdAndTransferDateBetween(request.getMemberId(), request.getSearchStartDate(), request.getSearchEndDate())
+                    .collectList().log();
         } else {
 
             // 검색어가 없는 경우

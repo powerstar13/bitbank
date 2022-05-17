@@ -1,6 +1,7 @@
 package click.bitbank.api.application.response;
 
 import click.bitbank.api.application.response.DTO.AccountBookSearchByDailyDTO;
+import click.bitbank.api.presentation.shared.response.SuccessResponse;
 import lombok.*;
 
 import java.math.BigInteger;
@@ -11,7 +12,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountBookSearchResponse {
+public class AccountBookSearchResponse extends SuccessResponse {
 
     List<AccountBookSearchByDailyDTO> accountBookSearchByDailyDTOList;
 

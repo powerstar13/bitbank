@@ -1,9 +1,6 @@
 package click.bitbank.api.presentation.accountBook.request;
 
-import click.bitbank.api.domain.accountBook.ExpenditureType;
-import click.bitbank.api.domain.accountBook.IncomeType;
-import click.bitbank.api.domain.accountBook.SearchDateType;
-import click.bitbank.api.domain.accountBook.TransferType;
+import click.bitbank.api.domain.accountBook.*;
 import click.bitbank.api.infrastructure.exception.status.BadRequestException;
 import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
 import click.bitbank.api.presentation.shared.request.RequestVerify;
@@ -27,6 +24,8 @@ public class AccountBookSearchRequest implements RequestVerify {
     String searchStartDate; // 검색 시작일
 
     String searchEndDate;   // 검색 종료일
+
+    AccountBookType accountBookType;    // 가계부 유형
 
     List<ExpenditureType> expenditureType;    // 지출 유형
 
