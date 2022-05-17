@@ -40,6 +40,7 @@ public class AccountBookSearchByDailyDTO {
     public void setAccountBookDate(LocalDateTime date) {
         LocalDateTime firstDayThisYear = LocalDateTime.now().with(TemporalAdjusters.firstDayOfYear());
 
+//        this.date = date.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
         if (date.isBefore(firstDayThisYear)) {  // 올해의 가계부 내역이 아니라면, 년도 추가
             this.date = date.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
         } else {
