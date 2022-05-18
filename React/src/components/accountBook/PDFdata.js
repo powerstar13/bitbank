@@ -1,21 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { makeStyles } from '@mui/styles';
 import clsx from 'clsx';
 import Grid from '@mui/material/Grid';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import Box from '@mui/material/Box';
-import transmit from './transmit.png'
-import excelTransmit from './excelTransmit.png'
+import transmit from './../img/transmit.png'
+import Loader from "./../common/Loader"
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: "flex",
-    },
-}));
+
 
 
 const PDFdata = () => {
-    const classes = useStyles();
     let [loading, setLoading] = useState(false);   
     const [email, setEmail] = useState('');   
     const [open, setOpen] = useState(false);  
@@ -38,13 +32,17 @@ const PDFdata = () => {
             <div className='center'>
                 <img src={transmit} width="350px" height="280px"/>
             </div>
-            <form className={classes.root} noValidate autoComplete="off">
+            <form className="flex" noValidate autoComplete="off">
                 <Grid container>
                     <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center'}}>
                         <button className={clsx('btn_1', 'margin_30')} onClick={CheckEmail}>
                             다운로드
                         </button>
                     </Grid>
+                    
+                    <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center'}}>
+                          <Loader loading={loading} />
+                    </Grid>  
                 </Grid>
             </form>
             {open && (

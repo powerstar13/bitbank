@@ -1,21 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { makeStyles } from '@mui/styles';
 import clsx from 'clsx';
 import Grid from '@mui/material/Grid';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import Box from '@mui/material/Box';
-import transmit from './transmit.png'
-import excelTransmit from './excelTransmit.png'
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: "flex",
-    },
-}));
-
+import transmit from './../img/transmit.png'
+import Loader from "./../common/Loader"
 
 const ExcelData = () => {
-    const classes = useStyles();
     let [loading, setLoading] = useState(false);   
     const [email, setEmail] = useState('');   
     const [open, setOpen] = useState(false);  
@@ -38,7 +29,7 @@ const ExcelData = () => {
             <div className='center'>
                 <img src={transmit} width="350px" height="280px"/>
             </div>
-            <form className={classes.root} noValidate autoComplete="off">
+            <form className="flex" noValidate autoComplete="off">
                 <Grid container>
                     <Grid item xs={12} style={{ justifyContent: 'center' }}>
                         <div className={clsx('around', 'margin_20')}>
@@ -58,6 +49,9 @@ const ExcelData = () => {
                             내보내기
                         </button>
                     </Grid>
+                    <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center'}}>
+                          <Loader loading={loading} />
+                    </Grid>  
                 </Grid>
             </form>
             {open && (
