@@ -1,6 +1,7 @@
 package click.bitbank.api.infrastructure.config;
 
 import click.bitbank.api.application.response.AccountBookSearchResponse;
+import click.bitbank.api.application.response.AccountBookStatisticResponse;
 import click.bitbank.api.presentation.accountBook.AccountBookHandler;
 import click.bitbank.api.presentation.accountBook.request.AccountBookSearchRequest;
 import click.bitbank.api.presentation.shared.response.SuccessResponse;
@@ -72,20 +73,27 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
             )
         ),
         @RouterOperation(
-            path = "/account-book/statistic",
+            path = "/account-book/statistic/expenditure",
             produces = { MediaType.APPLICATION_JSON_VALUE },
             headers = { HttpHeaders.AUTHORIZATION },
             beanClass = AccountBookHandler.class,
             method = RequestMethod.GET,
             beanMethod = "accountBookStatistic",
             operation = @Operation(
-                description = "가계부 월 별 통계 API",
+                description = "가계부 월 별 지출 통계 API",
                 operationId = "accountBookStatistic",
                 parameters = {
                     @Parameter(
                         in = ParameterIn.QUERY,
                         name = "memberId",
                         description = "회원 고유번호",
+                        required = true,
+                        example = "1"
+                    ),
+                    @Parameter(
+                        in = ParameterIn.QUERY,
+                        name = "month",
+                        description = "조회할 월",
                         required = true,
                         example = "1"
                     )
@@ -95,7 +103,46 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
                         responseCode = "200",
                         content = @Content(
                             schema = @Schema(
-                                implementation = SuccessResponse.class,
+                                implementation = AccountBookStatisticResponse.class,
+                                required = true
+                            )
+                        )
+                    )
+                }
+            )
+        ),
+        @RouterOperation(
+            path = "/account-book/statistic/income",
+            produces = { MediaType.APPLICATION_JSON_VALUE },
+            headers = { HttpHeaders.AUTHORIZATION },
+            beanClass = AccountBookHandler.class,
+            method = RequestMethod.GET,
+            beanMethod = "accountBookStatistic",
+            operation = @Operation(
+                description = "가계부 월 별 수입 통계 API",
+                operationId = "accountBookStatistic",
+                parameters = {
+                    @Parameter(
+                        in = ParameterIn.QUERY,
+                        name = "memberId",
+                        description = "회원 고유번호",
+                        required = true,
+                        example = "1"
+                    ),
+                    @Parameter(
+                        in = ParameterIn.QUERY,
+                        name = "month",
+                        description = "조회할 월",
+                        required = true,
+                        example = "1"
+                    )
+                },
+                responses = {
+                    @ApiResponse(
+                        responseCode = "200",
+                        content = @Content(
+                            schema = @Schema(
+                                implementation = AccountBookStatisticResponse.class,
                                 required = true
                             )
                         )
