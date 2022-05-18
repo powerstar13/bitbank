@@ -189,13 +189,13 @@ const BookSearch = () => {
                         <div className={clsx('between', 'margin_20')}>
                             <div className='form_name'>카테고리</div>
                             <div>
-                                {accountBookType ? (
+                            {accountBookType.length>0 ? (
                                 // 분류 선택 시에 카테고리 활성화
                                 <FormControl fullWidth style={{border: "1px solid #FFFFFF", borderRadius:"10px", margin: "0 5px 0 -10px"}}>
                                     <Select
                                         value={accountBookType === "P" ? expenditureType : accountBookType === "I" ? incomeType : transferType}
                                         onChange={(e)=>selectCategory(e)}
-                                        style={{width: "230px", borderRadius:"10px"}}
+                                        style={{width: "210px", borderRadius:"10px"}}
                                         MenuProps={defaultMenuProps}
                                     >
                                     { accountBookType === "P" ? (
@@ -203,7 +203,6 @@ const BookSearch = () => {
                                         <MenuItem
                                             value={option.id}
                                             key={"option"+index+1}
-                                            disabled={index === 0}
                                             selected={index === expenditureType}
                                         >
                                             {option.data}
@@ -214,7 +213,6 @@ const BookSearch = () => {
                                             <MenuItem
                                                 value={option.id}
                                                 key={"option"+index+1}
-                                                disabled={index === 0}
                                                 selected={index === incomeType}
                                             >
                                                 {option.data}
@@ -225,7 +223,6 @@ const BookSearch = () => {
                                             <MenuItem
                                                 value={option.id}
                                                 key={"option"+index+1}
-                                                disabled={index === 0}
                                                 selected={index === transferType}
                                             >
                                                 {option.data}
@@ -237,9 +234,9 @@ const BookSearch = () => {
                                 ):(
                                     // 분류 선택안할 시에 카테고리 비활성화
                                     <FormControl fullWidth disabled style={{border: "1px solid #FFFFFF", borderRadius:"10px", margin: "0 5px 0 -10px"}}>
-                                        <InputLabel>카테고리를 선택하세요.</InputLabel>
+                                        <InputLabel style={{zIndex: 0}}>카테고리를 선택하세요.</InputLabel>
                                         <Select
-                                            style={{width: "230px", borderRadius:"10px"}}
+                                            style={{width: "210px", borderRadius:"10px"}}
                                         >
                                         </Select>
                                     </FormControl>
