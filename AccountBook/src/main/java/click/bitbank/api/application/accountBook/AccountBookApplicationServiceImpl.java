@@ -4,8 +4,8 @@ import click.bitbank.api.application.response.AccountBookSearchResponse;
 import click.bitbank.api.application.response.AccountBookStatisticResponse;
 import click.bitbank.api.application.response.AccountBookWriteResponse;
 import click.bitbank.api.domain.accountBook.AccountBookFindSpecification;
-import click.bitbank.api.domain.accountBook.model.AccountBookType;
 import click.bitbank.api.domain.accountBook.MemberSpecification;
+import click.bitbank.api.domain.accountBook.model.AccountBookType;
 import click.bitbank.api.domain.accountBook.specification.AccountBookWriteSpecification;
 import click.bitbank.api.domain.service.AccountBookSearchService;
 import click.bitbank.api.infrastructure.exception.status.BadRequestException;
@@ -69,11 +69,9 @@ public class AccountBookApplicationServiceImpl implements AccountBookApplication
         return serverRequest.bodyToMono(AccountBookSearchRequest.class).flatMap(
             request -> {
                 request.verify();
-                log.info(String.valueOf(request));
+
                 return memberSpecification.memberExistenceCheck(request.getMemberId())
-                    .flatMap(m -> {
-                        return accountBookSearchService.makeAccountBookSearchByDail(request).log();
-                    }).log();
+                    .flatMap(m -> accountBookSearchService.makeAccountBookSearchByDail(request).log()).log();
             }).switchIfEmpty(Mono.error(new BadRequestException(ExceptionMessage.IsRequiredRequest.getMessage())));
     }
     
