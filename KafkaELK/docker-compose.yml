@@ -34,7 +34,7 @@ services:
     image: tchiotludo/akhq
     container_name: akhq
     ports:
-      - "8080:8080"
+      - "18080:8080"
     networks:
       - kafka-elk
     depends_on:

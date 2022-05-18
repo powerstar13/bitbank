@@ -39,7 +39,7 @@ class CardHandlerTest {
     @Test
     void cardPopularList() {
         // given
-        given(cardApplicationService.findCardPopularList()).willReturn(cardListResponse());
+        given(cardApplicationService.findCardPopularList(any(ServerRequest.class))).willReturn(cardListResponse());
 
         // when
         FluxExchangeResult<CardListResponse> result = webClient
@@ -50,7 +50,7 @@ class CardHandlerTest {
             .returnResult(CardListResponse.class);
 
         // then
-        verify(cardApplicationService).findCardPopularList();
+        verify(cardApplicationService).findCardPopularList(any(ServerRequest.class));
 
         StepVerifier.create(result.getResponseBody().log())
             .assertNext(response -> assertAll(() -> {
