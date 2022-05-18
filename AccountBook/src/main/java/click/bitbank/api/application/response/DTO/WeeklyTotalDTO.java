@@ -12,5 +12,5 @@ public class WeeklyTotalDTO {
 
     private String week; // 해당 월 주차 --> 0월 0주
     
-    private long total; // 카테고리 별 총 금액
+    private long total; // 주차 별 총 금액
 }
