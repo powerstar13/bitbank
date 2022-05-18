@@ -46,7 +46,7 @@ public class AccountBookSearchService {
      * 가계부 목록 검색
      *
      * @param request : 전달된 Request
-     * @return Mono<List<AccountBookSearchByDailyDTO>> : 날짜별 가계부 정보
+     * @return Mono<List < AccountBookSearchByDailyDTO>> : 날짜별 가계부 정보
      */
     public Mono<AccountBookSearchResponse> makeAccountBookSearchByDail(AccountBookSearchRequest request) {
 
@@ -112,7 +112,7 @@ public class AccountBookSearchService {
      * 가계부 목록 검색 (수입)
      *
      * @param request : 전달된 Request
-     * @return Mono<List<AccountBookByCategoryDTO>> : 회원의 가계부(수입) 내역
+     * @return Mono<List < AccountBookByCategoryDTO>> : 회원의 가계부(수입) 내역
      */
     @Transactional(rollbackFor = Exception.class, readOnly = true)
     public Mono<List<AccountBookByCategoryDTO>> getIncomeSearch(AccountBookSearchRequest request) {
@@ -121,9 +121,14 @@ public class AccountBookSearchService {
         // 수입 유형이 지정되지 않은 경우
         if (request.getIncomeType() == null || request.getIncomeType().isEmpty()) {
 
-            setBoundsDate(request); // 검색 기간 세팅
-            income = incomeRepository.findByMemberIdAndIncomeDateBetween(request.getMemberId(), request.getSearchStartDate(), request.getSearchEndDate())
-                    .collectList().log();
+            // 전체 기간 조회
+            if (request.getSearchDateType() == SearchDateType.A || request.getSearchDateType() == null) {
+                income = incomeRepository.findByMemberId(request.getMemberId()).collectList().log();
+            } else {
+                setBoundsDate(request); // 검색 기간 세팅
+                income = incomeRepository.findByMemberIdAndIncomeDateBetween(request.getMemberId(), request.getSearchStartDate(), request.getSearchEndDate())
+                        .collectList().log();
+            }
 
         } else {
 
@@ -166,7 +171,7 @@ public class AccountBookSearchService {
      * 가계부 목록 검색 (지출)
      *
      * @param request : 전달된 Request
-     * @return Mono<List<AccountBookByCategoryDTO>> : 회원의 가계부(지출) 내역
+     * @return Mono<List < AccountBookByCategoryDTO>> : 회원의 가계부(지출) 내역
      */
     @Transactional(rollbackFor = Exception.class, readOnly = true)
     public Mono<List<AccountBookByCategoryDTO>> getExpenditureSearch(AccountBookSearchRequest request) {
@@ -175,9 +180,14 @@ public class AccountBookSearchService {
         // 지출 유형이 지정되지 않은 경우
         if (request.getExpenditureType() == null || request.getExpenditureType().isEmpty()) {
 
-            setBoundsDate(request); // 검색 기간 세팅
-            expenditure = expenditureRepository.findByMemberIdAndExpenditureDateBetween(request.getMemberId(), request.getSearchStartDate(), request.getSearchEndDate())
-                    .collectList().log();
+            // 전체 기간 조회
+            if (request.getSearchDateType() == SearchDateType.A || request.getSearchDateType() == null) {
+                expenditure = expenditureRepository.findByMemberId(request.getMemberId()).collectList().log();
+            } else {
+                setBoundsDate(request); // 검색 기간 세팅
+                expenditure = expenditureRepository.findByMemberIdAndExpenditureDateBetween(request.getMemberId(), request.getSearchStartDate(), request.getSearchEndDate())
+                        .collectList().log();
+            }
 
         } else {
 
@@ -220,7 +230,7 @@ public class AccountBookSearchService {
      * 가계부 목록 검색 (이체)
      *
      * @param request : 전달된 Request
-     * @return Mono<List<AccountBookByCategoryDTO>> : 회원의 가계부(이체) 내역
+     * @return Mono<List < AccountBookByCategoryDTO>> : 회원의 가계부(이체) 내역
      */
     @Transactional(rollbackFor = Exception.class, readOnly = true)
     public Mono<List<AccountBookByCategoryDTO>> getTransferSearch(AccountBookSearchRequest request) {
@@ -229,9 +239,15 @@ public class AccountBookSearchService {
         // 지출 유형이 지정되지 않은 경우
         if (request.getTransferType() == null || request.getTransferType().isEmpty()) {
 
-            setBoundsDate(request); // 검색 기간 세팅
-            transfer = transferRepository.findByMemberIdAndTransferDateBetween(request.getMemberId(), request.getSearchStartDate(), request.getSearchEndDate())
-                    .collectList().log();
+            // 전체 기간 조회
+            if (request.getSearchDateType() == SearchDateType.A || request.getSearchDateType() == null) {
+                transfer = transferRepository.findByMemberId(request.getMemberId()).collectList().log();
+            } else {
+                setBoundsDate(request); // 검색 기간 세팅
+                transfer = transferRepository.findByMemberIdAndTransferDateBetween(request.getMemberId(), request.getSearchStartDate(), request.getSearchEndDate())
+                        .collectList().log();
+            }
+
         } else {
 
             // 검색어가 없는 경우

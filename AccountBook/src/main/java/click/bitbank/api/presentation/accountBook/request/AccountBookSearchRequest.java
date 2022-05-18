@@ -52,6 +52,6 @@ public class AccountBookSearchRequest implements RequestVerify {
     @Override
     public void verify() {
         if (memberId == null) throw new BadRequestException(ExceptionMessage.IsRequiredMemberId.getMessage());
-        if ((accountBookType == null || searchStartDate != null && searchEndDate != null) && searchDateType == null) throw new BadRequestException(ExceptionMessage.IsRequiredSearchDateType.getMessage());
+        if (searchStartDate != null && searchEndDate != null && searchDateType == null) throw new BadRequestException(ExceptionMessage.IsRequiredSearchDateType.getMessage());
     }
 }
