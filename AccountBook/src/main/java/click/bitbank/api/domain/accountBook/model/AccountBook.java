@@ -1,5 +1,6 @@
 package click.bitbank.api.domain.accountBook.model;
 
+import click.bitbank.api.domain.accountBook.model.Classification;
 import click.bitbank.api.domain.accountBook.model.expenditure.ExpenditureType;
 import click.bitbank.api.domain.accountBook.model.income.IncomeType;
 import click.bitbank.api.domain.accountBook.model.transfer.TransferType;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(value = "accountBook")
+
 public class AccountBook extends Classification {
 
     @Id
@@ -46,4 +48,5 @@ public class AccountBook extends Classification {
 
     @Column(value = "longitude")
     private String longitude; // 경도
+
 }

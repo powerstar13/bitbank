@@ -4,6 +4,7 @@ import click.bitbank.api.application.response.AccountBookStatisticResponse;
 import click.bitbank.api.application.response.DTO.DailyTotalDTO;
 import click.bitbank.api.application.response.DTO.DonutGraphDTO;
 import click.bitbank.api.application.response.DTO.WeeklyTotalDTO;
+import click.bitbank.api.domain.accountBook.model.AccountBookType;
 import click.bitbank.api.domain.accountBook.repository.ExpenditureRepository;
 import click.bitbank.api.domain.accountBook.repository.IncomeRepository;
 import click.bitbank.api.infrastructure.exception.status.BadRequestException;
@@ -72,8 +73,7 @@ public class AccountBookFindSpecification {
     
         return memberVerifyMono
             .flatMap(successResponse -> {
-                if (successResponse.getRt() != 200)
-                    return Mono.error(new BadRequestException(successResponse.getRtMsg()));
+                if (successResponse.getRt() != 200) return Mono.error(new BadRequestException(successResponse.getRtMsg()));
             
                 return Mono.zip(monthlyTotalMono, getWeeklyTotalDTOList, getDonutGraphDTOList, getDailyTotalList, getDayList)
                     .map(objects ->

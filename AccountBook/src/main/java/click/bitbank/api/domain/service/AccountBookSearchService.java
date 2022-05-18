@@ -4,7 +4,7 @@ import click.bitbank.api.application.response.AccountBookSearchResponse;
 import click.bitbank.api.application.response.DTO.AccountBookByCategoryDTO;
 import click.bitbank.api.application.response.DTO.AccountBookInfoDTO;
 import click.bitbank.api.application.response.DTO.AccountBookSearchByDailyDTO;
-import click.bitbank.api.domain.accountBook.AccountBookType;
+import click.bitbank.api.domain.accountBook.model.AccountBookType;
 import click.bitbank.api.domain.accountBook.SearchDateType;
 import click.bitbank.api.domain.accountBook.model.expenditure.Expenditure;
 import click.bitbank.api.domain.accountBook.model.income.Income;

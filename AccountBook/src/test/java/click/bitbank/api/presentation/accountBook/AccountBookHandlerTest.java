@@ -2,20 +2,21 @@ package click.bitbank.api.presentation.accountBook;
 
 import click.bitbank.api.application.accountBook.AccountBookApplicationService;
 import click.bitbank.api.application.response.AccountBookStatisticResponse;
+import click.bitbank.api.application.response.AccountBookWriteResponse;
 import click.bitbank.api.infrastructure.exception.GlobalExceptionHandler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import reactor.test.StepVerifier;
 
-import static click.bitbank.api.infrastructure.factory.AccountBookTestFactory.accountBookStatisticResponse;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static click.bitbank.api.infrastructure.factory.AccountBookTestFactory.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -30,6 +31,35 @@ class AccountBookHandlerTest {
     private GlobalExceptionHandler globalExceptionHandler;
     @MockBean
     private AccountBookApplicationService accountBookApplicationService;
+
+    /**
+     * 가계부 작성
+     */
+    @Test
+    void accountBookWrite() {
+        // given
+        given(accountBookApplicationService.accountBookWrite(any(ServerRequest.class))).willReturn(accountBookWriteResponse());
+
+        // when
+        FluxExchangeResult<AccountBookWriteResponse> result = webClient
+            .post()
+            .uri("/account-book/write")
+            .bodyValue(accountBookWriteRequest())
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus().isOk()
+            .returnResult(AccountBookWriteResponse.class);
+
+        // then
+        verify(accountBookApplicationService).accountBookWrite(any(ServerRequest.class));
+
+        StepVerifier.create(result.getResponseBody().log())
+            .assertNext(response -> assertAll(() -> {
+                assertEquals(HttpStatus.CREATED.value(), response.getRt());
+                assertInstanceOf(Integer.class, response.getAccountBookId());
+            }))
+            .verifyComplete();
+    }
     
     /**
      * 월 별 지출 통계
@@ -61,6 +91,7 @@ class AccountBookHandlerTest {
             }))
             .verifyComplete();
     }
+
     /**
      * 월 별 수입 통계
      */

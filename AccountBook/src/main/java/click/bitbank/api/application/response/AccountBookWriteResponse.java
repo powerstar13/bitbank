@@ -9,5 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountBookWriteResponse extends CreatedSuccessResponse {
+
     private int accountBookId;
 }

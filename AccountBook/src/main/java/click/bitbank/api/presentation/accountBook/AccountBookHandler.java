@@ -22,12 +22,19 @@ public class AccountBookHandler {
 
     private final AccountBookApplicationService accountBookApplicationService;
 
+
+    /**
+     * 가계부 작성
+     * @param request: ServerRequest
+     * @return 가계부 작성 성공 response
+     */
     public Mono<ServerResponse> accountBookWrite(ServerRequest request) {
         Mono<AccountBookWriteResponse> response = accountBookApplicationService.accountBookWrite(request)
-                .subscribeOn(Schedulers.boundedElastic());
+            .subscribeOn(Schedulers.boundedElastic());
+
         return ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(response, AccountBookWriteResponse.class);
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response, AccountBookWriteResponse.class);
     }
 
     /**
@@ -36,7 +43,7 @@ public class AccountBookHandler {
      * @return Mono<ServerResponse> : 날짜별 가계부 정보
      */
     public Mono<ServerResponse> accountBookSearch(ServerRequest request) {
-
+        log.info("---------- 핸들러");
         Mono<AccountBookSearchResponse> response = accountBookApplicationService.accountBookSearch(request)
                 .subscribeOn(Schedulers.boundedElastic()).log();
 

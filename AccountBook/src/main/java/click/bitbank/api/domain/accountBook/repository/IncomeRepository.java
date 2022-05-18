@@ -3,6 +3,7 @@ package click.bitbank.api.domain.accountBook.repository;
 import click.bitbank.api.application.response.DTO.DailyTotalDTO;
 import click.bitbank.api.application.response.DTO.DonutGraphDTO;
 import click.bitbank.api.application.response.DTO.WeeklyTotalDTO;
+
 import click.bitbank.api.domain.accountBook.model.income.Income;
 import click.bitbank.api.domain.accountBook.model.income.IncomeType;
 import org.springframework.data.r2dbc.repository.Query;
@@ -17,7 +18,7 @@ public interface IncomeRepository extends ReactiveCrudRepository<Income, Integer
 
 
     Flux<Income> findByMemberId(int memberId);  // 사용자의 모든 데이터 조회
-
+    Mono<Income> findByIncomeId(int accountBookId);
     Flux<Income> findByMemberIdAndIncomeInfoContaining(int memberId, String searchKeyword); // 검색어를 포함하는 사용자의 데이터 조회
 
     @Query("SELECT * FROM income WHERE memberId = :memberId AND DATE(incomeDate) BETWEEN :startDate AND :endDate")

@@ -2,8 +2,10 @@ package click.bitbank.api.infrastructure.config;
 
 import click.bitbank.api.application.response.AccountBookSearchResponse;
 import click.bitbank.api.application.response.AccountBookStatisticResponse;
+import click.bitbank.api.application.response.AccountBookWriteResponse;
 import click.bitbank.api.presentation.accountBook.AccountBookHandler;
 import click.bitbank.api.presentation.accountBook.request.AccountBookSearchRequest;
+import click.bitbank.api.presentation.accountBook.request.AccountBookWriteRequest;
 import click.bitbank.api.presentation.shared.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,6 +43,37 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
     }
 
     @RouterOperations({
+        @RouterOperation(
+            path = "/account-book/write",
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            headers = {HttpHeaders.AUTHORIZATION},
+            beanClass = AccountBookHandler.class,
+            method = RequestMethod.POST,
+            beanMethod = "accountBookWrite",
+            operation = @Operation(
+                description = "가계부 작성 API",
+                operationId = "accountBookWrite",
+                requestBody = @RequestBody(
+                    content = @Content(
+                        schema = @Schema(
+                            implementation = AccountBookWriteRequest.class,
+                            required = true
+                        )
+                    )
+                ),
+                responses = {
+                    @ApiResponse(
+                        responseCode = "201",
+                        content = @Content(
+                            schema = @Schema(
+                                implementation = AccountBookWriteResponse.class,
+                                required = true
+                            )
+                        )
+                    )
+                }
+            )
+        ),
         @RouterOperation(
             path = "/account-book/search",
             produces = {MediaType.APPLICATION_JSON_VALUE},
@@ -157,12 +190,11 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
             .path("/account-book", builder -> builder
                 .nest(accept(MediaType.APPLICATION_JSON), acceptBuilder ->
                     acceptBuilder
-                        .POST("/", accountBookHandler::accountBookWrite) // 가계부 작성
+                        .POST("/write", accountBookHandler::accountBookWrite) // 가계부 작성
                         .POST("/search", accountBookHandler::accountBookSearch) // 가계부 목록 검색
                 )
                 .GET("/statistic/expenditure", accountBookHandler::accountBookStatistic) // 월 별 지출 통계
                 .GET("/statistic/income", accountBookHandler::accountBookStatistic) // 월 별 수입 통계
             ).build();
     }
-
 }

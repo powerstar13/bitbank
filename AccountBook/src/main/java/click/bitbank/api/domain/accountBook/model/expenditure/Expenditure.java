@@ -1,6 +1,6 @@
 package click.bitbank.api.domain.accountBook.model.expenditure;
 
-import click.bitbank.api.domain.accountBook.AccountBookType;
+import click.bitbank.api.domain.accountBook.model.AccountBookType;
 import click.bitbank.api.domain.accountBook.model.Classification;
 import lombok.*;
 import org.springframework.data.annotation.Id;
