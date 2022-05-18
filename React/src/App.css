@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@500;700&display=swap');
 @font-face {
   font-family: "JalpullineunharuM";
   src: url("./font/JalpullineunharuM.ttf");
@@ -29,6 +29,12 @@ span {
 }
 .margin_40_10 {
   margin: 40px 0 10px;
+}
+.margin_20_50 {
+  margin: 20px 0 50px;
+}
+.padding_5 {
+  padding: 5px 0;
 }
 .padding_10 {
   padding: 0 10px;
@@ -75,6 +81,9 @@ span {
   justify-content: space-around;
   align-items: center;
 }
+.overflow_x {
+  overflow-x: auto;
+}
 .pointer {
   cursor: pointer;
 }
@@ -85,6 +94,7 @@ span {
   color: #2167C2;
   letter-spacing: 3px;
   margin: 10px -15px;
+  cursor: default;
 }
 .header_menu {
   width: 97px;
@@ -152,6 +162,7 @@ span {
   margin: 0 4px;
 }
 .clickedMenu {
+  width: 97px;
   color: #2167C2;
 }
 .logo_subtitle {
@@ -231,7 +242,14 @@ span {
   font-family: 'Noto Sans KR', sans-serif;
   font-weight: 600;
   font-size: 23px;
-  text-align: center;
+  /* text-align: center; */
+  color: #424242;
+  letter-spacing: 1px;
+}
+.subtitle_8 {
+  font-family: 'JalpullineunharuM';
+  font-weight: 500;
+  font-size: 15px;
   color: #424242;
   letter-spacing: 1px;
 }
@@ -288,7 +306,7 @@ span {
   font-family: 'Noto Sans KR', sans-serif;
   font-weight: 500;
   font-size: 13px;
-  color: #676767;
+  color: #949393;
   letter-spacing: 1px;
   white-space: nowrap;
 }
@@ -302,6 +320,58 @@ span {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+.info6 {
+  font-family: 'JalpullineunharuM';
+  font-weight: 500;
+  font-size: 13px;
+  color: #b4afaf;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+.info7 {
+  font-family: 'JalpullineunharuM';
+  font-weight: 500;
+  font-size: 15px;
+  color: #434242;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+.statistic_btn {
+  width: 73px;
+  height: 25px;
+  background-color: #fff;
+  border: 2px solid #2167C2;
+  border-radius: 20px;
+  color: #2167C2;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: 3px;
+  cursor: pointer;
+  text-align: center;
+  align-items: center;
+  padding: 1px 10px;
+  margin: 15px 5px;
+}
+.kakao_btn {
+  width: 300px;
+  padding: 15px;
+  border-radius: 26px;
+  background-color: #fff;
+  border: 2px solid #FAE100;
+  color: #FAE100;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: 3px;
+  cursor: pointer;
 }
 .btn_1 {
   width: 300px;
@@ -367,13 +437,13 @@ span {
   letter-spacing: 3px;
   cursor: pointer;
 }
-.tag_btn {
-  width: 108px; 
+.reset_btn {
+  width: 70px; 
   height: 25px;
   border-radius: 40px;
-  font-family: 'Do Hyeon', sans-serif;
-  font-weight: 600;
-  font-size: 15px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  font-size: 13px;
   background-color: #FFFFFF;
   border: 1.5px solid #2167C2;
   color: #2167C2;
@@ -383,6 +453,44 @@ span {
   letter-spacing: 1px;
   text-align: center;
   margin: 10px 0;
+  cursor: pointer;
+}
+.tag_btn {
+  width: 108px; 
+  height: 25px;
+  border-radius: 40px;
+  font-family: 'JalpullineunharuM';
+  font-weight: 600;
+  font-size: 14px;
+  background-color: #FFFFFF;
+  border: 1.5px solid #2167C2;
+  color: #2167C2;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.7;
+  letter-spacing: 1px;
+  text-align: center;
+  margin: 10px 0;
+}
+.search_btn {
+  width: auto; 
+  height: 28px;
+  border-radius: 40px;
+  font-family: 'JalpullineunharuM';
+  font-weight: 500;
+  font-size: 14px;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  padding: 0 10px 0 5px;
+  background-color: #4e92eb;
+  border: 1.5px solid #FFFFFF;
+  color: #FFFFFF;
+  line-height: 1.7;
+  text-align: center;
+  margin: 10px 1px;
+  cursor: pointer;
 }
 .card_company {
   font-family: 'Noto Sans KR', sans-serif;
@@ -425,6 +533,7 @@ span {
   padding: 16.5px 14px;
   border-radius: 7px;
   border: 1px solid #BDBDBD;
+  text-align: right;
 }
 .form_txt_1 {
   width: 209px;
@@ -458,10 +567,13 @@ span {
   line-height: 1.5;
   letter-spacing: 1px;
 }
+.filter {
+  width: 350px;
+  height: auto;
+}
 .paper {
   width: 300px;
   background-color: rgba(242, 242, 242, 0.7);
-  color: rgba(242, 242, 242, 0.7);
   margin: 10px 0;
   padding: 10px;
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -472,7 +584,16 @@ span {
 .books_paper {
   width: 320px;
   background-color: rgba(251, 251, 251, 0.7);
-  color: rgba(242, 242, 242, 0.7);
+  margin: 10px 0;
+  padding: 10px;
+  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  border-radius: 1px;
+  box-shadow: none;
+}
+.statistic_paper {
+  width: 330px;
+  background-color: #FFFFFF;
   margin: 10px 0;
   padding: 10px;
   -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -511,7 +632,7 @@ span {
   overflow: hidden;         
   background-color:#6E6E6E; 
   box-shadow: 5px 10px 10px 1px rgba(0,0,0,.3);
-  font-family: 'Roboto', sans-serif;
+  font-family: 'JalpullineunharuM';
   font-weight: 400; 
   font-stretch: normal;
   font-style: normal;
@@ -542,6 +663,7 @@ span {
   font-size: 13.5px;
   text-align: center;
   margin-bottom: 20px;
+  white-space: pre;
 }
 .popup-footer {
   height: 35px;
@@ -561,6 +683,10 @@ span {
   background-color: #FFFFFF;
   margin: 0 10px 0 -10px;
 }
+#lineChart .apexcharts-canvas{
+  width: 450px;
+  height: 400px;
+}
 #txtField.MuiOutlinedInput-input {
   width: 280px;
   font-size: 13px;
@@ -578,7 +704,28 @@ span {
   border-bottom: 1px solid #F2F2F2;
   box-shadow: none;
 }
-
+::-webkit-scrollbar {
+  width: 4px;
+  height: 20%;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #dddddd;
+  border-radius: 15px;
+}
+::-webkit-scrollbar-track {
+  background-color: #f8f8f8;
+  border-radius: 15px;
+  width: 4px;
+}
+/* #root .MuiFormControl-root.MuiTextField-root{
+  width: 230px;
+} */
+#txtField .MuiFormControl-root.MuiTextField-root{
+  width: 300px;
+}
+#root .MuiInputBase-root.MuiOutlinedInput-root {
+  border-radius: 10px;
+}
 @media screen and (min-width: 500px) {
   .subtitle_2 {
     font-family: 'Noto Sans KR', sans-serif;
@@ -645,6 +792,7 @@ span {
     padding: 16.5px 14px;
     border-radius: 7px;
     border: 1px solid #BDBDBD;
+    text-align: right;
   }
   .form_name {
     font-weight: 500;
@@ -657,6 +805,22 @@ span {
     letter-spacing: 1px;
     white-space: nowrap;
     text-align: left;
+  }
+  .kakao_btn {
+    width: 450px;
+    padding: 15px;
+    border-radius: 26px;
+    background-color: #fff;
+    border: 2px solid #FAE100;
+    color: #FAE100;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: 3px;
+    cursor: pointer;
   }
   .btn_1 {
     width: 450px;
@@ -706,12 +870,16 @@ span {
     letter-spacing: 3px;
     cursor: pointer;
   }
-  .paper {
+  .filter {
     width: 450px;
+    height: auto;
+  }
+  .paper {
+    width: 480px;
     background-color: rgba(242, 242, 242, 0.7);
     color: rgba(242, 242, 242, 0.7);
     margin: 10px 0;
-    padding: 10px;
+    padding: 12px;
     -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
     transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
     border-radius: 4px;
@@ -728,6 +896,16 @@ span {
     border-radius: 1px;
     box-shadow: none;
   }
+  .statistic_paper {
+    width: 460px;
+    background-color: #FFFFFF;
+    margin: 10px 0;
+    padding: 10px;
+    -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    border-radius: 1px;
+    box-shadow: none;
+  }
   .info5 {
     width: auto;
     font-family: 'Noto Sans KR', sans-serif;
@@ -737,9 +915,13 @@ span {
     letter-spacing: 1px;
     white-space: nowrap;
   }
-  #root .MuiFormControl-root.MuiTextField-root{
-    width: 450px;
+  .lineChart{
+    width: 350px;
+    height: 300px;
   }
+  /* #root .MuiFormControl-root.MuiTextField-root{
+    width: 230px;
+  } */
   #txtField.MuiOutlinedInput-input {
     width: 450px;
     height: 500px;

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Route, useLocation, BrowserRouter as Router } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
+import { observer, useObserver  } from 'mobx-react';
+import { observable } from 'mobx'
 import Box from '@mui/material/Box';
 import Home from './Home'
 import Login from './profile/Login'
@@ -17,19 +19,44 @@ import ExcelData from './accountBook/ExcelData'
 import PDFdata from './accountBook/PDFdata'
 import BookInquiry from './accountBook/BookInquiry'
 import BookSearch from './accountBook/BookSearch'
+import ExpenditureStatistics from './accountBook/ExpenditureStatistics'
+import IncomeStatistics from './accountBook/IncomeStatistics'
+import {store}  from './stores/Store';
+
 
 const useStyles = makeStyles((theme) => ({
     root:{
-        margin:"130px auto 100PX", 
+        margin:"130px auto 0", 
         padding: "0 100px", 
         minHeight: "calc( 100vh - 594px )",
         height:"auto",
         fontSize: "16px",
+        [theme.breakpoints.down('mobile')]: {
+            marginBottom: "60px" 
+        },
     }
 }));
 
 const Section = () => {
     const cls = useStyles();
+    const location = useLocation();
+
+
+    // useEffect(() => {
+    //     checkLogged() 
+    // }, []);
+
+    //  const checkLogged = async () => {
+    //     if( store.accessToken ) {
+    //         store.setUserInfo({
+    //             refreshToken: sessionStorage.getItem("refresh_token"),
+    //             memberName :  sessionStorage.getItem("memberName"),
+    //             memberType : sessionStorage.getItem("memberType"),
+    //             accessToken : store.accessToken,
+    //             memberId : store.memberId,
+    //         });
+    //     }
+    //  }
 
     return (
         <Box className={cls.root} display="flex" justifyContent="center">
@@ -48,9 +75,8 @@ const Section = () => {
             <Route path="/books/excel" component={ExcelData} exact/>
             <Route path="/books/pdf" component={PDFdata} exact/>
             <Route path="/books/search" component={BookSearch} exact/>
-            {/*
             <Route path="/books/expenditurestatistics" component={ExpenditureStatistics} exact/> 
-            <Route path="/books/incomestatistics" component={IncomeStatistics} exact/>*/}
+            <Route path="/books/incomestatistics" component={IncomeStatistics} exact/>
         </Box>
     );
 

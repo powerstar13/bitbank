@@ -1,5 +1,4 @@
 export const  expenditureOptions = [
-    {data: '카테고리를 선택해주세요.', id: '0'},
     {data: '식비', id: 'E'},
     {data: '생활', id: 'L'},
     {data: '쇼핑', id: 'S'},
@@ -17,7 +16,6 @@ export const  expenditureOptions = [
 ];
 
 export const  incomeOptions = [
-    {data: '카테고리를 선택해주세요.', id: '0'},
     {data: '급여', id: 'S'},
     {data: '용돈', id: 'A'},
     {data: '금융 수입', id: 'F'},
@@ -26,7 +24,6 @@ export const  incomeOptions = [
 ];
 
 export const  transferOptions = [
-    {data: '카테고리를 선택해주세요.', id: '0'},
     {data: '내 계좌로 이체', id: 'A'},
     {data: '이체', id: 'T'},
     {data: '카드 대금', id: 'C'},

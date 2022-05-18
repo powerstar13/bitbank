@@ -1,13 +1,13 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { ThemeProvider } from "@mui/styles";
 import { createTheme } from '@mui/material/styles'
 import { Navigate, BrowserRouter as Router, Routes, Link } from "react-router-dom";
+import { Provider } from 'mobx-react';
+import { store } from  './components/stores/Store'
 import Section from './components/Section'
 import MenuHeader from './components/header/MenuHeader';
+import ScrollTop from './components/ScrollTop';
 import './App.css';
-
-// const { NODE_ENV } = process.env;
-// export const API_SERVER = (NODE_ENV === "development") ? process.env.REACT_APP_API_SERVER : "https://gateway.bitbank.click";
 
 
 const theme = createTheme({
@@ -63,16 +63,19 @@ const theme = createTheme({
 
 
 function App() {
+
   return (
    <>
-    <ThemeProvider theme={theme}>
-      <Router>
-        <div></div>
-        <MenuHeader />   
-        <Section />
-        {/* <MenuFooter /> */}
-      </Router>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <Router>
+          <div></div>
+          <ScrollTop />
+          <MenuHeader />   
+          <Section />
+        </Router>
+      </ThemeProvider>
+    </Provider>
    </>
   );
 }
