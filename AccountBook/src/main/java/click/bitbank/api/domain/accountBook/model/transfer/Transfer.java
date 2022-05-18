@@ -1,7 +1,7 @@
-package click.bitbank.api.domain.accountBook.model;
+package click.bitbank.api.domain.accountBook.model.transfer;
 
 import click.bitbank.api.domain.accountBook.AccountBookType;
-import click.bitbank.api.domain.accountBook.TransferType;
+import click.bitbank.api.domain.accountBook.model.Classification;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(value = "transfer")
-public class Transfer {
+public class Transfer extends Classification {
 
     @Id
     @Column(value = "transferId")
@@ -38,15 +38,6 @@ public class Transfer {
 
     @Column(value = "memberId")
     private int memberId;
-
-    @Column(value = "regDate")
-    @CreatedDate
-    private LocalDateTime regDate; // 생성일
-
-    @Column(value = "modDate")
-    @LastModifiedDate
-    private LocalDateTime modDate; // 수정일
-
 
     public AccountBookType getAccountBookType() {
         return AccountBookType.T;

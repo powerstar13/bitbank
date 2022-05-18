@@ -1,7 +1,7 @@
 package click.bitbank.api.infrastructure.exception.status;
 
-import org.springframework.http.HttpStatus;
 import click.bitbank.api.infrastructure.exception.GlobalException;
+import org.springframework.http.HttpStatus;
 
 public class RegistrationFailException extends GlobalException {
 

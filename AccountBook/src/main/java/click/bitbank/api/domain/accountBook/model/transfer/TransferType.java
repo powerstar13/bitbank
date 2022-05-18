@@ -1,4 +1,4 @@
-package click.bitbank.api.domain.accountBook;
+package click.bitbank.api.domain.accountBook.model.transfer;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

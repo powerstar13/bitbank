@@ -1,4 +1,4 @@
-package click.bitbank.api.presentation.member;
+package click.bitbank.api.presentation.accountBook;
 
 import click.bitbank.api.application.member.MemberApplicationService;
 import click.bitbank.api.application.response.AlarmCountResponse;
@@ -7,6 +7,7 @@ import click.bitbank.api.application.response.MemberLoginResponse;
 import click.bitbank.api.application.response.MemberSignupResponse;
 import click.bitbank.api.domain.model.member.MemberType;
 import click.bitbank.api.infrastructure.exception.GlobalExceptionHandler;
+import click.bitbank.api.presentation.member.MemberHandler;
 import click.bitbank.api.presentation.shared.response.SuccessResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -266,6 +267,34 @@ class MemberHandlerTest {
                 assertEquals(HttpStatus.OK.value(), response.getRt());
                 assertEquals(alarmMessageList().get(0), response.getAlarmDTOList().get(0).getAlarmMessage());
             }))
+            .verifyComplete();
+    }
+
+    /**
+     * 회원 검증
+     */
+    @Test
+    void existVerify() {
+        // given
+        given(memberApplicationService.existVerify(any(ServerRequest.class))).willReturn(Mono.just(new SuccessResponse()));
+
+        // when
+        FluxExchangeResult<SuccessResponse> result = webClient
+            .method(HttpMethod.GET)
+            .uri(uriBuilder ->
+                uriBuilder.path("/member/exist-verify")
+                    .queryParam("memberId", "2")
+                    .build()
+            )
+            .exchange()
+            .expectStatus().isOk()
+            .returnResult(SuccessResponse.class);
+
+        // then
+        verify(memberApplicationService).existVerify(any(ServerRequest.class));
+
+        StepVerifier.create(result.getResponseBody().log())
+            .assertNext(response -> assertEquals(HttpStatus.OK.value(), response.getRt()))
             .verifyComplete();
     }
 }

@@ -1,9 +1,13 @@
 package click.bitbank.api.infrastructure.config;
 
 import click.bitbank.api.application.response.AccountBookSearchResponse;
+import click.bitbank.api.application.response.AccountBookStatisticResponse;
 import click.bitbank.api.presentation.accountBook.AccountBookHandler;
 import click.bitbank.api.presentation.accountBook.request.AccountBookSearchRequest;
+import click.bitbank.api.presentation.shared.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -36,25 +40,24 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
             .maxAge(3600);
     }
 
-
     @RouterOperations({
         @RouterOperation(
             path = "/account-book/search",
             produces = {MediaType.APPLICATION_JSON_VALUE},
             headers = {HttpHeaders.AUTHORIZATION},
             beanClass = AccountBookHandler.class,
-            method = RequestMethod.GET,
+            method = RequestMethod.POST,
             beanMethod = "accountBookSearch",
             operation = @Operation(
                 description = "가계부 목록 검색 API",
                 operationId = "accountBookSearch",
                 requestBody = @RequestBody(
-                        content = @Content(
-                                schema = @Schema(
-                                        implementation = AccountBookSearchRequest.class,
-                                        required = true
-                                )
+                    content = @Content(
+                        schema = @Schema(
+                            implementation = AccountBookSearchRequest.class,
+                            required = true
                         )
+                    )
                 ),
                 responses = {
                     @ApiResponse(
@@ -68,18 +71,98 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
                     )
                 }
             )
+        ),
+        @RouterOperation(
+            path = "/account-book/statistic/expenditure",
+            produces = { MediaType.APPLICATION_JSON_VALUE },
+            headers = { HttpHeaders.AUTHORIZATION },
+            beanClass = AccountBookHandler.class,
+            method = RequestMethod.GET,
+            beanMethod = "accountBookStatistic",
+            operation = @Operation(
+                description = "가계부 월 별 지출 통계 API",
+                operationId = "accountBookStatistic",
+                parameters = {
+                    @Parameter(
+                        in = ParameterIn.QUERY,
+                        name = "memberId",
+                        description = "회원 고유번호",
+                        required = true,
+                        example = "1"
+                    ),
+                    @Parameter(
+                        in = ParameterIn.QUERY,
+                        name = "month",
+                        description = "조회할 월",
+                        required = true,
+                        example = "1"
+                    )
+                },
+                responses = {
+                    @ApiResponse(
+                        responseCode = "200",
+                        content = @Content(
+                            schema = @Schema(
+                                implementation = AccountBookStatisticResponse.class,
+                                required = true
+                            )
+                        )
+                    )
+                }
+            )
+        ),
+        @RouterOperation(
+            path = "/account-book/statistic/income",
+            produces = { MediaType.APPLICATION_JSON_VALUE },
+            headers = { HttpHeaders.AUTHORIZATION },
+            beanClass = AccountBookHandler.class,
+            method = RequestMethod.GET,
+            beanMethod = "accountBookStatistic",
+            operation = @Operation(
+                description = "가계부 월 별 수입 통계 API",
+                operationId = "accountBookStatistic",
+                parameters = {
+                    @Parameter(
+                        in = ParameterIn.QUERY,
+                        name = "memberId",
+                        description = "회원 고유번호",
+                        required = true,
+                        example = "1"
+                    ),
+                    @Parameter(
+                        in = ParameterIn.QUERY,
+                        name = "month",
+                        description = "조회할 월",
+                        required = true,
+                        example = "1"
+                    )
+                },
+                responses = {
+                    @ApiResponse(
+                        responseCode = "200",
+                        content = @Content(
+                            schema = @Schema(
+                                implementation = AccountBookStatisticResponse.class,
+                                required = true
+                            )
+                        )
+                    )
+                }
+            )
         )
     })
     @Bean
     public RouterFunction<ServerResponse> accountBookRouterBuilder(AccountBookHandler accountBookHandler) {
         return RouterFunctions.route()
-                .path("/account-book", builder -> builder
-                        .nest(accept(MediaType.APPLICATION_JSON), acceptBuilder ->
-                                acceptBuilder
-//                                        .POST("/", accountBookHandler::accountBookWrite) // 가계부 작성
-                                        .POST("/search", accountBookHandler::accountBookSearch) // 가계부 목록 검색
-                        )
-                ).build();
+            .path("/account-book", builder -> builder
+                .nest(accept(MediaType.APPLICATION_JSON), acceptBuilder ->
+                    acceptBuilder
+                        .POST("/", accountBookHandler::accountBookWrite) // 가계부 작성
+                        .POST("/search", accountBookHandler::accountBookSearch) // 가계부 목록 검색
+                )
+                .GET("/statistic/expenditure", accountBookHandler::accountBookStatistic) // 월 별 지출 통계
+                .GET("/statistic/income", accountBookHandler::accountBookStatistic) // 월 별 수입 통계
+            ).build();
     }
 
 }

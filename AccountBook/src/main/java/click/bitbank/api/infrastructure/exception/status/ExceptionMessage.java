@@ -2,10 +2,8 @@ package click.bitbank.api.infrastructure.exception.status;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public enum ExceptionMessage {
 
@@ -21,8 +19,17 @@ public enum ExceptionMessage {
 
     SaveFailMember("RegistrationFailException", "회원 가입에 실패했습니다. 관리자에게 문의 바랍니다."),
 
-    IsRequiredSearchDateType("BadRequestException", "검색 기간 유형을 선택해 주세요.");
+    IsRequiredSearchDateType("BadRequestException", "검색 기간 유형을 선택해 주세요."),
 
-    private String type;
-    private String message;
+    IsRequiredAccountName("BadRequestException", "거래처명을 입력해주세요"),
+    IsRequiredCreatedDate("BadRequestException", "작성한 날짜를 입력해주세요"),
+    IsRequiredAccountType("BadRequestException", "가계부 내역 유형을 입력해주세요"),
+    IsRequiredIncomeType("BadRequestException", "수입 카테고리를 입력해주세요"),
+    IsRequiredExpenditureType("BadRequestException", "수입 카테고리를 입력해주세요"),
+    IsRequiredTransferType("BadRequestException", "수입 카테고리를 입력해주세요"),
+    IsRequiredPositiveNumber("BadRequest", "금액을 1원 이상 입력해주세요"),
+    WriteFailAccountBook("WriteFailException", "가계부 작성 실패, 관리자에게 문의 바랍니다.");
+
+    private final String type;
+    private final String message;
 }

@@ -5,8 +5,8 @@ import click.bitbank.api.application.response.AlarmListResponse;
 import click.bitbank.api.application.response.MemberLoginResponse;
 import click.bitbank.api.application.response.MemberSignupResponse;
 import click.bitbank.api.presentation.member.MemberHandler;
-import click.bitbank.api.presentation.member.request.MemberLoginRequest;
 import click.bitbank.api.presentation.member.request.MemberIdRequest;
+import click.bitbank.api.presentation.member.request.MemberLoginRequest;
 import click.bitbank.api.presentation.member.request.MemberSignupRequest;
 import click.bitbank.api.presentation.member.request.SocialLoginRequest;
 import click.bitbank.api.presentation.shared.response.SuccessResponse;
@@ -300,6 +300,38 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
                     )
                 }
             )
+        ),
+        @RouterOperation(
+            path = "/member/exist-verify",
+            consumes = { MediaType.APPLICATION_JSON_VALUE },
+            produces = { MediaType.APPLICATION_JSON_VALUE },
+            beanClass = MemberHandler.class,
+            method = RequestMethod.GET,
+            beanMethod = "existVerify",
+            operation = @Operation(
+                description = "회원 검증 API",
+                operationId = "existVerify",
+                parameters = {
+                    @Parameter(
+                        in = ParameterIn.QUERY,
+                        name = "memberId",
+                        description = "회원 고유번호",
+                        required = true,
+                        example = "1"
+                    )
+                },
+                responses = {
+                    @ApiResponse(
+                        responseCode = "200",
+                        content = @Content(
+                            schema = @Schema(
+                                implementation = SuccessResponse.class,
+                                required = true
+                            )
+                        )
+                    )
+                }
+            )
         )
     })
     @Bean
@@ -318,6 +350,7 @@ public class WebFluxRouterConfig implements WebFluxConfigurer {
                 memberBuilder
                     .GET("/alarm-count", memberHandler::alarmCount) // 읽지 않은 알림 갯수 조회
                     .GET("/alarm-list", memberHandler::alarmList) // 읽지 않은 알림 목록 조회
+                    .GET("/exist-verify", memberHandler::existVerify) // 회원 검증
             )
             .path("/member", memberBuilder ->
                 memberBuilder.nest(accept(MediaType.APPLICATION_JSON), builder ->

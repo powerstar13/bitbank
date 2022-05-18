@@ -1,11 +1,9 @@
-package click.bitbank.api.domain.accountBook.model;
+package click.bitbank.api.domain.accountBook.model.income;
 
 import click.bitbank.api.domain.accountBook.AccountBookType;
-import click.bitbank.api.domain.accountBook.IncomeType;
+import click.bitbank.api.domain.accountBook.model.Classification;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -18,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(value = "income")
-public class Income {
+public class Income extends Classification {
 
     @Id
     @Column(value = "incomeId")
@@ -38,15 +36,6 @@ public class Income {
 
     @Column(value = "memberId")
     private int memberId;
-
-    @Column(value = "regDate")
-    @CreatedDate
-    private LocalDateTime regDate; // 생성일
-
-    @Column(value = "modDate")
-    @LastModifiedDate
-    private LocalDateTime modDate; // 수정일
-
 
     public AccountBookType getAccountBookType() {
         return AccountBookType.I;

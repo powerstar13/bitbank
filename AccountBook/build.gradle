@@ -24,7 +24,8 @@ ext {
 
 dependencies {
 	implementation 'org.springframework.kafka:spring-kafka' // kafka 사용
-
+	implementation 'org.modelmapper:modelmapper:2.4.2'
+	runtimeOnly 'mysql:mysql-connector-java'
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-webflux-ui', version: '1.6.8' // swagger 사용
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-webflux-core', version: '1.6.8'
 
