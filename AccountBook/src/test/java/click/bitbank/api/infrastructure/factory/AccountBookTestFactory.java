@@ -1,13 +1,50 @@
 package click.bitbank.api.infrastructure.factory;
 
 import click.bitbank.api.application.response.AccountBookStatisticResponse;
+import click.bitbank.api.application.response.AccountBookWriteResponse;
 import click.bitbank.api.application.response.DTO.DonutGraphDTO;
 import click.bitbank.api.application.response.DTO.WeeklyTotalDTO;
+import click.bitbank.api.domain.accountBook.model.AccountBookType;
+import click.bitbank.api.domain.accountBook.model.income.IncomeType;
+import click.bitbank.api.presentation.accountBook.request.AccountBookWriteRequest;
 import reactor.core.publisher.Mono;
 
+import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 public class AccountBookTestFactory {
+
+    /**
+     * 가계부 작성하기 Response 구성
+     */
+    public static Mono<AccountBookWriteResponse> accountBookWriteResponse() {
+
+        return Mono.just(
+            AccountBookWriteResponse.builder()
+                .accountBookId(1)
+                .build()
+        );
+    }
+
+    /**
+     * 가계부 작성하기 Request 구성
+     */
+    public static AccountBookWriteRequest accountBookWriteRequest() {
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        return AccountBookWriteRequest.builder()
+            .memberId(1)
+            .accountBookType(AccountBookType.I)
+            .incomeType(IncomeType.S)
+            .accountName("회사")
+            .price(BigInteger.valueOf(90000000))
+            .createdDate(dateFormat.format(new Date()))
+            .build();
+    }
 
     /**
      * 월 별 지출/수입 통계 Response 구성

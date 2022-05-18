@@ -30,46 +30,34 @@ public class AccountBookWriteSpecification {
     private final AccountBookFactory accountBookFactory;
 
     /**
-     * 가계부 중복 검사 및 작성
+     * 가계부 작성
      * @param request AccountBookWriteRequest
-     * @return
+     * @return Mono<AccountBookWriteResponse>
      */
     @Transactional(rollbackFor = Exception.class)
     public Mono<AccountBookWriteResponse> accountBookExistCheckAndWrite(AccountBookWriteRequest request) {
         AccountBookType accountBookType = request.getAccountBookType();
         if (accountBookType == AccountBookType.I) {
-            return incomeRepository.findByIncomeId(request.getAccountBookId())
-                .hasElement()
-                .flatMap(incomeBook -> {
-                    return this.writeIncome(request)
-                        .flatMap(income -> Mono.just(
-                            AccountBookWriteResponse.builder()
-                                .accountBookId(income.getIncomeId())
-                                .build()
-                    ));
-                });
+            return this.writeIncome(request)
+                .flatMap(income -> Mono.just(
+                    AccountBookWriteResponse.builder()
+                        .accountBookId(income.getIncomeId())
+                        .build()
+                ));
         } else if (accountBookType == AccountBookType.P) {
-            return expenditureRepository.findByExpenditureId(request.getAccountBookId())
-                .hasElement()
-                .flatMap(expenditureBook -> {
-                    return this.writeExpenditure(request)
-                        .flatMap(expenditure -> Mono.just(
-                            AccountBookWriteResponse.builder()
-                                .accountBookId(expenditure.getExpenditureId())
-                                .build()
-                        ));
-                });
+            return this.writeExpenditure(request)
+                .flatMap(expenditure -> Mono.just(
+                    AccountBookWriteResponse.builder()
+                        .accountBookId(expenditure.getExpenditureId())
+                        .build()
+                ));
         } else if (accountBookType == AccountBookType.T) {
-            return transferRepository.findByTransferId(request.getAccountBookId())
-                .hasElement()
-                .flatMap(transferBook -> {
-                    return this.writeTransfer(request)
-                        .flatMap(transfer -> Mono.just(
-                            AccountBookWriteResponse.builder()
-                                .accountBookId(transfer.getTransferId())
-                                .build()
-                        ));
-                });
+            return this.writeTransfer(request)
+                .flatMap(transfer -> Mono.just(
+                    AccountBookWriteResponse.builder()
+                        .accountBookId(transfer.getTransferId())
+                        .build()
+                ));
         }
         return Mono.error(new RegistrationFailException(ExceptionMessage.WriteFailAccountBook.getMessage()));
     }
@@ -77,11 +65,11 @@ public class AccountBookWriteSpecification {
     /**
      * 수입 작성
      * @param request: AccountBookWriteRequest
-     * @return
+     * @return Mono<Income>
      */
     private Mono<Income> writeIncome(AccountBookWriteRequest request) {
-        return this.incomeRepository.save(
-            this.accountBookFactory.incomeBuilder(
+        return incomeRepository.save(
+            accountBookFactory.incomeBuilder(
                 request.getAccountName(),
                 LocalDateTime.parse(request.getCreatedDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 request.getIncomeType(),
@@ -94,11 +82,11 @@ public class AccountBookWriteSpecification {
     /**
      * 지출 작성
      * @param request: AccountBookWriteRequest
-     * @return
+     * @return Mono<Expenditure>
      */
     private Mono<Expenditure> writeExpenditure(AccountBookWriteRequest request) {
-        return this.expenditureRepository.save(
-            this.accountBookFactory.expenditureBuilder(
+        return expenditureRepository.save(
+            accountBookFactory.expenditureBuilder(
                 request.getAccountName(),
                 LocalDateTime.parse(request.getCreatedDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 request.getExpenditureType(),
@@ -111,11 +99,11 @@ public class AccountBookWriteSpecification {
     /**
      * 이체 작성
      * @param request: AccountBookWriteRequest
-     * @return
+     * @return Mono<Transfer>
      */
     private Mono<Transfer> writeTransfer(AccountBookWriteRequest request) {
-        return this.transferRepository.save(
-            this.accountBookFactory.transferBuilder(
+        return transferRepository.save(
+            accountBookFactory.transferBuilder(
                 request.getAccountName(),
                 LocalDateTime.parse(request.getCreatedDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
                 request.getTransferType(),

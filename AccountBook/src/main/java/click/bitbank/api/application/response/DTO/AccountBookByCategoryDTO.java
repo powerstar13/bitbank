@@ -1,6 +1,6 @@
 package click.bitbank.api.application.response.DTO;
 
-import click.bitbank.api.domain.accountBook.AccountBookType;
+import click.bitbank.api.domain.accountBook.model.AccountBookType;
 import lombok.*;
 
 import java.math.BigInteger;

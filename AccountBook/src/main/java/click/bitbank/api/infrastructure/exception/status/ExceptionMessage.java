@@ -21,6 +21,7 @@ public enum ExceptionMessage {
 
     IsRequiredSearchDateType("BadRequestException", "검색 기간 유형을 선택해 주세요."),
 
+    IsRequiredAccountBookId("BadRequestException", "거래처명을 입력해주세요"),
     IsRequiredAccountName("BadRequestException", "거래처명을 입력해주세요"),
     IsRequiredCreatedDate("BadRequestException", "작성한 날짜를 입력해주세요"),
     IsRequiredAccountType("BadRequestException", "가계부 내역 유형을 입력해주세요"),

@@ -4,7 +4,7 @@ import click.bitbank.api.application.response.AccountBookSearchResponse;
 import click.bitbank.api.application.response.AccountBookStatisticResponse;
 import click.bitbank.api.application.response.AccountBookWriteResponse;
 import click.bitbank.api.domain.accountBook.AccountBookFindSpecification;
-import click.bitbank.api.domain.accountBook.AccountBookType;
+import click.bitbank.api.domain.accountBook.model.AccountBookType;
 import click.bitbank.api.domain.accountBook.MemberSpecification;
 import click.bitbank.api.domain.accountBook.specification.AccountBookWriteSpecification;
 import click.bitbank.api.domain.service.AccountBookSearchService;
@@ -12,6 +12,7 @@ import click.bitbank.api.infrastructure.exception.status.BadRequestException;
 import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
 import click.bitbank.api.presentation.accountBook.request.AccountBookSearchRequest;
 import click.bitbank.api.presentation.accountBook.request.AccountBookWriteRequest;
+import click.bitbank.api.presentation.shared.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,17 +35,23 @@ public class AccountBookApplicationServiceImpl implements AccountBookApplication
     /**
      * 가계부 작성
      * @param serverRequest: ServerRequest
-     * @return
+     * @return Mono<AccountBookWriteResponse>
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Mono<AccountBookWriteResponse> accountBookWrite(ServerRequest serverRequest) {
-//        String jwt = serverRequest.headers().firstHeader("Authorization");
 
         return serverRequest.bodyToMono(AccountBookWriteRequest.class).flatMap(
             request -> {
                 request.verify(); // 유효성 검사
-                return accountBookWriteSpecification.accountBookExistCheckAndWrite(request);
+
+                Mono<CommonResponse> memberVerifyMono = memberSpecification.memberExistVerify(request.getMemberId());
+
+                return memberVerifyMono.flatMap(commonResponse -> { // 회원 인증 처리
+                    if (commonResponse.getRt() != 200) return Mono.error(new BadRequestException(commonResponse.getRtMsg()));
+
+                    return accountBookWriteSpecification.accountBookExistCheckAndWrite(request); // 가계부 작성 처리
+                });
             }
         );
     }
