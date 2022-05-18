@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public enum AccountBookType {
 
@@ -13,6 +12,6 @@ public enum AccountBookType {
     P("P", "지출"),
     T("T", "이체");
 
-    private String name;
-    private String description;
+    private final String name;
+    private final String description;
 }
