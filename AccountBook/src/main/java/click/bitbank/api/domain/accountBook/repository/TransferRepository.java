@@ -5,6 +5,7 @@ import click.bitbank.api.domain.accountBook.model.transfer.TransferType;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface TransferRepository extends ReactiveCrudRepository<Transfer, Int
 
 
     Flux<Transfer> findByMemberId(int memberId);    // 사용자의 모든 데이터 조회
-
+    Mono<Transfer> findByTransferId(int accountBookId);
     Flux<Transfer> findByMemberIdAndTransferInfoContaining(int memberId, String searchKeyword); // 검색어를 포함하는 사용자의 데이터 조회
 
     @Query("SELECT * FROM transfer WHERE memberId = :memberId AND DATE(transferDate) BETWEEN :startDate AND :endDate")

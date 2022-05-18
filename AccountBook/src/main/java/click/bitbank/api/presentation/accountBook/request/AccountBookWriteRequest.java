@@ -48,7 +48,7 @@ public class AccountBookWriteRequest implements RequestVerify {
 
     /**
      * AccountBookType 유효성검사
-     * I,E,T,null인 경우 처리
+     * I,P,T,null 인 경우 처리
      */
     private void verifyAccountBookType() {
 
@@ -56,7 +56,7 @@ public class AccountBookWriteRequest implements RequestVerify {
 
         if (accountBookType == AccountBookType.I && incomeType == null) {
             throw new BadRequestException(ExceptionMessage.IsRequiredIncomeType.getMessage());
-        } else if (accountBookType == AccountBookType.E && expenditureType == null) {
+        } else if (accountBookType == AccountBookType.P && expenditureType == null) {
             throw new BadRequestException(ExceptionMessage.IsRequiredExpenditureType.getMessage());
         } else if (accountBookType == AccountBookType.T && transferType == null) {
             throw new BadRequestException(ExceptionMessage.IsRequiredTransferType.getMessage());

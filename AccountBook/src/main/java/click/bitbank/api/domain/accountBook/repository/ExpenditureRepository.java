@@ -17,7 +17,7 @@ import java.util.List;
 public interface ExpenditureRepository extends ReactiveCrudRepository<Expenditure, Integer> {
 
     Flux<Expenditure> findByMemberId(int memberId); // 사용자의 모든 데이터 조회
-
+    Mono<Expenditure> findByExpenditureId(int accountBookId);
     Flux<Expenditure> findByMemberIdAndExpenditureInfoContaining(int memberId, String searchKeyword);   // 검색어를 포함하는 사용자의 데이터 조회
 
     @Query("SELECT * FROM expenditure WHERE memberId = :memberId AND DATE(expenditureDate) BETWEEN :startDate AND :endDate")

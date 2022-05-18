@@ -18,7 +18,7 @@ public interface IncomeRepository extends ReactiveCrudRepository<Income, Integer
 
 
     Flux<Income> findByMemberId(int memberId);  // 사용자의 모든 데이터 조회
-
+    Mono<Income> findByIncomeId(int accountBookId);
     Flux<Income> findByMemberIdAndIncomeInfoContaining(int memberId, String searchKeyword); // 검색어를 포함하는 사용자의 데이터 조회
 
     @Query("SELECT * FROM income WHERE memberId = :memberId AND DATE(incomeDate) BETWEEN :startDate AND :endDate")

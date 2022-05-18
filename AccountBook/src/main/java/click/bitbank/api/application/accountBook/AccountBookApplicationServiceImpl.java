@@ -3,15 +3,8 @@ package click.bitbank.api.application.accountBook;
 import click.bitbank.api.application.response.AccountBookSearchResponse;
 import click.bitbank.api.application.response.AccountBookStatisticResponse;
 import click.bitbank.api.application.response.AccountBookWriteResponse;
-import click.bitbank.api.application.response.DTO.DailyTotalDTO;
-import click.bitbank.api.application.response.DTO.DonutGraphDTO;
-import click.bitbank.api.application.response.DTO.WeeklyTotalDTO;
 import click.bitbank.api.domain.accountBook.AccountBookFindSpecification;
 import click.bitbank.api.domain.accountBook.AccountBookType;
-import click.bitbank.api.domain.accountBook.MemberSpecification;
-import click.bitbank.api.domain.accountBook.repository.ExpenditureRepository;
-import click.bitbank.api.domain.accountBook.repository.IncomeRepository;
-import click.bitbank.api.application.response.AccountBookWriteResponse;
 import click.bitbank.api.domain.accountBook.MemberSpecification;
 import click.bitbank.api.domain.accountBook.specification.AccountBookWriteSpecification;
 import click.bitbank.api.domain.service.AccountBookSearchService;
@@ -19,20 +12,14 @@ import click.bitbank.api.infrastructure.exception.status.BadRequestException;
 import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
 import click.bitbank.api.presentation.accountBook.request.AccountBookSearchRequest;
 import click.bitbank.api.presentation.accountBook.request.AccountBookWriteRequest;
-import click.bitbank.api.presentation.shared.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.server.ServerRequest;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -46,19 +33,16 @@ public class AccountBookApplicationServiceImpl implements AccountBookApplication
 
     /**
      * 가계부 작성
-     *
-     * @param serverRequest
+     * @param serverRequest: ServerRequest
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Mono<Object> accountBookWrite(ServerRequest serverRequest) {
+    public Mono<AccountBookWriteResponse> accountBookWrite(ServerRequest serverRequest) {
 //        String jwt = serverRequest.headers().firstHeader("Authorization");
 
         return serverRequest.bodyToMono(AccountBookWriteRequest.class).flatMap(
             request -> {
-                log.info(String.valueOf(request));
-
                 request.verify(); // 유효성 검사
                 return accountBookWriteSpecification.accountBookExistCheckAndWrite(request);
             }

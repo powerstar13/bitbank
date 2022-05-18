@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public enum AccountBookType {
 
     I("I", "수입"),
-    E("E", "지출"),
+    P("P", "지출"),
     T("T", "이체");
 
     private String name;
