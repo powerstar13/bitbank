@@ -44,7 +44,7 @@ public class AccountBookFindSpecification {
         Mono<List<DonutGraphDTO>> getDonutGraphDTOList = categoryTotalFlux.collectList()
             .map(donutGraphDTOList ->
                 donutGraphDTOList.stream()
-                    .peek(donutGraphDTO -> donutGraphDTO.setName(AccountBookType.P, donutGraphDTO.getName()))
+                    .peek(donutGraphDTO -> donutGraphDTO.setName(accountBookType, donutGraphDTO.getName()))
                     .collect(Collectors.toList())
             );
     
