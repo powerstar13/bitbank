@@ -44,7 +44,6 @@ const BookInquiry = () => {
                         Authorization : store.accessToken
                     },
                 });
-                console.log( '가계부 목록 조회', response.data.accountBookSearchByDailyDTOList )
                 if( response.status === 200 && response.data.rt === 200 ){    
                     setAccountBookList(response.data.accountBookSearchByDailyDTOList);
                     setIncomeTotal(comma(response.data.incomeTotal))

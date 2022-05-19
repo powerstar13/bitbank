@@ -22,7 +22,6 @@ const CardRanking = () => {
         setLoading(true);
         try {
                 const response = await axios.get( API_SERVER +'/card/popular-list');
-                console.log( '인기 카드 조회', response.data, response.data.cardDTOList )
                 if( response.status === 200 && response.data.rt === 200 ){   
                     setCardList(response.data.cardDTOList)
                 }    

@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid';
 import { Donut } from "britecharts-react";
 import ApexChart from 'react-apexcharts';
 import { store } from '../stores/Store';
-
+import Loader from "./../common/Loader"
 
 const ExpenditureStatistics = () => {
     const API_SERVER = "https://gateway.bitbank.click";
@@ -27,6 +27,7 @@ const ExpenditureStatistics = () => {
 
     // 알림 목록 조회
     const geteExpenditure = async() => {
+        setLoading(true);
         try {
                 const headers = {
                     'Authorization': `${store.accessToken}`,
@@ -37,7 +38,6 @@ const ExpenditureStatistics = () => {
                         month : todayMonth,
                     }
                 });
-                console.log( '월 별 지출 통계 조회', response.data )
                 if( response.status === 200 && response.data.rt === 200 ){   
                     setMonthlyTotal(comma(response.data.monthlyTotal));
                     setWeeklyTotalList(response.data.weeklyTotalDTOList);
@@ -48,6 +48,7 @@ const ExpenditureStatistics = () => {
         } catch (e) {
             console.log( 'e', e.response );
         }
+        setLoading(false);
     }
 
     function comma(str) {
@@ -65,6 +66,7 @@ const ExpenditureStatistics = () => {
     
     return (
         <div>
+            <Loader loading={loading}/>
             <div>
                 <div className={clsx('padding_10', 'margin_10', 'info7')}>{todayMonth}월 지출</div>
                 <div className={clsx('padding_10', 'subtitle_7')}>{monthlyTotal}원</div>
@@ -140,7 +142,6 @@ const ExpenditureStatistics = () => {
                                         // tickAmount: 10,
                                         labels: {
                                             formatter: function(value, timestamp, opts) {
-                                                console.log("timestamp",timestamp)
                                                 return opts.dateFormatter(new Date(timestamp), 'dd')
                                             }
                                         }

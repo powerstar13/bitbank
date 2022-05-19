@@ -28,7 +28,6 @@ const Setting = () => {
                     Authorization : store.accessToken
                 },
             })
-            console.log('로그아웃 response', response)
             if (response.status === 200 && response.data.rt === 200) {
                 sessionStorage.clear();
                 store.logOut();

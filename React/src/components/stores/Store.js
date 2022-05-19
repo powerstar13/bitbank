@@ -13,7 +13,6 @@ const store = observable({
     this.accessToken = data.accessToken;
     this.refreshToken = data.refreshToken;
     this.memberId = data.memberId;
-    console.log("스토어 데이터", data)
   },
   setMemberName(data) {
     this.memberName = data.memberName;
