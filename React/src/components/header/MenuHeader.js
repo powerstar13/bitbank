@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { Link, useHistory  } from 'react-router-dom';
+import { Link, useHistory, Redirect } from 'react-router-dom';
+import { observer, useObserver } from 'mobx-react';
+import axios from 'axios';
 import clsx from 'clsx';
 import AppBar from "@mui/material/AppBar";
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Menu from '@mui/material/Menu';
-import TableContainer from '@mui/material/TableContainer';
-import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import TableBody from '@mui/material/TableBody';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import CloseIcon from '@mui/icons-material/Close';
+import PaidIcon from '@mui/icons-material/Paid';
+import logo from './../img/logo.png'
+import {store} from './../stores/Store';
+
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -52,76 +52,139 @@ const MenuHeader = () => {
     let history = useHistory();
     const [menu, setMenu] = useState(4); 
     const [showNoti, setShowNoti] = useState(false)
+    const [alarmCount, setAlarmCount] = useState(0);
+    const [alarmList, setAlarmList] = useState([]);
+    const API_SERVER = "https://gateway.bitbank.click" ;
 
+    useEffect(() => {
+        if( store.memberId != null ) {
+            getAlarmCount(store.accessToken, store.memberId);
+            console.log("Store 확인",store.accessToken, store.memberId, store)
+        }
+    },[store.memberId])
+
+    useEffect(()=> {
+        if( menu===0 && !store.memberId ){
+            history.push('/login')
+        }
+    }, [menu])
+
+    // 알림 갯수 조회
+    const getAlarmCount = async(token, id) => {
+        try {
+                const headers = {
+                    'Authorization': `${token}`,
+                };
+                const response = await axios.get( API_SERVER +'/member/alarm-count',{ headers ,
+                    params: {
+                        memberId : id,
+                    }
+                });
+                console.log( '알람 갯수 조회', response.data.alarmCount  )
+                if( response.status === 200 && response.data.rt === 200 ){   
+                    setAlarmCount(response.data.alarmCount)
+                }    
+        } catch (e) {
+            console.log( 'e', e.response );
+        }
+    }
+
+    // 알림 목록 조회
+    const getAlarmList = async(token, id) => {
+        try {
+                const headers = {
+                    'Authorization': `${token}`,
+                };
+                const response = await axios.get( API_SERVER +'/member/alarm-list',{ headers ,
+                    params: {
+                        memberId : id,
+                    }
+                });
+                console.log( '알람 목록 조회', response.data.alarmMessageList  )
+                if( response.status === 200 && response.data.rt === 200 ){   
+                    setShowNoti(true)
+                    setAlarmList(response.data.alarmDTOList)
+                    setAlarmCount(0)
+                }    
+        } catch (e) {
+            console.log( 'e', e.response );
+        }
+    }
 
     const goBack = (e) => {
         history.goBack();
     };
 
-    return (
+    return useObserver(() => (
         <>
             <AppBar className={cls.appBar}>
                 <Container maxWidth="sm" style={{padding:"0px"}}>
                    <div className={clsx('between', 'padding_10')}>
                         <div>
+                            {/* {menu === 4 ? (
+                                <ArrowBackIosIcon style={{margin: '10px 0', color: '#F2F2F2'}}/>
+                            ):(
+                                <ArrowBackIosIcon style={{margin: '10px 0', color: '#6E6E6E'}} onClick={goBack}/>
+                            )} */}
                             <ArrowBackIosIcon style={{margin: '10px 0', color: '#6E6E6E'}} onClick={goBack}/>
                         </div>
                         <Box display="flex">
-                            <img src="./img/logo.png" width="17px" height="25px" style={{margin:"10px 20px"}}/>
+                            <img src={logo} alt="B" width="17px" height="25px" style={{margin:"10px 20px"}}/>
                             <div className='logo' onClick={() => window.location.replace("/")}>ITBANK</div>
                         </Box>
-                        <Link to='/login'>
-                            <Box onClick={()=>setMenu(4)}>
-                                <button className="loginBtn">로그인</button>
-                            </Box>
-                        </Link>
 
-                        {/* <div style={{width:"35px", marginTop:"-10px"}}>
-                            <Badge badgeContent={99} color="primary">
-                                <NotificationsIcon style={{color:"#848484", fontSize:"30px"}} onClick={(e) => setShowNoti(true)}/>
-                            </Badge>
-                            <Menu
-                                id="simple-menu1"
-                                className={cls.popup}
-                                anchorEl={showNoti}
-                                open={showNoti}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'center',
-                                }}
-                                keepMounted
-                                style={{ top: '-70px' }}
-                                onClick={() => setShowNoti(false)}
-                            >
-                                <div style={{ width: '475px', height: '416px' }}></div>
-                                <Container
-                                    style={{ position: 'absolute', top: '32px', left: '0', height: '400px' }}
+                        { !store.memberId ? ( 
+                            <Link to='/login'>
+                                <Box onClick={()=>setMenu(4)}>
+                                    <button className="loginBtn">로그인</button>
+                                </Box>
+                            </Link>
+                         ):(
+                            <div style={{width:"38px", marginTop:"-10px"}}>
+                                <Badge badgeContent={alarmCount} color="primary">
+                                    <NotificationsIcon style={{color:"#848484", fontSize:"25px"}} onClick={(e) => getAlarmList(store.accessToken, store.memberId)}/>
+                                </Badge>
+                                <Menu
+                                    id="simple-menu1"
+                                    className={cls.popup}
+                                    anchorEl={showNoti}
+                                    open={showNoti}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'center',
+                                    }}
+                                    keepMounted
+                                    style={{ top: '-70px' }}
+                                    onClick={() => setShowNoti(false)}
                                 >
-                                    <Box display="flex" justifyContent="space-between">
-                                        <Box color="primary" style={{ fontWeight: "bold", fontSize: "1rem" }}>
-                                            알림을 확인하세요.
+                                    <div style={{ width: '475px', height: '350px' }}></div>
+                                    <Container
+                                        style={{ position: 'absolute', top: '32px', left: '0', height: '330px', overflowY:"auto" }}
+                                    >
+                                        <Box display="flex" justifyContent="space-between">
+                                            <Box color="primary" style={{ fontWeight: "bold", fontSize: "1rem" }}>
+                                                알림을 확인하세요.
+                                            </Box>
+                                            <Box>
+                                                <CloseIcon onClick={(e) => { setShowNoti(false); e.stopPropagation(); }} className="pointer"></CloseIcon>
+                                            </Box>
                                         </Box>
-                                        <Box>
-                                            <CloseIcon onClick={(e) => { setShowNoti(false); e.stopPropagation(); }} className="pointer"></CloseIcon>
-                                        </Box>
-                                    </Box>
-                                    <TableContainer>
-                                        <Table className={cls.table} aria-label="simple table">
-                                            <TableHead className={cls.MuiTableHead}>
-                                                <TableRow>
-                                                    <TableCell>ooo</TableCell>
-                                                    <TableCell>ooo</TableCell>
-                                                    <TableCell>ooo</TableCell>
-                                                    <TableCell>ooo</TableCell>
-                                                </TableRow>
-                                            </TableHead>
-                                            <TableBody className={cls.MuiTableBody}>
-                                            </TableBody>
-                                        </Table>
-                                    </TableContainer>
-                                </Container>
-                            </Menu>
-                        </div> */}
+                                        {alarmList && alarmList.map((data, i) => (
+                                            <div className={clsx('margin_20','flex')} key={data.id}>
+                                                <div>
+                                                    <PaidIcon style={{ color:'#2167C2', fontSize: '35px'}}/>
+                                                </div>
+                                                <div className='padding_10'>
+                                                    <div className='info4'>소비 리포트</div>
+                                                    <div className={clsx('padding_5','subtitle_8')}>{data.alarmMessage}</div>
+                                                    <div className={clsx('info4')}>{data.regDate}</div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </Container>
+                                </Menu>
+                            </div> 
+                        )} 
                     </div>
                 </Container>
             </AppBar>
@@ -141,7 +204,7 @@ const MenuHeader = () => {
                 </Container>
             </AppBar>
         </>
-    );
+    ));
 }
 
 export default MenuHeader;

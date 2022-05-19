@@ -1,31 +1,30 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { makeStyles } from '@mui/styles';
+import { Link, useHistory } from 'react-router-dom';
+import { observer, useObserver  } from 'mobx-react';
+import KakaoLogin from "react-kakao-login";
 import clsx from 'clsx'
-import { Link } from 'react-router-dom';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import axios from 'axios';
 import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
+import logo from './../img/logo.png'
+import Loader from "./../common/Loader"
+import Modal from "./../common/Modal"
+import {store}  from './../stores/Store';
 
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: "flex",
-    },
-}));
-
+const { Kakao } = window;
 
 const Login = () => {
-    const classes = useStyles();
+    const history = useHistory();
     let [loading, setLoading] = useState(false);   
     const [userInfo, setUserInfo] = useState({
-        memberLoginid: '',
+        memberLoginId: '',
         memberPassword: '',
     });
-    const [logintTest, setLoginTest] = useState(false);   // api 붙이기 전 로그인 테스트
-    const [idCheck, setIDcheck] = useState(false);
-    const [pwCheck, setPWcheck] = useState(false);
+    const [open, setOpen] = useState(false);   
+    const [notice, setNotice] = useState();           //모달 멘트 설정
 
-    const { memberLoginid, memberPassword } = userInfo;
+    const { memberLoginId, memberPassword } = userInfo;
+    const API_SERVER = "https://gateway.bitbank.click" ;
 
     const handleChange = (e) => {
         const { value, name } = e.target;
@@ -41,67 +40,102 @@ const Login = () => {
         }
     }
 
+    // 일반 로그인
     const getLogin = async ( userInfo ) => {
+        setLoading(true);
         try {
-            setLoading(true);
-            // const response = await axios.post(API_SERVER + '/auth/signup', {
-            //     memberLoginid: userInfo.memberLoginid,
-            //     memberPassword: userInfo.memberPassword,
-            // })
-            // console.log('response', response)
-            // if (response.status === 200 && response.data.access_token != null && response.data.user != null) {
-            //     console.log("유저", JSON.stringify(response.data));
-            //     // updateUserInfo(dispatch, response.data.access_token, response.data.user)
-
-            //     Swal.fire({
-            //         text: "로그인 되었습니다.",
-            //         icon: "success",
-            //         showConfirmButton: false,
-            //         timer: 1200,
-            //     }).then(() => {
-            //         if (location.state && location.state.referer) document.location.href = location.state.referer
-            //         else document.location.href = '/'
-            //     });
-
-            // }
-            setLoginTest(true);
+            const response = await axios.post(API_SERVER + '/auth/login', {
+                memberLoginId: userInfo.memberLoginId,
+                memberPassword: userInfo.memberPassword,
+            })
+            if (response.status === 200 && response.data.rt === 200) {
+                console.log("유저", response.data);
+                store.setUserInfo(response.data);
+                sessionStorage.setItem('access_token', response.data.accessToken);
+                sessionStorage.setItem('refresh_token', response.data.refreshToken);
+                sessionStorage.setItem('memberName', response.data.memberName);
+                sessionStorage.setItem('memberType', response.data.memberType);
+                sessionStorage.setItem('memberId',  response.data.memberId);
+                document.location.href = '/';
+            } else if( response.status === 200 && response.data.rt > 499 ) {
+                    setNotice(`로그인에 실패했습니다.\n관리자에게 문의하시길 바랍니다.`)
+                    setOpen(true);
+            } else { 
+                setNotice(response.data.rtMsg)
+                setOpen(true);
+            } 
         } catch (error) {
             console.log('error', error)
-                // Swal.fire({
-                //     title: "로그인에 실패하였습니다",
-                //     html: "아이디 또는 비밀번호가 잘못 입력 되었습니다.<br>아이디와 비밀번호를 정확히 입력해주세요.",
-                //     icon: "error",
-                //     confirmButtonText: "확인",
-                //     buttons: {
-                //         text: "확인",
-                //     },
-                // });
         } 
         setLoading(false);
     }
 
+    // 유효성 검사
     const handleValid = (e) => {
         e.preventDefault();
-        if (!memberLoginid) {
-            setIDcheck(true);
+        if (!memberLoginId) {
+            setNotice("아이디를 입력하세요.")
+            setOpen(true);
+        } else if (!memberPassword) {
+            setNotice("비밀번호를 입력하세요.")
+            setOpen(true);
+        } else {
+            getLogin(userInfo);
         }
-        else if (!memberPassword) {
-            setPWcheck(true);
-        }
-        else getLogin(userInfo);
     }
 
-    return (
+    const handleClose = (value) => {
+        setOpen(value);
+    }
+
+    const kakaoLoginClickHandler = (e) => {
+        e.preventDefault();
+        if (!Kakao.isInitialized()) {
+            Kakao.init("38b3f0aff12245b4f33fdeb8829476c6");
+        }
+      
+        Kakao.Auth.login({
+            success: function (authObj) {
+                fetch(API_SERVER + '/auth/login/social', {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        socialToken : authObj.access_token,
+                        memberName : null,
+                    }),
+                })
+                .then(res => res.json())
+                .then(res => {
+                    console.log("소셜 로그인 성공", res)
+                    store.setUserInfo(res);
+                    sessionStorage.setItem('access_token', res.accessToken);
+                    sessionStorage.setItem('refresh_token', res.refreshToken);
+                    sessionStorage.setItem('memberName', res.memberName);
+                    sessionStorage.setItem('memberType', res.memberType);
+                    sessionStorage.setItem('memberId',  res.memberId);
+                    history.push("/")
+                })
+            },
+            fail: function (err) {
+                alert(JSON.stringify(err))
+            }
+        })
+    }
+
+
+    return useObserver(() => (
         <div>
             <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center'}}>
-                <img src="./img/logo.png" width="23px" height="35px" style={{margin:"28px 0", paddingLeft:"30px"}}/>
+                <img src={logo} alt="B" width="23px" height="35px" style={{margin:"28px 0", paddingLeft:"30px"}}/>
                 <div className='logo_subtitle'>ITBANK</div>
             </Grid>
-            <form className={classes.root} noValidate autoComplete="off">
+            <form className="flex" noValidate autoComplete="off">
                 <Grid container>
                     <Grid item xs={12} style={{ justifyContent: 'center' }}>
                         <div className="item_center">
-                            <input type="text" placeholder="아이디를 입력하세요" className={clsx('margin_20','form_txt_login')} value={memberLoginid} name="memberLoginid" onChange={handleChange} />
+                            <input type="text" placeholder="아이디를 입력하세요" className={clsx('margin_20','form_txt_login')} value={memberLoginId} name="memberLoginId" onChange={handleChange} />
                         </div>
                         <div className="item_center">
                             <input type="password" placeholder="비밀번호를 입력하세요" className={clsx('form_txt_login')} value={memberPassword} name="memberPassword" onChange={handleChange} />
@@ -118,58 +152,25 @@ const Login = () => {
                                 회원가입
                             </button>
                         </Link>
-                    </Grid>
+                    </Grid>    
                     <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center'}}>
-                        {/* <button className='signup_btn' onClick={handleClick}>
-                            소셜
-                        </button> */}
+                        <button className={clsx('kakao_btn', 'margin_30')} onClick={kakaoLoginClickHandler}>
+                            카카오 로그인
+                        </button>
+                    </Grid>         
+                    <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center'}}>
+                        <div className='margin_40_10'>
+                            <Loader loading={loading} />
+                        </div>
                     </Grid>
+
                 </Grid>
             </form>
-            {idCheck && (
-                <div className="container">
-                    <div className="popup-wrap" > 
-                        <div className="popup">	
-                            <div className="popup-body">
-                                <div className="body-content">
-                                    <div className="body-titlebox">
-                                        <ErrorOutlineIcon style={{fontSize: '47px'}}/>
-                                    </div>
-                                    <div className="body-contentbox">
-                                        아이디를 입력하세요.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="popup-footer">
-                                <Box className="pop-btn" onClick={()=>setIDcheck(false)}>확인</Box>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-            {pwCheck && (
-                <div className="container">
-                    <div className="popup-wrap" > 
-                        <div className="popup">	
-                            <div className="popup-body">
-                                <div className="body-content">
-                                    <div className="body-titlebox">
-                                        <ErrorOutlineIcon style={{fontSize: '47px'}}/>
-                                    </div>
-                                    <div className="body-contentbox">
-                                        비밀번호를 입력하세요.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="popup-footer">
-                                <Box className="pop-btn" onClick={()=>setPWcheck(false)}>확인</Box>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            {open && (
+                <Modal notice={notice} onClose={handleClose}/>
             )}
         </div>
-    );
+    ));
 }
 
 export default Login;
