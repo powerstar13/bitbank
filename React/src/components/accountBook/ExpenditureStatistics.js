@@ -139,12 +139,9 @@ const ExpenditureStatistics = () => {
                                     xaxis: {
                                         type: 'datetime',
                                         categories: lineGraphDayList,
-                                        // tickAmount: 10,
                                         labels: {
-                                            formatter: function(value, timestamp, opts) {
-                                                return opts.dateFormatter(new Date(timestamp), 'dd')
-                                            }
-                                        }
+                                            format: 'dd/MM',
+                                        },
                                     },
                                     fill: {
                                         type: 'gradient',
@@ -157,12 +154,23 @@ const ExpenditureStatistics = () => {
                                         },
                                       },
                                     yaxis: {
+                                        labels: {
+                                            formatter: function (val) {
+                                                var str = String(val);         
+                                                str = str.replace(/[^\d]+/g, '');
+                                                str = str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');  
+                                                return str
+                                            }
+                                        }
                                     },
                                     tooltip: {
                                         shared: false,
                                         y: {
                                           formatter: function (val) {
-                                            return (val / 1000000).toFixed(0)
+                                            var str = String(val);         
+                                            str = str.replace(/[^\d]+/g, '');
+                                            str = str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');  
+                                            return str
                                           }
                                         }
                                     },
@@ -187,71 +195,3 @@ const ExpenditureStatistics = () => {
 
 export default ExpenditureStatistics;
 
-
-
-
-// const [lineData, setLineData] = useState({
-//     options : {
-//         series: [{
-//             name: 'Sales',
-//             data: [4, 3, 10, 9, 29, 19, 22, 9, 12, 7, 19, 5, 13, 9, 17, 2, 7, 5]
-//         }],
-//         chart: {
-//             height: 400,
-//             type: 'line',
-//         },
-//         forecastDataPoints: {
-//             count: 7
-//         },
-//         stroke: {
-//             width: 5,
-//             curve: 'smooth'
-//         },
-//         xaxis: {
-//             type: 'datetime',
-//             categories: ['1/11/2000', '2/11/2000', '3/11/2000', '4/11/2000', '5/11/2000', '6/11/2000', '7/11/2000', '8/11/2000', '9/11/2000', '10/11/2000', '11/11/2000', '12/11/2000', '1/11/2001', '2/11/2001', '3/11/2001','4/11/2001' ,'5/11/2001' ,'6/11/2001'],
-//             tickAmount: 10,
-//             labels: {
-//                 formatter: function(value, timestamp, opts) {
-//                     return opts.dateFormatter(new Date(timestamp), 'dd MMM')
-//                 }
-//             }
-//         },
-//         title: {
-//             text: 'Forecast',
-//             align: 'left',
-//             style: {
-//             fontSize: "16px",
-//             color: '#666'
-//             }
-//         },
-//         fill: {
-//             type: 'gradient',
-//             gradient: {
-//             shade: 'dark',
-//             gradientToColors: [ '#FDD835'],
-//             shadeIntensity: 1,
-//             type: 'horizontal',
-//             opacityFrom: 1,
-//             opacityTo: 1,
-//             stops: [0, 100, 100, 100]
-//             },
-//         },
-//         yaxis: {
-//             min: -10,
-//             max: 40
-//         },
-//         responsive: [{
-//             breakpoint: 500,
-//             options: {
-//                 width: 450,
-//                 height: 400
-//             },
-//             breakpoint: 400,
-//             options: {
-//                 width: 320,
-//                 height: 300
-//             },
-//         }]
-//     }
-// })

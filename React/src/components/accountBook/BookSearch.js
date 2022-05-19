@@ -36,7 +36,7 @@ const BookSearch = () => {
     const [incomeType, setIncomeType] = useState([]);                           // 수입 유형
     const [transferType, setTransferType] = useState([]);                       // 이체 유형
     const [searchDateType, setSearchDateType] = useState("M");                  // 기간  
-    const [searhStartDate, setSearhStartDate] = useState();                     // 시작 날짜
+    const [searchStartDate, setSearchStartDate] = useState();                     // 시작 날짜
     const [searchEndDate , setSearchEndDate] = useState();                      // 종료 날짜
     const [nowKeyword, setNowKeyword] = useState();                             // 현재 검색어
     const [accountbookList, setAccountBookList] = useState([]); 
@@ -83,7 +83,7 @@ const BookSearch = () => {
     // 시작 날짜 선택
     const handleSelectStartDate = (newValue) => {
         const date = moment(newValue).format('YYYY-MM-DD HH:mm:ss');    // 날짜 포맷
-        setSearhStartDate(date);
+        setSearchStartDate(date);
     };
 
     // 종료 날짜 선택
@@ -118,7 +118,7 @@ const BookSearch = () => {
                     searchKeyword : nowKeyword,
                     searchDateType : searchDateType,
                     accountBookType : accountBookType,
-                    searhStartDate : searhStartDate,
+                    searchStartDate : searchStartDate,
                     searchEndDate : searchEndDate,
                     expenditureType : expenditureType,
                     incomeType : incomeType,
@@ -270,7 +270,7 @@ const BookSearch = () => {
                                     <div className='center' style={{margin: "0 5px 0 -10px"}}>
                                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                                             <DateTimePicker
-                                                value={searhStartDate}
+                                                value={searchStartDate}
                                                 onChange={handleSelectStartDate}
                                                 renderInput={(params) => <TextField {...params} />}
                                                 format="YYYY-MM-DD HH:mm:ss"
