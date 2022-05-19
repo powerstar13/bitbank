@@ -23,8 +23,6 @@ ext {
 }
 
 dependencies {
-    implementation 'org.springframework.kafka:spring-kafka' // kafka 사용
-
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5' // jwt 사용
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
