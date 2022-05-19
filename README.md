@@ -6,6 +6,8 @@
 
 ### [Welcome to bitbank](https://bithumb.bitbank.click)
 
+![demo](https://user-images.githubusercontent.com/76933244/169328053-1e54ccae-99af-487a-9b4c-cc537f7a1df5.gif)
+
 ---
 
 # ℹ️ Info
