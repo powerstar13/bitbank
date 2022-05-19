@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { makeStyles } from '@mui/styles';
-import clsx from 'clsx';
 import { Link, useHistory } from 'react-router-dom';
+import { store } from '../stores/Store';
+import clsx from 'clsx';
+import axios from 'axios';
+import moment from 'moment';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
@@ -12,14 +14,8 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { expenditureOptions, incomeOptions, transferOptions } from './categoryData';
-
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: "flex",
-    },
-}));
-
+import Loader from "./../common/Loader"
+import Modal from "./../common/Modal"
 
 const defaultMenuProps = {
     PaperProps: {
@@ -33,28 +29,18 @@ const defaultMenuProps = {
 };
 
 const AddBook = () => {
-    const cls = useStyles();
-    const [price, setPrice] = useState(0);                                  // 가계부 금액
-    const [accountBookType, setAccountBookType] = useState(0);              // 가계부 내역 유형
-    const [expenditureType, setExpenditureType] = useState(["0"]);          // 지출 유형
-    const [incomeType, setIncomeType] = useState(["0"]);                    // 수입 유형
-    const [transferType, setTransferType] = useState(["0"]);                // 이체 유형
-    const [searchDateType, setSearchDateType] = useState(new Date());       // 날짜
-    const [account, setAccount] = useState('');                             // 거래처명
-
-
-    //가계부 금액 입력시 천 단위마다 콤마
-    const inputPriceFormat = (str) => {
-        const comma = (str) => {
-          str = String(str);
-          return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, "$1,");
-        };
-        const uncomma = (str) => {
-          str = String(str);
-          return str.replace(/[^\d]+/g, "");
-        };
-        return comma(uncomma(str));
-    };
+    let history = useHistory();
+    const [loading, setLoading] = useState(false);
+    const [open, setOpen] = useState(false);   
+    const [notice, setNotice] = useState();                                                                         //모달 멘트 설정
+    const [price, setPrice] = useState(0);                                                                          // 가계부 금액
+    const [accountBookType, setAccountBookType] = useState("");                                                     // 가계부 내역 유형
+    const [expenditureType, setExpenditureType] = useState(null);                                                   // 지출 유형
+    const [incomeType, setIncomeType] = useState(null);                                                             // 수입 유형
+    const [transferType, setTransferType] = useState(null);                                                         // 이체 유형
+    const [searchDateType, setSearchDateType] = useState(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));         // 날짜
+    const [account, setAccount] = useState('');                                                                     // 거래처명
+    const API_SERVER = "https://gateway.bitbank.click" ;
 
     // 가계부 내역 유형
     const selectType = (e, value) => {
@@ -63,8 +49,9 @@ const AddBook = () => {
     }
 
     // 날짜 선택
-    const selectDate= (newValue) => {
-        setSearchDateType(newValue);
+    const handleSelectEndDate = (newValue) => {
+        const date = moment(newValue).format('YYYY-MM-DD HH:mm:ss');    // 날짜 포맷
+        setSearchDateType(date);
     };
 
     //가계부 세부 내역 유형
@@ -78,12 +65,62 @@ const AddBook = () => {
         } 
     }
 
+     // 가계부 목록 추가
+     const addAccountBook = async() => {
+        try {
+                const response = await axios.post( API_SERVER +'/account-book/write', {
+                    memberId : store.memberId,
+                    accountBookType : accountBookType,
+                    expenditureType : expenditureType,
+                    incomeType : incomeType,
+                    transferType : transferType,
+                    accountName  : account,
+                    price : price, 
+                    createdDate : searchDateType,
+                },
+                {
+                    headers: { 
+                        Authorization : store.accessToken
+                    },
+                });
+                console.log( '가계부 목록 추가', response.data )
+                if( response.status === 200 && response.data.rt === 201 ){    
+                    history.push('/books')
+                }    
+        } catch (e) {
+            console.log( 'e', e.response );
+        }
+    }
+
+    // 유효성 검사
+    const handleValid = (e) => {
+        e.preventDefault();
+        if (!account) {
+            setNotice("거래처명을 입력하세요")
+            setOpen(true);
+        } else if (price == 0) {
+            setNotice("금액을 입력하세요.")
+            setOpen(true);
+        } else if (!accountBookType) {
+            setNotice("분류를 선택하세요.")
+            setOpen(true);
+        } else if (!expenditureType && !incomeType && !transferType ) {
+            setNotice("카테고리를 선택하세요.")
+            setOpen(true);
+        } else {
+            addAccountBook();
+        }
+    }
+
+    const handleClose = (value) => {
+        setOpen(value);
+    }
+    
     return (
         <div>
-            {/* <Loader loading={loading} /> */}
             <div className={clsx('item_center','subtitle_2')}>가계부를 추가해보세요.</div>
             <div className="info">(※금액 입력 시 숫자만 입력하세요.※)</div>
-            <form className={cls.root} noValidate autoComplete="off">
+            <form className={clsx('item_center')} noValidate autoComplete="off">
                 <Grid container>
                     <Grid item xs={12} style={{ justifyContent: 'center' }}>
                         <div className={clsx('between', 'margin_20')}>
@@ -95,7 +132,7 @@ const AddBook = () => {
                         <div className={clsx('between', 'margin_20')}>
                             <div className='form_name'>금액</div>
                             <div>
-                                <input type="text" id="number" placeholder="금액을 입력하세요" className={clsx('form_txt_account','margin_5')} name="price" value={price} onChange={(e) => setPrice(inputPriceFormat(e.target.value))}/>
+                                <input type="number" id="number" placeholder="금액을 입력하세요" className={clsx('form_txt_account','margin_5')} name="price" value={price} onChange={(e) => setPrice(e.target.value)}/>
                             </div>
                         </div>
                         <div className={clsx('between', 'margin_20')}>
@@ -123,7 +160,6 @@ const AddBook = () => {
                                         <MenuItem
                                             value={option.id}
                                             key={"option"+index+1}
-                                            disabled={index === 0}
                                             selected={index === expenditureType}
                                         >
                                             {option.data}
@@ -134,7 +170,6 @@ const AddBook = () => {
                                             <MenuItem
                                                 value={option.id}
                                                 key={"option"+index+1}
-                                                disabled={index === 0}
                                                 selected={index === incomeType}
                                             >
                                                 {option.data}
@@ -145,7 +180,6 @@ const AddBook = () => {
                                             <MenuItem
                                                 value={option.id}
                                                 key={"option"+index+1}
-                                                disabled={index === 0}
                                                 selected={index === transferType}
                                             >
                                                 {option.data}
@@ -157,7 +191,7 @@ const AddBook = () => {
                                 ):(
                                     // 분류 선택안할 시에 카테고리 비활성화
                                     <FormControl fullWidth disabled style={{border: "1px solid #FFFFFF", borderRadius:"10px", margin: "0 5px 0 -10px"}}>
-                                        <InputLabel>카테고리를 선택하세요.</InputLabel>
+                                        <InputLabel style={{zIndex: 0}}>카테고리를 선택하세요.</InputLabel>
                                         <Select
                                             style={{width: "210px", borderRadius:"10px"}}
                                         >
@@ -172,7 +206,7 @@ const AddBook = () => {
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DateTimePicker
                                         value={searchDateType}
-                                        onChange={selectDate}
+                                        onChange={handleSelectEndDate}
                                         renderInput={(params) => <TextField {...params} />}
                                     />
                                 </LocalizationProvider>
@@ -181,14 +215,18 @@ const AddBook = () => {
                     </Grid>
 
                     <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center'}}>
-                        <Link to='/cards/profits'>
-                            <button className={clsx('btn_1', 'margin_40')}>
-                                저장
-                            </button>
-                        </Link>
+                        <button className={clsx('btn_1', 'margin_40')} onClick={handleValid}>
+                            저장
+                        </button>
                     </Grid>
+                    <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center'}}>
+                          <Loader loading={loading} />
+                    </Grid>  
                 </Grid>
             </form>
+            {open && (
+                <Modal notice={notice} onClose={handleClose}/>
+            )}
         </div>
     );
 }
