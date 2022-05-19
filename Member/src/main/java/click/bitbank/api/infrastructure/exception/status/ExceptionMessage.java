@@ -21,7 +21,12 @@ public enum ExceptionMessage {
 
     SaveFailMember("RegistrationFailException", "회원 가입에 실패했습니다. 관리자에게 문의 바랍니다."),
     
-    NotFoundMember("NotFoundDataException", "조회된 회원 정보가 없습니다.");
+    NotFoundMember("NotFoundDataException", "조회된 회원 정보가 없습니다."),
+
+    IsRequiredAlphaNumericForMemberLoginId("BadRequestException", "아이디를 문자 혹은 숫자로 입력하세요"),
+    IsRequiredAlphaForMemberName("BadRequestException", "이름을 문자로 입력하세요"),
+    IsRequiredStringLengthForMemberLoginId("BadRequestException", "8자 이상의 아이디를 입력하세요"),
+    IsRequiredCharNumberSpecialCharactersForMemberPassword("BadRequestException", "영문/숫자/특수문자 포함 6자 이상의 비밀번호를 입력하세요");
 
     private final String type;
     private final String message;
