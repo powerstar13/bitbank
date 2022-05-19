@@ -10,6 +10,7 @@ import click.bitbank.api.domain.accountBook.specification.AccountBookWriteSpecif
 import click.bitbank.api.domain.service.AccountBookSearchService;
 import click.bitbank.api.infrastructure.exception.status.BadRequestException;
 import click.bitbank.api.infrastructure.exception.status.ExceptionMessage;
+import click.bitbank.api.infrastructure.kafka.KafkaProducerService;
 import click.bitbank.api.presentation.accountBook.request.AccountBookSearchRequest;
 import click.bitbank.api.presentation.accountBook.request.AccountBookWriteRequest;
 import click.bitbank.api.presentation.shared.response.CommonResponse;
@@ -31,6 +32,7 @@ public class AccountBookApplicationServiceImpl implements AccountBookApplication
     private final AccountBookSearchService accountBookSearchService;
     private final AccountBookWriteSpecification accountBookWriteSpecification;
     private final AccountBookFindSpecification accountBookFindSpecification;
+    private final KafkaProducerService kafkaProducerService;
 
     /**
      * 가계부 작성
@@ -43,6 +45,7 @@ public class AccountBookApplicationServiceImpl implements AccountBookApplication
 
         return serverRequest.bodyToMono(AccountBookWriteRequest.class).flatMap(
             request -> {
+                kafkaProducerService.sendRequestTopic(serverRequest, request.toString());
                 request.verify(); // 유효성 검사
 
                 Mono<CommonResponse> memberVerifyMono = memberSpecification.memberExistVerify(request.getMemberId());
@@ -53,7 +56,7 @@ public class AccountBookApplicationServiceImpl implements AccountBookApplication
                     return accountBookWriteSpecification.accountBookExistCheckAndWrite(request); // 가계부 작성 처리
                 });
             }
-        );
+        ).doOnSuccess(response -> kafkaProducerService.sendResponseTopic(serverRequest, response.toString()));
     }
 
     /**
@@ -68,11 +71,13 @@ public class AccountBookApplicationServiceImpl implements AccountBookApplication
         
         return serverRequest.bodyToMono(AccountBookSearchRequest.class).flatMap(
             request -> {
+                kafkaProducerService.sendRequestTopic(serverRequest, request.toString());
                 request.verify();
 
                 return memberSpecification.memberExistenceCheck(request.getMemberId())
                     .flatMap(m -> accountBookSearchService.makeAccountBookSearchByDail(request).log()).log();
-            }).switchIfEmpty(Mono.error(new BadRequestException(ExceptionMessage.IsRequiredRequest.getMessage())));
+            }).switchIfEmpty(Mono.error(new BadRequestException(ExceptionMessage.IsRequiredRequest.getMessage())))
+            .doOnSuccess(response -> kafkaProducerService.sendResponseTopic(serverRequest, response.toString()));
     }
     
     /**
@@ -107,13 +112,15 @@ public class AccountBookApplicationServiceImpl implements AccountBookApplication
     @Override
     @Transactional(rollbackFor = Exception.class, readOnly = true)
     public Mono<AccountBookStatisticResponse> accountBookStatistic(ServerRequest serverRequest) {
+        kafkaProducerService.sendRequestTopic(serverRequest, serverRequest.queryParams().toSingleValueMap().toString());
         // 지출(expenditure), 수입(income) 경로에 따라 조회할 가계부 유형 분기 처리
         AccountBookType accountBookType = serverRequest.path().contains("expenditure") ? AccountBookType.P : AccountBookType.I;
         
         int memberId = this.getMemberIdByRequest(serverRequest); // 회원 고유번호 추출
         int month = this.getMonthByRequest(serverRequest); // 조회할 월 추출
     
-        return accountBookFindSpecification.statisticVerify(memberId, month, accountBookType);
+        return accountBookFindSpecification.statisticVerify(memberId, month, accountBookType)
+            .doOnSuccess(response -> kafkaProducerService.sendResponseTopic(serverRequest, response.toString()));
     }
     
 }

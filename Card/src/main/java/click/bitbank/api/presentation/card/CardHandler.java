@@ -24,7 +24,7 @@ public class CardHandler {
      */
     public Mono<ServerResponse> cardPopularList(ServerRequest request) {
     
-        Mono<CardListResponse> response = cardApplicationService.findCardPopularList()
+        Mono<CardListResponse> response = cardApplicationService.findCardPopularList(request)
             .subscribeOn(Schedulers.boundedElastic());
 
         return ok()
