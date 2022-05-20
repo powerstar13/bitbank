@@ -11,6 +11,7 @@ import Loader from "./../common/Loader"
 import { store } from '../stores/Store';
 
 
+
 const BookInquiry = () => {
     const { pathname } = useLocation();
     let [loading, setLoading] = useState(false);   
@@ -28,6 +29,7 @@ const BookInquiry = () => {
 
     // 가계부 목록 조회
     const getAccountBook = async() => {
+        setLoading(true);
         try {
                 const response = await axios.post( API_SERVER +'/account-book/search', {
                     memberId : store.memberId,
@@ -44,7 +46,6 @@ const BookInquiry = () => {
                         Authorization : store.accessToken
                     },
                 });
-                console.log( '가계부 목록 조회', response.data.accountBookSearchByDailyDTOList )
                 if( response.status === 200 && response.data.rt === 200 ){    
                     setAccountBookList(response.data.accountBookSearchByDailyDTOList);
                     setIncomeTotal(comma(response.data.incomeTotal))
@@ -53,6 +54,7 @@ const BookInquiry = () => {
         } catch (e) {
             console.log( 'e', e.response );
         }
+        setLoading(false);
     }
 
     function comma(str) {
@@ -73,6 +75,7 @@ const BookInquiry = () => {
     } else {
     return (
         <div>
+            <Loader loading={loading}/>
             <div className={clsx('between','margin_10')}>
                 <div className='subtitle_6'>{store.memberName}님 가계부</div>
                 <div>
@@ -104,7 +107,7 @@ const BookInquiry = () => {
             </div>
             <Grid container>
                 <Grid item xs={12} style={{ justifyContent: 'center', marginTop: '20px' }}>
-                    <Loader loading={loading} />
+                    {/* <Loader loading={loading} /> */}
                     <Link to='/books/addbook'>
                         <Box className={clsx('pointer','item_right')}>
                             <AddIcon style={{ color:"#676767", fontSize: "25px" }}/>

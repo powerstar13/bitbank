@@ -83,7 +83,6 @@ const AddBook = () => {
                         Authorization : store.accessToken
                     },
                 });
-                console.log( '가계부 목록 추가', response.data )
                 if( response.status === 200 && response.data.rt === 201 ){    
                     history.push('/books')
                 }    

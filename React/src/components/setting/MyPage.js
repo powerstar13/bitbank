@@ -25,8 +25,6 @@ const MyPage = () => {
 
     const API_SERVER = "https://gateway.bitbank.click";
 
-    console.log("ddddddd",store)
-
     const handleChange = (e) => {
         const { value, name } = e.target;
         setUserInfo({
@@ -69,7 +67,6 @@ const MyPage = () => {
                     Authorization : store.accessToken
                 },
             })
-            console.log( '마이페이지 수정 성공', response.data, response.data.rt )
             if( response.status === 200 && response.data.rt === 200 ){   
                 sessionStorage.setItem('memberName', userInfo.memberName);
                 store.setUserInfo({

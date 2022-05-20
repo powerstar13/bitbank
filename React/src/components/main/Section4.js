@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Zoom } from "react-awesome-reveal";
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import ranking from './../img/ranking.png'; 
+import accountBook from './../img/accountbook.png'; 
 import Grid from '@mui/material/Grid';
 
 const Section3 = () => {
@@ -17,15 +17,15 @@ const Section3 = () => {
                             <Grid item xs={12} >
                                 <Wrapper>
                                     <TextDiv>
-                                    <Zoom triggerOnce={false} duration={1500}>
-                                        <Text>그 밖에 카드사 별</Text>
-                                        <Text>1위부터 10위 인기 카드</Text>
-                                    </Zoom>
+                                        <Zoom triggerOnce={false} duration={1500}>
+                                            <Text>흩어져 있는 내 가계부 내역을</Text>
+                                            <Text>한 번에 모아 관리!</Text>
+                                        </Zoom>
                                     </TextDiv>
                                     <div>
-                                      <Zoom triggerOnce={false} duration={1500}>
-                                          <Image src={ranking} alt="banner"/>
-                                      </Zoom>
+                                        <Zoom triggerOnce={false} duration={1500}>
+                                            <Image src={accountBook} alt="accountBook"/>
+                                        </Zoom>
                                     </div>
                                 </Wrapper>
                             </Grid>
@@ -42,7 +42,7 @@ export default Section3;
 
 
 export const Wrapper = styled.div`
-  background-color: #CEF6E3;
+  background-color: #F5F6CE;
   padding-top: 75px;
   height: 100vh;
   width: 100vw;
@@ -80,7 +80,7 @@ export const TextDiv = styled.div`
 
 export const Text = styled.div`
   color: #2167C2;
-  font-size: 45px;
+  font-size: 40px;
   font-weight: 700;
   margin-bottom: 5px;
   @media (max-width: 770px) {
@@ -93,7 +93,7 @@ export const Text = styled.div`
   }
   @media (max-width: 400px) {
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     padding-top: 10px;
   }
 `;

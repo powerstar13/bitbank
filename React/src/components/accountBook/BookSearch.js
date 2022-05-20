@@ -30,16 +30,17 @@ const defaultMenuProps = {
 
 const BookSearch = () => {
     let [loading, setLoading] = useState(false);     
-    const [accountBookType, setAccountBookType] = useState([]);              // 가계부 내역 유형
-    const [expenditureType, setExpenditureType] = useState([]);          // 지출 유형
-    const [incomeType, setIncomeType] = useState([]);                    // 수입 유형
-    const [transferType, setTransferType] = useState([]);                // 이체 유형
-    const [searchDateType, setSearchDateType] = useState("M");              // 기간  
-    const [searhStartDate, setSearhStartDate] = useState();       // 시작 날짜
-    const [searchEndDate , setSearchEndDate] = useState();        // 종료 날짜
-    const [nowKeyword, setNowKeyword] = useState();                         // 현재 검색어
+    const [searchList, setSearchList] = useState(false);
+    const [accountBookType, setAccountBookType] = useState([]);                 // 가계부 내역 유형
+    const [expenditureType, setExpenditureType] = useState([]);                 // 지출 유형
+    const [incomeType, setIncomeType] = useState([]);                           // 수입 유형
+    const [transferType, setTransferType] = useState([]);                       // 이체 유형
+    const [searchDateType, setSearchDateType] = useState("M");                  // 기간  
+    const [searchStartDate, setSearchStartDate] = useState();                     // 시작 날짜
+    const [searchEndDate , setSearchEndDate] = useState();                      // 종료 날짜
+    const [nowKeyword, setNowKeyword] = useState();                             // 현재 검색어
     const [accountbookList, setAccountBookList] = useState([]); 
-    const [keywords, setKeywords] = useState(                               // 검색어
+    const [keywords, setKeywords] = useState(                                   // 검색어
         JSON.parse(localStorage.getItem('keywords') || '[]'),
     )
 
@@ -53,7 +54,6 @@ const BookSearch = () => {
     //검색어 추가
     const handleAddKeyword = (keyword) => {
         setNowKeyword(keyword);
-        console.log('text', keyword)
         const newKeyword = {
             id: Date.now(),
             keyword: keyword,                 //현재 입력한 검색어
@@ -83,14 +83,12 @@ const BookSearch = () => {
     // 시작 날짜 선택
     const handleSelectStartDate = (newValue) => {
         const date = moment(newValue).format('YYYY-MM-DD HH:mm:ss');    // 날짜 포맷
-        console.log("date",date)
-        setSearhStartDate(date);
+        setSearchStartDate(date);
     };
 
     // 종료 날짜 선택
     const handleSelectEndDate = (newValue) => {
         const date = moment(newValue).format('YYYY-MM-DD HH:mm:ss');    // 날짜 포맷
-        console.log("date",date)
         setSearchEndDate(date);
     };
 
@@ -110,7 +108,6 @@ const BookSearch = () => {
             setExpenditureType([]);
         } 
     }
-    console.log("dddddddddd",nowKeyword)
 
     // 가계부 목록 조회
     const getAccountBook = async(e) => {
@@ -121,7 +118,7 @@ const BookSearch = () => {
                     searchKeyword : nowKeyword,
                     searchDateType : searchDateType,
                     accountBookType : accountBookType,
-                    searhStartDate : searhStartDate,
+                    searchStartDate : searchStartDate,
                     searchEndDate : searchEndDate,
                     expenditureType : expenditureType,
                     incomeType : incomeType,
@@ -132,8 +129,10 @@ const BookSearch = () => {
                         Authorization : store.accessToken
                     },
                 });
-                console.log( '가계부 목록 조회', response.data.accountBookSearchByDailyDTOList )
                 if( response.status === 200 && response.data.rt === 200 ){    
+                    if( response.data.accountBookSearchByDailyDTOList.length === 0 ){
+                        setSearchList(false);
+                    } else setSearchList(true);
                     setAccountBookList(response.data.accountBookSearchByDailyDTOList)
                 }    
         } catch (e) {
@@ -189,13 +188,13 @@ const BookSearch = () => {
                         <div className={clsx('between', 'margin_20')}>
                             <div className='form_name'>카테고리</div>
                             <div>
-                                {accountBookType ? (
+                            {accountBookType.length>0 ? (
                                 // 분류 선택 시에 카테고리 활성화
                                 <FormControl fullWidth style={{border: "1px solid #FFFFFF", borderRadius:"10px", margin: "0 5px 0 -10px"}}>
                                     <Select
                                         value={accountBookType === "P" ? expenditureType : accountBookType === "I" ? incomeType : transferType}
                                         onChange={(e)=>selectCategory(e)}
-                                        style={{width: "230px", borderRadius:"10px"}}
+                                        style={{width: "210px", borderRadius:"10px"}}
                                         MenuProps={defaultMenuProps}
                                     >
                                     { accountBookType === "P" ? (
@@ -203,7 +202,6 @@ const BookSearch = () => {
                                         <MenuItem
                                             value={option.id}
                                             key={"option"+index+1}
-                                            disabled={index === 0}
                                             selected={index === expenditureType}
                                         >
                                             {option.data}
@@ -214,7 +212,6 @@ const BookSearch = () => {
                                             <MenuItem
                                                 value={option.id}
                                                 key={"option"+index+1}
-                                                disabled={index === 0}
                                                 selected={index === incomeType}
                                             >
                                                 {option.data}
@@ -225,7 +222,6 @@ const BookSearch = () => {
                                             <MenuItem
                                                 value={option.id}
                                                 key={"option"+index+1}
-                                                disabled={index === 0}
                                                 selected={index === transferType}
                                             >
                                                 {option.data}
@@ -237,9 +233,9 @@ const BookSearch = () => {
                                 ):(
                                     // 분류 선택안할 시에 카테고리 비활성화
                                     <FormControl fullWidth disabled style={{border: "1px solid #FFFFFF", borderRadius:"10px", margin: "0 5px 0 -10px"}}>
-                                        <InputLabel>카테고리를 선택하세요.</InputLabel>
+                                        <InputLabel style={{zIndex: 0}}>카테고리를 선택하세요.</InputLabel>
                                         <Select
-                                            style={{width: "230px", borderRadius:"10px"}}
+                                            style={{width: "210px", borderRadius:"10px"}}
                                         >
                                         </Select>
                                     </FormControl>
@@ -274,7 +270,7 @@ const BookSearch = () => {
                                     <div className='center' style={{margin: "0 5px 0 -10px"}}>
                                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                                             <DateTimePicker
-                                                value={searhStartDate}
+                                                value={searchStartDate}
                                                 onChange={handleSelectStartDate}
                                                 renderInput={(params) => <TextField {...params} />}
                                                 format="YYYY-MM-DD HH:mm:ss"
@@ -305,21 +301,27 @@ const BookSearch = () => {
                     </Grid>
                 </Grid>
             </form>
-                {accountbookList && accountbookList.map((data, i) => (
-                    <div className='books_paper'>
-                        <div className={clsx('books_data', 'between')}>  
-                            <div className='info4'>{data.date} {data.day}</div>
-                            <div className='info4'>{getValue(data.accountBookTotalByDaily)}</div>
-                        </div>
-                        <hr/>
-                        {data.accountBookInfoDTOList && data.accountBookInfoDTOList.map((o, index) =>(
+                {!searchList ? (
+                    <div className='center'>  
+                        <div className='info4'>검색된 내용이 없습니다.</div>
+                    </div>
+                ):( 
+                    accountbookList.map((data, i) => (
+                        <div className='books_paper'>
                             <div className={clsx('books_data', 'between')}>  
-                                <div className='info5'>{o.accountBookInfo}</div>
-                                <div className='books_price'>{getValue(o.accountMoney)}원</div>
+                                <div className='info4'>{data.date} {data.day}</div>
+                                <div className='info4'>{getValue(data.accountBookTotalByDaily)}</div>
                             </div>
-                        ))}
-                    </div>    
-                ))}   
+                            <hr/>
+                            {data.accountBookInfoDTOList && data.accountBookInfoDTOList.map((o, index) =>(
+                                <div className={clsx('books_data', 'between')}>  
+                                    <div className='info5'>{o.accountBookInfo}</div>
+                                    <div className='books_price'>{getValue(o.accountMoney)}원</div>
+                                </div>
+                            ))}
+                        </div>    
+                    ))
+                )}   
         </div>
     );
 }

@@ -66,7 +66,6 @@ const Poll = () => {
                         convenienceStoreCost : consumptionList.convenienceStoreCost ,
                     }
                 });
-                console.log( '카드 추천 조회', response.data )
                 if( response.status === 200 && response.data.rt === 200 ){   
                     history.push({
                         pathname: "/cards/profits",

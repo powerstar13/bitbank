@@ -49,7 +49,6 @@ const Login = () => {
                 memberPassword: userInfo.memberPassword,
             })
             if (response.status === 200 && response.data.rt === 200) {
-                console.log("유저", response.data);
                 store.setUserInfo(response.data);
                 sessionStorage.setItem('access_token', response.data.accessToken);
                 sessionStorage.setItem('refresh_token', response.data.refreshToken);
@@ -57,7 +56,7 @@ const Login = () => {
                 sessionStorage.setItem('memberType', response.data.memberType);
                 sessionStorage.setItem('memberId',  response.data.memberId);
                 document.location.href = '/';
-            } else if( response.status === 200 && response.data.rt > 499 ) {
+            } else if( response.status === 500 ) {
                     setNotice(`로그인에 실패했습니다.\n관리자에게 문의하시길 바랍니다.`)
                     setOpen(true);
             } else { 
@@ -108,7 +107,6 @@ const Login = () => {
                 })
                 .then(res => res.json())
                 .then(res => {
-                    console.log("소셜 로그인 성공", res)
                     store.setUserInfo(res);
                     sessionStorage.setItem('access_token', res.accessToken);
                     sessionStorage.setItem('refresh_token', res.refreshToken);

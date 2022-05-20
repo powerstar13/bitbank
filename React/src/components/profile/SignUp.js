@@ -65,7 +65,6 @@ const SignUp = () => {
                 memberLoginId: userInfo.memberLoginId,
                 memberPassword: userInfo.memberPassword,
             })
-            console.log( '회원가입 성공 response', response.data, response.data.rt )
             if( response.status === 200 && response.data.rt === 201 ){   
                 setAccessCheck(true);
             } else {   

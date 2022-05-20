@@ -93,7 +93,7 @@ export const Text = styled.div`
   }
   @media (max-width: 400px) {
     text-align: center;
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     padding-top: 10px;
   }
 `;

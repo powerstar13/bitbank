@@ -59,7 +59,6 @@ const MenuHeader = () => {
     useEffect(() => {
         if( store.memberId != null ) {
             getAlarmCount(store.accessToken, store.memberId);
-            console.log("Store 확인",store.accessToken, store.memberId, store)
         }
     },[store.memberId])
 
@@ -80,7 +79,6 @@ const MenuHeader = () => {
                         memberId : id,
                     }
                 });
-                console.log( '알람 갯수 조회', response.data.alarmCount  )
                 if( response.status === 200 && response.data.rt === 200 ){   
                     setAlarmCount(response.data.alarmCount)
                 }    
@@ -100,7 +98,6 @@ const MenuHeader = () => {
                         memberId : id,
                     }
                 });
-                console.log( '알람 목록 조회', response.data.alarmMessageList  )
                 if( response.status === 200 && response.data.rt === 200 ){   
                     setShowNoti(true)
                     setAlarmList(response.data.alarmDTOList)
@@ -121,11 +118,6 @@ const MenuHeader = () => {
                 <Container maxWidth="sm" style={{padding:"0px"}}>
                    <div className={clsx('between', 'padding_10')}>
                         <div>
-                            {/* {menu === 4 ? (
-                                <ArrowBackIosIcon style={{margin: '10px 0', color: '#F2F2F2'}}/>
-                            ):(
-                                <ArrowBackIosIcon style={{margin: '10px 0', color: '#6E6E6E'}} onClick={goBack}/>
-                            )} */}
                             <ArrowBackIosIcon style={{margin: '10px 0', color: '#6E6E6E'}} onClick={goBack}/>
                         </div>
                         <Box display="flex">
