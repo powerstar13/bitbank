@@ -34,8 +34,9 @@ const BookInquiry = () => {
                 const response = await axios.post( API_SERVER +'/account-book/search', {
                     memberId : store.memberId,
                     searchKeyword : null,
-                    searchDateType : "M",
-                    searhStartDate : null,
+                    searchDateType :  "M",
+                    accountBookType : null,
+                    searchStartDate : null,
                     searchEndDate : null,
                     expenditureType : null,
                     incomeType : null,
