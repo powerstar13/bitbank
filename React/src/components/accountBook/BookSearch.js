@@ -31,14 +31,14 @@ const defaultMenuProps = {
 const BookSearch = () => {
     let [loading, setLoading] = useState(false);     
     const [searchList, setSearchList] = useState(false);
-    const [accountBookType, setAccountBookType] = useState([]);                 // 가계부 내역 유형
+    const [accountBookType, setAccountBookType] = useState("");                 // 가계부 내역 유형
     const [expenditureType, setExpenditureType] = useState([]);                 // 지출 유형
     const [incomeType, setIncomeType] = useState([]);                           // 수입 유형
     const [transferType, setTransferType] = useState([]);                       // 이체 유형
     const [searchDateType, setSearchDateType] = useState("M");                  // 기간  
     const [searchStartDate, setSearchStartDate] = useState();                     // 시작 날짜
     const [searchEndDate , setSearchEndDate] = useState();                      // 종료 날짜
-    const [nowKeyword, setNowKeyword] = useState();                             // 현재 검색어
+    const [nowKeyword, setNowKeyword] = useState("");                             // 현재 검색어
     const [accountbookList, setAccountBookList] = useState([]); 
     const [keywords, setKeywords] = useState(                                   // 검색어
         JSON.parse(localStorage.getItem('keywords') || '[]'),
@@ -54,11 +54,13 @@ const BookSearch = () => {
     //검색어 추가
     const handleAddKeyword = (keyword) => {
         setNowKeyword(keyword);
-        const newKeyword = {
-            id: Date.now(),
-            keyword: keyword,                 //현재 입력한 검색어
+        if(keyword !== ''){
+            const newKeyword = {
+                id: Date.now(),
+                keyword: keyword,                 //현재 입력한 검색어
+            }
+            setKeywords([newKeyword, ...keywords])
         }
-        setKeywords([newKeyword, ...keywords])
     }
 
     //검색어 삭제
@@ -188,7 +190,7 @@ const BookSearch = () => {
                         <div className={clsx('between', 'margin_20')}>
                             <div className='form_name'>카테고리</div>
                             <div>
-                            {accountBookType.length>0 ? (
+                            {accountBookType ? (
                                 // 분류 선택 시에 카테고리 활성화
                                 <FormControl fullWidth style={{border: "1px solid #FFFFFF", borderRadius:"10px", margin: "0 5px 0 -10px"}}>
                                     <Select
@@ -303,7 +305,7 @@ const BookSearch = () => {
             </form>
                 {!searchList ? (
                     <div className='center'>  
-                        <div className='info4'>검색된 내용이 없습니다.</div>
+                        <div className='info4' style={{marginBottom:"20px"}}>검색된 내용이 없습니다.</div>
                     </div>
                 ):( 
                     accountbookList.map((data, i) => (

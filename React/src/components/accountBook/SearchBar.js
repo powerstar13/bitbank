@@ -51,6 +51,7 @@ function SearchBar({ onAddKeyword }) {
 
   const handleClearKeyword = () => {
       setKeyword('')
+      onAddKeyword('')
   }
 
   return (
