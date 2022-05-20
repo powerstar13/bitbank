@@ -1,5 +1,7 @@
 package click.bitbank.api.infrastructure.exception;
 
+import click.bitbank.api.infrastructure.kafka.KafkaProducerService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.stereotype.Component;
@@ -9,7 +11,10 @@ import java.util.Map;
 
 // DefaultErrorAttributes는 스프링이 자동으로 만들어내는 에러를 담고 있다.
 @Component
+@RequiredArgsConstructor
 public class GlobalErrorAttributes extends DefaultErrorAttributes {
+    
+    private final KafkaProducerService kafkaProducerService;
 
     @Override
     public Map<String, Object> getErrorAttributes(ServerRequest request, ErrorAttributeOptions options) {
@@ -39,6 +44,8 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
         if (map.get("message") != null) map.remove("message");
         if (map.get("timestamp") != null) map.remove("timestamp");
         if (map.get("requestId") != null) map.remove("requestId");
+    
+        if (!request.path().equals("/") && !request.path().equals("/favicon.ico")) kafkaProducerService.sendExceptionTopic(request, map.toString());
 
         return map;
     }
