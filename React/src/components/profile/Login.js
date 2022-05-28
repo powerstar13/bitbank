@@ -15,12 +15,12 @@ const { Kakao } = window;
 
 const Login = () => {
     const history = useHistory();
-    let [loading, setLoading] = useState(false);   
+    let [loading, setLoading] = useState(false);
     const [userInfo, setUserInfo] = useState({
         memberLoginId: '',
         memberPassword: '',
     });
-    const [open, setOpen] = useState(false);   
+    const [open, setOpen] = useState(false);
     const [notice, setNotice] = useState();           //모달 멘트 설정
 
     const { memberLoginId, memberPassword } = userInfo;
@@ -59,13 +59,13 @@ const Login = () => {
             } else if( response.status === 500 ) {
                     setNotice(`로그인에 실패했습니다.\n관리자에게 문의하시길 바랍니다.`)
                     setOpen(true);
-            } else { 
+            } else {
                 setNotice(response.data.rtMsg)
                 setOpen(true);
-            } 
+            }
         } catch (error) {
             console.log('error', error)
-        } 
+        }
         setLoading(false);
     }
 
@@ -89,37 +89,51 @@ const Login = () => {
 
     const kakaoLoginClickHandler = (e) => {
         e.preventDefault();
-        if (!Kakao.isInitialized()) {
-            Kakao.init("38b3f0aff12245b4f33fdeb8829476c6");
-        }
-      
+        Kakao.init("ad3e608963f04fff6adb46171422f1fe");
+
         Kakao.Auth.login({
-            success: function (authObj) {
-                fetch(API_SERVER + '/auth/login/social', {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
+            success: function (response) {
+                window.Kakao.Auth.setAccessToken(response.access_token);
+                // console.log(`is set?: ${window.Kakao.Auth.getAccessToken()}`);
+
+                window.Kakao.API.request({
+                    url: "/v2/user/me",
+                    success: function ({ id, kakao_account }) {
+                        // console.log(id, kakao_account);
+
+                        const { profile } = kakao_account;
+                        // console.log(profile.nickname);
+
+                        fetch(API_SERVER + "/auth/login/social", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                socialToken: id,
+                                memberName: profile.nickname,
+                            }),
+                        })
+                        .then((res) => res.json())
+                        .then((res) => {
+                            store.setUserInfo(res);
+                            sessionStorage.setItem("access_token", res.accessToken);
+                            sessionStorage.setItem("refresh_token", res.refreshToken);
+                            sessionStorage.setItem("memberName", res.memberName);
+                            sessionStorage.setItem("memberType", res.memberType);
+                            sessionStorage.setItem("memberId", res.memberId);
+                            history.push("/");
+                        });
                     },
-                    body: JSON.stringify({
-                        socialToken : authObj.access_token,
-                        memberName : null,
-                    }),
-                })
-                .then(res => res.json())
-                .then(res => {
-                    store.setUserInfo(res);
-                    sessionStorage.setItem('access_token', res.accessToken);
-                    sessionStorage.setItem('refresh_token', res.refreshToken);
-                    sessionStorage.setItem('memberName', res.memberName);
-                    sessionStorage.setItem('memberType', res.memberType);
-                    sessionStorage.setItem('memberId',  res.memberId);
-                    history.push("/")
-                })
+                    fail: function (error) {
+                        console.log(error);
+                    },
+                });
             },
             fail: function (err) {
-                alert(JSON.stringify(err))
-            }
-        })
+                alert(JSON.stringify(err));
+            },
+        });
     }
 
 
@@ -150,12 +164,12 @@ const Login = () => {
                                 회원가입
                             </button>
                         </Link>
-                    </Grid>    
+                    </Grid>
                     <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center'}}>
                         <button className={clsx('kakao_btn', 'margin_30')} onClick={kakaoLoginClickHandler}>
                             카카오 로그인
                         </button>
-                    </Grid>         
+                    </Grid>
                     <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center'}}>
                         <div className='margin_40_10'>
                             <Loader loading={loading} />
